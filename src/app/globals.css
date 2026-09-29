@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+/* Eduvos palette design tokens (Tailwind v4 CSS-first config).
+   Contrast (WCAG AA): navy/white 12.6:1, royal/white 6.6:1, navy on sand 6.0:1.
+   Sand is decorative/background only: never use sand text on white. */
+@theme {
+  --color-navy: #16305e;
+  --color-royal: #2352c4;
+  --color-sand: #cfae7e;
+  --color-mist: #f3f4f7;
+  --color-ink: #1b2233;
+  --color-muted: #4a5468;
+  --font-display: var(--font-display-face), Georgia, serif;
+  --font-sans: var(--font-body-face), system-ui, sans-serif;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #1b2233;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+:focus-visible { outline: 3px solid var(--color-royal); outline-offset: 2px; }
+
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 100;
+  background: var(--color-navy); color: #fff; padding: 0.75rem 1rem;
+}
+.skip-link:focus { left: 0.5rem; top: 0.5rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

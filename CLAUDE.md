@@ -1,0 +1,54 @@
+# Vossie Market Place — Project Brief (read every session)
+
+Team entry for the **Eduvos Hack Jam 2026** (Incubation Hub Marketplace brief, with Suitable Focus).
+Judged on: Innovative, User-focused, Practical, Scalable (multi-campus), Accessible, Sustainable.
+Demo Day: 2–6 November 2026. Tagline: "Student hustles. Campus customers."
+
+## Working rules
+- One phase per session, in order (Phase 0 → 9). Do not jump ahead.
+- Decisions go through AskUserQuestion with 2–4 options, recommended first.
+- Start each phase with a short plan; end with lint + typecheck + build green, CHANGELOG.md and
+  AI_USAGE.md updated, conventional-commit, push to origin main.
+- Git auth is via Git Credential Manager. Never put a token in a remote URL or file.
+
+## Secrets
+- Config lives in `.env.local` (git-ignored). `.env.example` has placeholders only.
+- `SUPABASE_SERVICE_ROLE_KEY` is server-only: never `NEXT_PUBLIC_`, never logged, never committed.
+  Use it only in server actions, route handlers and Edge Functions.
+
+## Stack
+Next.js App Router + TypeScript strict + Tailwind v4 (tokens in `src/app/globals.css` `@theme`, not a
+tailwind.config file). Supabase: Auth (email OTP), Postgres with RLS on every table, Storage, Realtime,
+Edge Functions, `@supabase/ssr`. Migrations in `supabase/migrations`; types via
+`supabase gen types typescript` into `src/types/database.ts`. PWA, mobile-first, deploy on Vercel.
+Payments later via Paystack (ZAR) behind a feature flag.
+
+## Brand
+Deep navy #16305E, royal blue #2352C4, sand #CFAE7E, white, light grey. Serif display headings
+(Playfair Display), sans body (Inter). Sand is background-only (fails AA as text on white).
+Eduvos logo: `public/brand/eduvos-logo.png`.
+
+## Roles (enforced in RLS, not only UI)
+buyer, seller (needs approval), mentor (read-only analytics), admin (full moderation).
+
+## Scope (22 features, built across phases)
+1 seller registration/profiles · 2 listings · 3 discovery · 4 enquiry messaging + WhatsApp handoff ·
+5 enquiry management · 6 safety/accessibility/onboarding · 7 barter · 8 mentor view · 9 Featured Hustle
+rotation · 10 trust score · 11 admin panel · 12 analytics · 13 reviews (flagged) · 14 Paystack (flagged) ·
+15 Looking For board · 16 saved/follow · 17 campus pickup points · 18 low-data mode · 19 share cards ·
+20 Hub Growth corner · 21 POPIA · 22 multi-campus from day one.
+
+## Quality bar
+360px width, tap targets ≥ 44px, keyboard navigable, alt text, loading/empty/error states,
+realistic South African seed data, no lorem ipsum.
+
+## Architecture decisions
+- **Phase 0:** Tailwind v4 CSS-first tokens. Service worker (`public/sw.js`) is registered only in
+  production; navigation is network-first with `/offline` fallback. Health route `/api/health` pings
+  Supabase Auth `/auth/v1/health` with the anon key only.
+- Project lives in `vossie-market-place/` subfolder of the Desktop workspace.
+- npm 11 requires `allowScripts` policy for install scripts; `unrs-resolver` (ESLint resolver) is
+  currently not approved, and lint/build work without it.
+
+## Status
+Phase 0 complete. Next: Phase 1 (database, auth and roles).
