@@ -1,9 +1,35 @@
+import { signOut } from "@/app/actions/auth";
+import { Button, ButtonLink, PageShell } from "@/components/ui";
+import { getMySeller, requireUser } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
+
 export const metadata = { title: "Account" };
-export default function Page() {
+
+const STATUS_COPY: Record<string, string> = {
+  draft: "Not submitted yet",
+  pending: "Waiting for Incubation Hub approval",
+  approved: "Approved seller",
+  rejected: "Needs changes",
+  suspended: "Suspended",
+};
+
+export default async function Account() {
+  const user = await requireUser("/account");
+  const supabase = await createClient();
+  const { data: profile } = await supabase.from("profiles").select("display_name, role").eq("id", user.id).single();
+  const seller = await getMySeller(user.id);
+
   return (
-    <section className="mx-auto max-w-3xl px-4 py-12">
-      <h1 className="font-display text-3xl font-bold text-navy">Account</h1>
-      <p className="mt-3 text-muted">Sign in with your Eduvos email in Phase 1.</p>
-    </section>
+    <PageShell title="Your account">
+      <dl className="grid gap-4 rounded-xl bg-mist p-5 sm:grid-cols-2">
+        <div><dt className="text-sm text-muted">Signed in as</dt><dd className="font-semibold text-navy break-all">{user.email}</dd></div>
+        <div><dt className="text-sm text-muted">Role</dt><dd className="font-semibold capitalize text-navy">{profile?.role ?? "buyer"}</dd></div>
+        <div><dt className="text-sm text-muted">Seller status</dt><dd className="font-semibold text-navy">{seller ? STATUS_COPY[seller.status] : "Not a seller yet"}</dd></div>
+      </dl>
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+        <ButtonLink href="/sell" variant="sand">{seller ? "Seller dashboard" : "Start selling"}</ButtonLink>
+        <form action={signOut}><Button type="submit" variant="secondary" className="w-full">Sign out</Button></form>
+      </div>
+    </PageShell>
   );
 }

@@ -9,7 +9,7 @@ const PASSWORD = "Vossie-Demo-2026!";
 
 let pass = 0, fail = 0;
 const check = (name, ok, extra = "") => {
-  ok ? pass++ : fail++;
+  if (ok) pass++; else fail++;
   console.log(`${ok ? "PASS" : "FAIL"}  ${name}${ok ? "" : "  " + extra}`);
 };
 

@@ -22,5 +22,12 @@ Checks: `npm run lint`, `npm run typecheck`, `npm run build`. Health check: `GET
 Vercel: import the repo and add the three env vars (service role key as a non-public variable).
 
 ## Features
-Phase 0 (done): PWA shell, brand tokens, responsive header / bottom nav / footer, health check.
-Planned: see `CLAUDE.md` and the phase roadmap.
+- **Phase 0:** PWA shell, brand tokens, responsive header / bottom nav / footer, health check.
+- **Phase 1:** schema, RLS on every table, sign-up allow-list with POPIA consent, storage, seed data.
+- **Phase 2:** email-code sign-in, seller onboarding wizard, seller dashboard and public profile,
+  listing create/edit/manage with client-side image compression, first-time tours, seller guidelines.
+- Planned: discovery, messaging, moderation, Looking For board, payments (see CLAUDE.md).
+
+## Scripts
+`npm run db:seed` (demo data), `npm run test:rls`, `npm run test:smoke` (needs `npm start -p 3111`),
+`npm run db:audit` (needs DATABASE_URL). Demo logins: set `DEMO_LOGIN_ENABLED=true` locally only.

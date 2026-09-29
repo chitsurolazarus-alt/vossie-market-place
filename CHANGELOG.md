@@ -15,3 +15,15 @@
 - Generated `src/types/database.ts`; `docs/DATA_MODEL.md` with Mermaid ER diagram.
 - Seed (`npm run db:seed`): 2 campuses, categories, 1 admin, 1 mentor, 8 approved sellers, 32 listings.
 - `npm run test:rls` (30 checks) and `npm run db:audit` (advisor-style audit, 0 flagged).
+
+## Phase 2 — Seller onboarding, profiles and listings
+- Email-code sign-in (`/login`), account page, session refresh in `proxy.ts`, demo logins (flag-gated).
+- Seller onboarding wizard (`/sell/onboarding`): 5 steps, draft saved per step, square-crop + <300KB photo,
+  private +27 WhatsApp number, campus + 1-3 pickup points, guidelines agreement, "You're in the queue" screen.
+- Seller dashboard (`/sell`), edit profile, public profile (`/s/[slug]`) with verified badge, contact buttons that
+  respect preference, and `/go/whatsapp/[slug]` redirect so numbers never appear in page HTML.
+- Listings: create/edit/manage (`/sell/listings`): product/service, cash/swap/both, up to 5 photos (1600px WebP
+  <400KB, EXIF stripped, drag or arrow reorder, alt text), tag suggestions, availability, soft delete.
+- First-time welcome tour and a 3-step seller dashboard tour (flags stored on profiles).
+- zod schemas shared by client and server; server actions for all writes; seller guidelines page.
+- Tests: `npm run test:smoke` (31 checks) added alongside `test:rls` (30).

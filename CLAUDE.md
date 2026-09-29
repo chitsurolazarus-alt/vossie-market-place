@@ -51,4 +51,11 @@ realistic South African seed data, no lorem ipsum.
   currently not approved, and lint/build work without it.
 
 ## Status
-Phase 0 complete. Next: Phase 1 (database, auth and roles).
+Phases 0-2 complete. Next: Phase 3 (discovery).
+
+## Phase 1-2 decisions
+- Sign-up allow-list in DB tables (`vossie.net`, `eduvos.com`, named test emails); roles by promotion only.
+- Helper functions live in the un-exposed `private` schema; guard triggers enforce column-level rules.
+- WhatsApp numbers live in `seller_private` (owner-only); `/go/whatsapp/[slug]` redirects signed-in users.
+- Client uploads images straight to Storage under `{user_id}/`; server actions validate paths and write rows.
+- Tailwind v4 tokens; `proxy.ts` (Next 16) only refreshes auth cookies; pages call `requireUser`.

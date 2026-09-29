@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BottomNav from "@/components/BottomNav";
 import RegisterSW from "@/components/RegisterSW";
+import { WelcomeGate } from "@/components/Tours";
 
 const display = Playfair_Display({ variable: "--font-display-face", subsets: ["latin"] });
 const body = Inter({ variable: "--font-body-face", subsets: ["latin"] });
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <BottomNav />
         <RegisterSW />
+        <WelcomeGate />
       </body>
     </html>
   );

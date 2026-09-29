@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "db:seed": "node --env-file=.env.local scripts/seed.mjs",
     "test:rls": "node --env-file=.env.local scripts/rls-test.mjs",
-    "db:audit": "node scripts/db-audit.mjs"
+    "db:audit": "node scripts/db-audit.mjs",
+    "test:smoke": "node --env-file=.env.local scripts/smoke.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -19,7 +20,9 @@
     "pg": "^8.23.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "sharp": "^0.35.5"
+    "server-only": "^0.0.1",
+    "sharp": "^0.35.5",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

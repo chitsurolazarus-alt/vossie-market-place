@@ -15,6 +15,7 @@ export const DEMO_PASSWORD = "Vossie-Demo-2026!";
 const STAFF = [
   { email: "admin.demo@eduvos.com", name: "Nomsa Dlamini (Admin)", role: "admin" },
   { email: "mentor.demo@eduvos.com", name: "Pieter van Wyk (Mentor)", role: "mentor" },
+  { email: "20250109@vossie.net", name: "Ayanda Buthelezi (Buyer)", role: "buyer" },
 ];
 
 const CATEGORY_COLOURS = {
@@ -108,7 +109,7 @@ async function tile(text, colour, sub, size = 900) {
   return sharp(Buffer.from(svg)).webp({ quality: 78 }).toBuffer();
 }
 
-const slugify = (s) => s.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+const slugify = (s) => s.toLowerCase().replace(/['’]/g, "").replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 const must = (r, ctx) => { if (r.error) throw new Error(`${ctx}: ${r.error.message}`); return r.data; };
 
 async function ensureUser(email, name) {
