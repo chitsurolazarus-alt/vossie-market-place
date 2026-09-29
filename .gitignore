@@ -45,3 +45,6 @@ next-env.d.ts
 
 # supabase CLI local state
 supabase/.temp
+
+# ui-check screenshots
+/shots

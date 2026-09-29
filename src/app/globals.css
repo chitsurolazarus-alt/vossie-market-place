@@ -42,3 +42,12 @@ body {
   border-radius: 0.75rem;
   transition: outline-color 0.2s;
 }
+
+/* Low-data mode: no motion, no smooth scrolling */
+html[data-lowdata="true"] *,
+html[data-lowdata="true"] *::before,
+html[data-lowdata="true"] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}

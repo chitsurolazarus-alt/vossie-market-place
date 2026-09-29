@@ -16,3 +16,5 @@ export const AVAILABILITY_LABEL: Record<string, string> = {
 
 export const memberSince = (iso: string) =>
   new Date(iso).toLocaleDateString("en-ZA", { month: "long", year: "numeric" });
+
+export const isWithinDays = (iso: string, days: number) => Date.now() - new Date(iso).getTime() < days * 24 * 3600 * 1000;

@@ -27,3 +27,8 @@
 - First-time welcome tour and a 3-step seller dashboard tour (flags stored on profiles).
 - zod schemas shared by client and server; server actions for all writes; seller guidelines page.
 - Tests: `npm run test:smoke` (31 checks) added alongside `test:rls` (30).
+
+## Phase 3 - Discovery (in progress)
+- Migrations: browse_listings view, weighted FTS + typo search (search_listings), anonymous-safe listing_views, rotate_featured + pg_cron daily job.
+- Home, /browse (URL filters, Load more), /l/[id] with OG image, /saved, /settings, /how-featured-works, low-data mode, save/follow, real 404s.
+- Tests: test:discovery (67), test:rls (30), test:smoke (31) pass. test:ui (real-browser 360px) added, not yet passing fully.

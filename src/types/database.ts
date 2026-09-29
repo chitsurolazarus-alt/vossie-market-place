@@ -97,6 +97,12 @@ isOneToOne: false
       foreignKeyName: "conversations_listing_id_fkey"
       columns: ["listing_id"]
 isOneToOne: false
+      referencedRelation: "browse_listings"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "conversations_listing_id_fkey"
+      columns: ["listing_id"]
+isOneToOne: false
       referencedRelation: "listings"
       referencedColumns: ["id"]
     },{
@@ -204,6 +210,12 @@ isOneToOne: false
       foreignKeyName: "listing_images_listing_id_fkey"
       columns: ["listing_id"]
 isOneToOne: false
+      referencedRelation: "browse_listings"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "listing_images_listing_id_fkey"
+      columns: ["listing_id"]
+isOneToOne: false
       referencedRelation: "listings"
       referencedColumns: ["id"]
     }
@@ -223,6 +235,12 @@ isOneToOne: false
       foreignKeyName: "listing_tags_listing_id_fkey"
       columns: ["listing_id"]
 isOneToOne: false
+      referencedRelation: "browse_listings"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "listing_tags_listing_id_fkey"
+      columns: ["listing_id"]
+isOneToOne: false
       referencedRelation: "listings"
       referencedColumns: ["id"]
     },{
@@ -235,16 +253,22 @@ isOneToOne: false
                   ]
                 },"listing_views": {
                   Row: {
-                    "created_at": string,"id": number,"listing_id": string,"view_date": string,"viewer_id": string | null
+                    "anon_hash": string | null,"created_at": string,"id": number,"listing_id": string,"view_date": string,"viewer_id": string | null,"viewer_key": string | null
                   }
                   Insert: {
-                    "created_at"?: string,"id"?: never,"listing_id": string,"view_date"?: string,"viewer_id"?: string | null
+                    "anon_hash"?: string | null,"created_at"?: string,"id"?: never,"listing_id": string,"view_date"?: string,"viewer_id"?: string | null,"viewer_key"?: never
                   }
                   Update: {
-                    "created_at"?: string,"id"?: never,"listing_id"?: string,"view_date"?: string,"viewer_id"?: string | null
+                    "anon_hash"?: string | null,"created_at"?: string,"id"?: never,"listing_id"?: string,"view_date"?: string,"viewer_id"?: string | null,"viewer_key"?: never
                   }
                   Relationships: [
                     {
+      foreignKeyName: "listing_views_listing_id_fkey"
+      columns: ["listing_id"]
+isOneToOne: false
+      referencedRelation: "browse_listings"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "listing_views_listing_id_fkey"
       columns: ["listing_id"]
 isOneToOne: false
@@ -417,6 +441,12 @@ isOneToOne: false
       foreignKeyName: "request_responses_listing_id_fkey"
       columns: ["listing_id"]
 isOneToOne: false
+      referencedRelation: "browse_listings"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "request_responses_listing_id_fkey"
+      columns: ["listing_id"]
+isOneToOne: false
       referencedRelation: "listings"
       referencedColumns: ["id"]
     },{
@@ -501,6 +531,12 @@ isOneToOne: false
                   }
                   Relationships: [
                     {
+      foreignKeyName: "saved_listings_listing_id_fkey"
+      columns: ["listing_id"]
+isOneToOne: false
+      referencedRelation: "browse_listings"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "saved_listings_listing_id_fkey"
       columns: ["listing_id"]
 isOneToOne: false
@@ -630,10 +666,39 @@ isOneToOne: true
                 }
           }
           Views: {
-            [_ in never]: never
+            "browse_listings": {
+                  Row: {
+                    "availability": Database["public"]['Enums']["availability"] | null,"business_name": string | null,"campus_id": string | null,"campus_name": string | null,"category_id": string | null,"category_name": string | null,"category_slug": string | null,"cover_alt": string | null,"cover_path": string | null,"created_at": string | null,"description": string | null,"id": string | null,"kind": Database["public"]['Enums']["listing_kind"] | null,"price_is_from": boolean | null,"price_zar": number | null,"pricing_mode": Database["public"]['Enums']["pricing_mode"] | null,"search": unknown,"seller_id": string | null,"seller_photo": string | null,"seller_slug": string | null,"seller_verified": boolean | null,"swap_for": string | null,"tags": (string)[] | null,"title": string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "listings_campus_id_fkey"
+      columns: ["campus_id"]
+isOneToOne: false
+      referencedRelation: "campuses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "listings_category_id_fkey"
+      columns: ["category_id"]
+isOneToOne: false
+      referencedRelation: "categories"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "listings_seller_id_fkey"
+      columns: ["seller_id"]
+isOneToOne: false
+      referencedRelation: "seller_profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                }
           }
           Functions: {
-            [_ in never]: never
+            "search_listings":
+{ Args: { "p_available_only"?: boolean,"p_campus"?: string,"p_category"?: string,"p_kind"?: Database["public"]['Enums']["listing_kind"],"p_limit"?: number,"p_max"?: number,"p_min"?: number,"p_mode"?: string,"p_offset"?: number,"p_q"?: string,"p_sort"?: string }; Returns: {
+              "listing_id": string,"total_count": number
+            }[]
+                           }
           }
           Enums: {
             "availability": "available"|"sold_out"|"paused","contact_pref": "in_app"|"whatsapp"|"both","enquiry_status": "new"|"in_progress"|"completed","listing_kind": "product"|"service","payment_status": "pending"|"paid"|"failed"|"refunded","pricing_mode": "cash"|"swap"|"both","report_reason": "spam"|"scam"|"inappropriate"|"unsafe"|"wrong_category"|"other","report_status": "pending"|"actioned"|"dismissed","report_target": "listing"|"user"|"request","request_status": "open"|"fulfilled"|"closed","seller_status": "draft"|"pending"|"approved"|"rejected"|"suspended","user_role": "buyer"|"seller"|"mentor"|"admin"

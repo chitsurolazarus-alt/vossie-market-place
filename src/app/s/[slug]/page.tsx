@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { FollowButton } from "@/components/SaveButton";
 import { ButtonLink } from "@/components/ui";
 import { getUser } from "@/lib/auth";
 import { AVAILABILITY_LABEL, memberSince, priceLabel, publicImageUrl } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
+import { isFollowing } from "@/lib/viewer";
 
 async function load(slug: string) {
   const supabase = await createClient();
@@ -37,6 +39,7 @@ export default async function SellerPage({ params }: { params: Promise<{ slug: s
     .select("id,title,kind,pricing_mode,price_zar,price_is_from,availability,listing_images(path,alt,position)")
     .eq("seller_id", seller.id).is("deleted_at", null).order("created_at", { ascending: false });
   const listings = data ?? [];
+  const following = isOwner ? false : await isFollowing(seller.id);
 
   const wantsWhatsapp = seller.contact_pref === "whatsapp" || seller.contact_pref === "both";
   const wantsInApp = seller.contact_pref === "in_app" || seller.contact_pref === "both";
@@ -67,6 +70,7 @@ export default async function SellerPage({ params }: { params: Promise<{ slug: s
             {/* Phase 4 fills these: trust score and reply-time */}
             <div hidden data-slot="trust-score" />
             <div hidden data-slot="reply-time" />
+            {!isOwner && seller.status === "approved" && <div className="mt-4"><FollowButton sellerId={seller.id} name={seller.business_name} initialFollowing={following} authed={!!user} /></div>}
           </div>
         </div>
       </header>
@@ -111,6 +115,7 @@ export default async function SellerPage({ params }: { params: Promise<{ slug: s
                 const cover = [...l.listing_images].sort((a, b) => a.position - b.position)[0];
                 return (
                   <li key={l.id} className="overflow-hidden rounded-xl border border-navy/15 bg-white">
+                    <Link href={`/l/${l.id}`} className="block">
                     <div className="relative aspect-square bg-mist">
                       {cover && <Image src={publicImageUrl(cover.path)} alt={cover.alt} fill sizes="(max-width: 1024px) 50vw, 33vw" className="object-cover" />}
                       {l.availability !== "available" && (
@@ -121,6 +126,7 @@ export default async function SellerPage({ params }: { params: Promise<{ slug: s
                       <h3 className="font-semibold leading-snug text-navy">{l.title}</h3>
                       <p className="mt-1 text-sm font-semibold text-ink">{priceLabel(l)}</p>
                     </div>
+                    </Link>
                   </li>
                 );
               })}

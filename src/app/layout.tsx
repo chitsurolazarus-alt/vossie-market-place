@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import BottomNav from "@/components/BottomNav";
 import RegisterSW from "@/components/RegisterSW";
 import { WelcomeGate } from "@/components/Tours";
+import { getLowData } from "@/lib/viewer";
 
 const display = Playfair_Display({ variable: "--font-display-face", subsets: ["latin"] });
 const body = Inter({ variable: "--font-body-face", subsets: ["latin"] });
@@ -23,9 +24,10 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const lowData = await getLowData();
   return (
-    <html lang="en" className={`${display.variable} ${body.variable} h-full antialiased`}>
+    <html lang="en" data-lowdata={lowData ? "true" : "false"} className={`${display.variable} ${body.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
         <a href="#main" className="skip-link">Skip to content</a>
         <Header />
