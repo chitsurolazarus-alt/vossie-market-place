@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vossie Market Place: MVP showcase</title>
+<meta name="description" content="Student hustles. Campus customers. Screenshots and walkthrough of the Vossie Market Place MVP for the Eduvos Hack Jam 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap">
+<style>
+  :root { --navy:#16305E; --royal:#2352C4; --sand:#CFAE7E; --mist:#F2F4F8; --ink:#1B2433; --muted:#4A5468; --bg:#fff; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0E1A33; --ink:#EAF0FA; --muted:#B5C0D6; --mist:#16284A; } }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:Inter,system-ui,sans-serif; color:var(--ink); background:var(--bg); line-height:1.55; }
+  a { color:var(--royal); } @media (prefers-color-scheme: dark) { a { color:#8FB0FF; } }
+  h1,h2,h3 { font-family:"Playfair Display",Georgia,serif; margin:0; }
+  header { background:var(--navy); color:#fff; }
+  .wrap { max-width:1000px; margin:0 auto; padding:0 16px; }
+  .hero { padding:48px 0 40px; }
+  .pill { display:inline-block; background:var(--sand); color:var(--navy); font-weight:700; font-size:.875rem; padding:4px 12px; border-radius:999px; }
+  .hero h1 { font-size:clamp(2rem,6vw,3.25rem); margin-top:14px; max-width:16ch; }
+  .hero p { max-width:56ch; font-size:1.125rem; color:#E6ECF8; }
+  .btns { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
+  .btn { display:inline-flex; align-items:center; min-height:48px; padding:0 20px; border-radius:10px; font-weight:700; text-decoration:none; }
+  .btn.sand { background:var(--sand); color:var(--navy); }
+  .btn.ghost { border:2px solid #fff; color:#fff; }
+  section { padding:40px 0 8px; }
+  h2 { font-size:1.75rem; color:var(--navy); } @media (prefers-color-scheme: dark) { h2 { color:#fff; } }
+  .lead { color:var(--muted); max-width:62ch; }
+  .shots { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:20px; margin-top:20px; }
+  figure { margin:0; background:var(--mist); border-radius:16px; padding:12px; }
+  figure img { width:100%; height:auto; border-radius:10px; display:block; border:1px solid rgba(22,48,94,.15); }
+  figcaption { margin-top:10px; font-size:.9375rem; }
+  figcaption b { display:block; color:var(--navy); } @media (prefers-color-scheme: dark) { figcaption b { color:#fff; } }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin-top:16px; }
+  .card { background:var(--mist); border-radius:14px; padding:16px; }
+  .card h3 { font-size:1.2rem; color:var(--navy); } @media (prefers-color-scheme: dark) { .card h3 { color:#fff; } }
+  .tiers { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin-top:16px; padding:0; list-style:none; }
+  .tiers li { border:1px solid rgba(22,48,94,.2); border-radius:14px; padding:14px; }
+  .badge { display:inline-block; font-weight:700; font-size:.8125rem; padding:3px 10px; border-radius:999px; }
+  .b0 { background:var(--mist); color:var(--navy); border:1px solid rgba(22,48,94,.25); } .b1 { background:var(--royal); color:#fff; }
+  .b2 { background:var(--navy); color:#fff; border:1px solid #fff3; } .b3 { background:var(--sand); color:var(--navy); }
+  ol.steps { padding-left:20px; } ol.steps li { margin:6px 0; }
+  footer { margin-top:48px; background:var(--navy); color:#fff; padding:24px 0; font-size:.9375rem; } footer a { color:var(--sand); }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hero">
+    <span class="pill">Eduvos Hack Jam 2026 · Incubation Hub</span>
+    <h1>Vossie Market Place</h1>
+    <p>Student hustles. Campus customers. A multi-campus marketplace where Eduvos students sell products and services, message buyers safely, and earn trust badges instead of star ratings.</p>
+    <div class="btns">
+      <a class="btn sand" href="#tour">See the MVP</a>
+      <a class="btn ghost" href="https://github.com/chitsurolazarus-alt/vossie-market-place">View the code</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="tour" aria-labelledby="tour-h">
+    <h2 id="tour-h">MVP tour</h2>
+    <p class="lead">Real screenshots at 360px (a small phone), captured from an automated two-user run: a buyer enquires, the seller replies in realtime, completes the sale, and the buyer confirms it.</p>
+    <div class="shots">
+      <figure><img src="screenshots/1-enquire.png" alt="Enquiry composer prefilled with 'Hi! Is Chicken kota with atchar still available?'" loading="lazy"><figcaption><b>1. Enquire</b>Prefilled, editable message. Swap listings can propose a swap.</figcaption></figure>
+      <figure><img src="screenshots/2-buyer-thread.png" alt="Buyer's message thread with the listing pinned at the top" loading="lazy"><figcaption><b>2. Realtime thread</b>Pinned listing card, day separators, seen receipts, private photos.</figcaption></figure>
+      <figure><img src="screenshots/3-seller-bell.png" alt="Seller's notification bell listing a new enquiry" loading="lazy"><figcaption><b>3. Seller bell</b>Live unread count; message alerts batched per conversation.</figcaption></figure>
+      <figure><img src="screenshots/4-seller-dashboard.png" alt="Seller enquiry dashboard with New, In progress and Completed tabs" loading="lazy"><figcaption><b>4. Seller dashboard</b>Tabs with counts, filters, quick replies and WhatsApp leads.</figcaption></figure>
+      <figure><img src="screenshots/5-safety-tip.png" alt="Safety tip shown while typing 'pay a deposit first'" loading="lazy"><figcaption><b>5. Safety tip</b>Warns about deposit-first and bank-detail patterns, never blocks.</figcaption></figure>
+      <figure><img src="screenshots/6-did-it-happen.png" alt="Seller dialog asking whether the sale or swap happened" loading="lazy"><figcaption><b>6. Did it happen?</b>Only a confirmed 'yes' can count toward the trust badge.</figcaption></figure>
+      <figure><img src="screenshots/7-buyer-confirm.png" alt="Buyer's one-tap prompt to confirm the sale" loading="lazy"><figcaption><b>7. Buyer confirms</b>One tap. Auto-confirms after 7 days if there is no answer.</figcaption></figure>
+      <figure><img src="screenshots/8-inbox.png" alt="Inbox listing conversations with previews and unread badges" loading="lazy"><figcaption><b>8. Inbox</b>Other party, listing thumbnail, preview, time and unread badge.</figcaption></figure>
+      <figure><img src="screenshots/9-seller-profile-trust.png" alt="Seller profile showing a trust badge and reply-time band" loading="lazy"><figcaption><b>9. Trust on profiles</b>Badge tiers plus a friendly reply-time band.</figcaption></figure>
+      <figure><img src="screenshots/10-browse-cards.png" alt="Browse grid with trust badges on listing cards" loading="lazy"><figcaption><b>10. Trust on cards</b>Badges appear wherever buyers choose.</figcaption></figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="trust-h">
+    <h2 id="trust-h">Trust, without stars</h2>
+    <p class="lead">Badges are calculated by the system from what sellers actually do. Sellers cannot edit them, and the rules live in an admin-editable table.</p>
+    <ul class="tiers">
+      <li><span class="badge b0">New seller</span><p>Everyone starts here.</p></li>
+      <li><span class="badge b1">Responsive</span><p>3+ enquiries in 90 days, 80%+ answered within 48h.</p></li>
+      <li><span class="badge b2">Trusted</span><p>85%+ replied, 5+ buyer-confirmed sales, account 30+ days.</p></li>
+      <li><span class="badge b3">Top Hustler</span><p>90%+ replied, 15+ confirmed sales, 90+ days, verified.</p></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="built-h">
+    <h2 id="built-h">What is built</h2>
+    <div class="cards">
+      <div class="card"><h3>Discovery</h3><p>Browse, typo-tolerant search, filters, saved sellers, Featured Hustle rotation, low-data mode.</p></div>
+      <div class="card"><h3>Enquiries and messaging</h3><p>One conversation per buyer, seller and listing. Realtime, optimistic send with retry, private photos, rate limits.</p></div>
+      <div class="card"><h3>Seller tools</h3><p>Listings, onboarding wizard, enquiry dashboard, quick replies, buyer-confirmed completion.</p></div>
+      <div class="card"><h3>Safety by design</h3><p>Row Level Security on every table, no contact details in page HTML, WhatsApp handoff logged, mentors cannot read messages.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="try-h">
+    <h2 id="try-h">Try it yourself</h2>
+    <ol class="steps">
+      <li>Clone the repo, add your Supabase keys to <code>.env.local</code>, run <code>npm run build &amp;&amp; npm start</code>.</li>
+      <li>Open two phones (or two browsers). Sign in with the demo buyer on one and Thandi's Kitchen on the other.</li>
+      <li>Enquire, reply, complete and confirm. The full script is in the <a href="https://github.com/chitsurolazarus-alt/vossie-market-place#two-phone-test-about-5-minutes">README</a>.</li>
+    </ol>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Built by the Vossie team for the Eduvos Hack Jam 2026 · <a href="https://github.com/chitsurolazarus-alt/vossie-market-place">Source on GitHub</a> · Demo Day 2–6 November 2026</div>
+</footer>
+</body>
+</html>
