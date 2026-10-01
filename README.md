@@ -19,7 +19,11 @@ Checks: `npm run lint`, `npm run typecheck`, `npm run build`. Health check: `GET
 | `SUPABASE_SERVICE_ROLE_KEY` | **server only** |
 
 ## Deploy
-Vercel: import the repo and add the three env vars (service role key as a non-public variable).
+Live (team only, behind Vercel Authentication): **https://vossie-market-place.vercel.app**. Every push to `main` redeploys.
+Vercel project `vossie-market-place`, functions pinned to Dublin (`vercel.json`) next to the Supabase project (eu-west-1).
+Environment variables (Production and Preview): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (sensitive, server only),
+and for the team demo `DEMO_LOGIN_ENABLED=true` + `DEMO_PASSWORD`. **Only enable demo login while Deployment Protection is on**, and switch it off
+(or remove the variable) once email sign-in works (`docs/EMAIL_SETUP.md`). Supabase > Authentication > URL Configuration must list the Vercel URL.
 
 ## Features
 - **Phase 0:** PWA shell, brand tokens, responsive header / bottom nav / footer, health check.

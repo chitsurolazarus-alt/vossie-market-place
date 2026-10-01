@@ -48,3 +48,6 @@ supabase/.temp
 
 # ui-check screenshots
 /shots
+
+.vercel
+.env*

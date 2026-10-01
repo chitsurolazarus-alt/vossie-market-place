@@ -85,3 +85,8 @@ Phases 0-5 complete. Next: Phase 6 (accessibility, onboarding and polish; email 
 - Light/dark is `<html data-theme>` set before paint by `THEME_INIT_SCRIPT` (saved cookie `vossie_theme`, else the device). React never renders that attribute, so it is never overwritten.
 - Dark overrides live at the end of `globals.css` and target the Tailwind utilities that assume a light surface (`bg-white`, `text-navy`, `text-royal`, `border-navy/*`, pastel alert colours). `bg-navy`, `bg-royal` and `bg-sand` keep their brand colours; navy text on sand stays navy. New components should use these existing classes so dark mode works automatically; run `npm run test:theme` after UI changes.
 
+## Deployment
+- Vercel project `vossie-market-place` (team lazarus-71c1), connected to GitHub `main` (auto-deploy), functions in `dub1`, Deployment Protection = all (team only).
+- Env vars are set for Production and Preview via `vercel env add` (service role and demo password are sensitive). `.vercel/` and `.env*` are git-ignored.
+- The demo login is enabled on Vercel only because the site is protected; turn it off once SMTP works.
+
