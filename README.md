@@ -31,6 +31,24 @@ Vercel: import the repo and add the three env vars (service role key as a non-pu
   trust badges (no stars) with a public explainer, notification bell, WhatsApp handoff logging.
 - Planned: moderation and safety, barter polish, mentor view, Looking For board, payments (see CLAUDE.md).
 
+## MVP tour (360px phone screenshots)
+Captured from a real two-user run (`npm run test:flow`): a buyer enquires, the seller replies in realtime, completes the sale, and the buyer confirms.
+
+| 1. Enquire | 2. Buyer thread | 3. Seller bell | 4. Seller dashboard |
+|---|---|---|---|
+| ![Enquire composer](docs/screenshots/1-enquire.png) | ![Buyer thread](docs/screenshots/2-buyer-thread.png) | ![Seller bell](docs/screenshots/3-seller-bell.png) | ![Seller dashboard](docs/screenshots/4-seller-dashboard.png) |
+
+| 5. Safety tip | 6. Did it happen? | 7. Buyer confirms | 8. Inbox |
+|---|---|---|---|
+| ![Safety tip](docs/screenshots/5-safety-tip.png) | ![Did it happen](docs/screenshots/6-did-it-happen.png) | ![Buyer confirms](docs/screenshots/7-buyer-confirm.png) | ![Inbox](docs/screenshots/8-inbox.png) |
+
+| 9. Seller profile with trust badge | 10. Browse cards with badges |
+|---|---|
+| ![Seller profile](docs/screenshots/9-seller-profile-trust.png) | ![Browse](docs/screenshots/10-browse-cards.png) |
+
+GitHub can show the code and these screenshots but cannot run the app (it needs a server, Supabase and realtime).
+To get a live URL, import this repo into Vercel and add the three environment variables above.
+
 ## Scripts
 `npm run db:seed` (demo data, safe to rerun), `npm run test:rls`, `npm run test:messaging`, `npm run test:smoke`,
 `npm run test:ui` and `npm run test:flow` (the last three need a production server: `npm run build && npx next start -p 3111`),
