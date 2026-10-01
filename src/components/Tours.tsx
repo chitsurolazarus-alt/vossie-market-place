@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui";
 
@@ -16,8 +17,13 @@ const WELCOME: Slide[] = [
 export function WelcomeGate() {
   const [open, setOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const settled = useRef(false);
+  const pathname = usePathname();
 
+  // The root layout persists across client-side navigation (including the redirect after sign-in),
+  // so re-check on each route change until we know the user has seen the tour.
   useEffect(() => {
+    if (settled.current) return;
     let cancelled = false;
     (async () => {
       try {
@@ -25,11 +31,13 @@ export function WelcomeGate() {
         const { data } = await supabase.auth.getUser();
         if (!data.user) return;
         const { data: p } = await supabase.from("profiles").select("onboarding_seen").eq("id", data.user.id).maybeSingle();
-        if (!cancelled && p && !p.onboarding_seen) { setUserId(data.user.id); setOpen(true); }
+        if (cancelled || !p) return;
+        settled.current = true;
+        if (!p.onboarding_seen) { setUserId(data.user.id); setOpen(true); }
       } catch { /* offline or not configured: skip the tour */ }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [pathname]);
 
   if (!open || !userId) return null;
   const finish = async () => {

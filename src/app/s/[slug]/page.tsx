@@ -2,11 +2,15 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import EnquireButton from "@/components/messages/EnquireButton";
 import { FollowButton } from "@/components/SaveButton";
+import { ReplyTime, TrustBadge } from "@/components/trust";
 import { ButtonLink } from "@/components/ui";
 import { getUser } from "@/lib/auth";
 import { AVAILABILITY_LABEL, memberSince, priceLabel, publicImageUrl } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
+import { getExistingConversationId } from "@/lib/inbox-data";
+import { getSellerTrust, getTierLabels } from "@/lib/trust";
 import { isFollowing } from "@/lib/viewer";
 
 async function load(slug: string) {
@@ -27,8 +31,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function SellerPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function SellerPage({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ compose?: string }> }) {
   const { slug } = await params;
+  const { compose } = await searchParams;
   const { supabase, seller } = await load(slug);
   if (!seller) notFound();
 
@@ -39,7 +44,12 @@ export default async function SellerPage({ params }: { params: Promise<{ slug: s
     .select("id,title,kind,pricing_mode,price_zar,price_is_from,availability,listing_images(path,alt,position)")
     .eq("seller_id", seller.id).is("deleted_at", null).order("created_at", { ascending: false });
   const listings = data ?? [];
-  const following = isOwner ? false : await isFollowing(seller.id);
+  const [following, trust, tierLabels, existingConv] = await Promise.all([
+    isOwner ? Promise.resolve(false) : isFollowing(seller.id),
+    getSellerTrust(seller.id),
+    getTierLabels(),
+    user && !isOwner ? getExistingConversationId(user.id, seller.id, null) : Promise.resolve(null),
+  ]);
 
   const wantsWhatsapp = seller.contact_pref === "whatsapp" || seller.contact_pref === "both";
   const wantsInApp = seller.contact_pref === "in_app" || seller.contact_pref === "both";
@@ -67,9 +77,11 @@ export default async function SellerPage({ params }: { params: Promise<{ slug: s
               {seller.campuses?.name && <li className="rounded-full bg-white/15 px-3 py-1">{seller.campuses.name}</li>}
               <li className="rounded-full bg-white/15 px-3 py-1">Member since {memberSince(seller.created_at)}</li>
             </ul>
-            {/* Phase 4 fills these: trust score and reply-time */}
-            <div hidden data-slot="trust-score" />
-            <div hidden data-slot="reply-time" />
+            <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+              <TrustBadge tier={trust?.tier} label={trust ? tierLabels[trust.tier] : undefined} />
+              <Link href="/how-trust-works" className="inline-flex min-h-11 items-center text-sm font-semibold text-sand underline">How trust works</Link>
+            </div>
+            <ReplyTime band={trust?.reply_band} className="text-sm text-white/90" />
             {!isOwner && seller.status === "approved" && <div className="mt-4"><FollowButton sellerId={seller.id} name={seller.business_name} initialFollowing={following} authed={!!user} /></div>}
           </div>
         </div>
@@ -81,10 +93,9 @@ export default async function SellerPage({ params }: { params: Promise<{ slug: s
             <ButtonLink href="/sell/profile/edit" variant="sand">Edit profile</ButtonLink>
           ) : (
             <>
-              {wantsInApp && (
-                <button type="button" disabled className="inline-flex min-h-12 items-center justify-center rounded-lg bg-navy/40 px-5 font-semibold text-white" aria-describedby="msg-note">
-                  Message on Vossie
-                </button>
+              {wantsInApp && seller.status === "approved" && (
+                <EnquireButton authed={!!user} sellerId={seller.id} listingId={null} listingTitle={null} sellerName={seller.business_name}
+                  swapAllowed={false} myListings={[]} openInitially={compose === "1"} returnTo={`/s/${seller.slug}`} existingConversationId={existingConv} />
               )}
               {wantsWhatsapp && (
                 <a href={`/go/whatsapp/${seller.slug}`} rel="nofollow" className="inline-flex min-h-12 items-center justify-center rounded-lg bg-navy px-5 font-semibold text-white hover:bg-royal">
@@ -94,7 +105,6 @@ export default async function SellerPage({ params }: { params: Promise<{ slug: s
             </>
           )}
         </div>
-        {!isOwner && wantsInApp && <p id="msg-note" className="mt-2 text-sm text-muted">In-app messaging is coming soon. Until then, use the other contact option if available.</p>}
 
         {seller.bio && (
           <section className="mt-8" aria-labelledby="about-h">

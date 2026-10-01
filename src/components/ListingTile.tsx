@@ -4,6 +4,7 @@ import { priceLabel, publicImageUrl } from "@/lib/format";
 import type { Tile } from "@/lib/browse";
 import { SaveButton } from "./SaveButton";
 import TapImage from "./TapImage";
+import { ReplyTime, TrustBadge } from "./trust";
 
 type Props = {
   t: Tile; saved: boolean; authed: boolean; lowData: boolean;
@@ -34,6 +35,7 @@ export default function ListingTile({ t, saved, authed, lowData, index = 0, layo
             <h3 className="font-semibold leading-snug text-navy">{t.title}</h3>
             <p className="text-sm font-semibold text-ink">{price}{soldOut && " · Sold out"}</p>
             <p className="truncate text-sm text-muted">{t.business_name}{t.seller_verified && " ✓"}</p>
+            <div className="mt-1"><TrustBadge tier={t.seller_tier} label={t.seller_tier_label} size="sm" /></div>
           </div>
         </Link>
         <SaveButton listingId={t.id} title={t.title} initialSaved={saved} authed={authed} className="absolute right-2 top-2" />
@@ -56,6 +58,8 @@ export default function ListingTile({ t, saved, authed, lowData, index = 0, layo
           <p className="mt-1 truncate text-sm text-muted">
             {t.business_name}{t.seller_verified && <span title="Verified Incubation Hub member"> ✓<span className="sr-only"> Verified</span></span>}
           </p>
+          <div className="mt-1.5"><TrustBadge tier={t.seller_tier} label={t.seller_tier_label} size="sm" /></div>
+          <ReplyTime band={t.seller_reply_band} className="mt-1 line-clamp-1 text-xs text-muted" />
           {t.campus_name && <p className="truncate text-xs text-muted">{t.campus_name}</p>}
         </div>
       </Link>

@@ -26,8 +26,22 @@ Vercel: import the repo and add the three env vars (service role key as a non-pu
 - **Phase 1:** schema, RLS on every table, sign-up allow-list with POPIA consent, storage, seed data.
 - **Phase 2:** email-code sign-in, seller onboarding wizard, seller dashboard and public profile,
   listing create/edit/manage with client-side image compression, first-time tours, seller guidelines.
-- Planned: discovery, messaging, moderation, Looking For board, payments (see CLAUDE.md).
+- **Phase 3:** discovery: home, browse with filters and typo-tolerant search, listing pages, saved/follow, Featured Hustle rotation, low-data mode.
+- **Phase 4 (MVP):** buyer-seller enquiries and realtime messaging, seller enquiry dashboard, buyer-confirmed completion, reply-time bands,
+  trust badges (no stars) with a public explainer, notification bell, WhatsApp handoff logging.
+- Planned: moderation and safety, barter polish, mentor view, Looking For board, payments (see CLAUDE.md).
 
 ## Scripts
-`npm run db:seed` (demo data), `npm run test:rls`, `npm run test:smoke` (needs `npm start -p 3111`),
-`npm run db:audit` (needs DATABASE_URL). Demo logins: set `DEMO_LOGIN_ENABLED=true` locally only.
+`npm run db:seed` (demo data, safe to rerun), `npm run test:rls`, `npm run test:messaging`, `npm run test:smoke`,
+`npm run test:ui` and `npm run test:flow` (the last three need a production server: `npm run build && npx next start -p 3111`),
+`npm run test:discovery` and `npm run db:audit` (need DATABASE_URL). Demo logins: set `DEMO_LOGIN_ENABLED=true` locally only.
+
+## Two-phone test (about 5 minutes)
+Run the app (`npm run build && npm start`) or use the deployed URL, with `DEMO_LOGIN_ENABLED=true`.
+1. **Phone A (buyer):** open `/login`, tap "New student". Browse to *Thandi's Kitchen > Chicken kota with atchar*.
+2. Tap **Message on Vossie**, edit the text, **Send**. You land in the thread.
+3. **Phone B (seller):** `/login`, tap "Thandi's Kitchen". The bell shows a new enquiry; open **/sell/enquiries** (New tab) and open the chat.
+4. Reply from B: it appears on A instantly, and B's message shows "Seen" once A has it open. Try typing "pay a deposit first" on A for the safety tip.
+5. On B tap **Start**, then **Mark completed > Yes, it happened**. A sees "Did this go ahead?"; tap **Yes, it went ahead**.
+6. Open `/s/thandis-kitchen` on either phone: the **Top Hustler** badge and "Usually replies within an hour" show; `/how-trust-works` lists the rules.
+7. On A tap **Chat on WhatsApp**: B's dashboard counts it under "WhatsApp leads". Attach a photo from A's thread to check the private image.

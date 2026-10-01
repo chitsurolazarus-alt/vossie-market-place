@@ -83,3 +83,25 @@ export async function compressSquare(bmp: ImageBitmap, crop: Crop): Promise<Blob
     300 * 1024
   );
 }
+
+/** Chat photo: max 1280px on the longest side, WebP, under 400KB. EXIF/GPS is dropped by the canvas re-encode. */
+export async function compressMessageImage(file: File): Promise<Blob> {
+  assertImage(file);
+  const bmp = await decode(file);
+  const scale = Math.min(1, 1280 / Math.max(bmp.width, bmp.height));
+  const w0 = Math.round(bmp.width * scale), h0 = Math.round(bmp.height * scale);
+  const blob = await encodeUnder(
+    (size) => {
+      const k = Math.min(1, size / 1280);
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(w0 * k));
+      canvas.height = Math.max(1, Math.round(h0 * k));
+      canvas.getContext("2d")!.drawImage(bmp, 0, 0, canvas.width, canvas.height);
+      return canvas;
+    },
+    1280,
+    400 * 1024
+  );
+  bmp.close();
+  return blob;
+}

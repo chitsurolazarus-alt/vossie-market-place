@@ -1,5 +1,7 @@
 import { SellerTour } from "@/components/Tours";
 import { ButtonLink, PageShell } from "@/components/ui";
+import { ReplyTime, TrustBadge } from "@/components/trust";
+import { getSellerTrust, getTierLabels } from "@/lib/trust";
 import { getMySeller, requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
@@ -32,6 +34,11 @@ export default async function SellDashboard() {
   }
 
   const supabase = await createClient();
+  const [{ count: newEnq }, trust, tierLabels] = await Promise.all([
+    supabase.from("enquiries").select("id", { count: "exact", head: true }).eq("seller_id", seller.id).eq("status", "new"),
+    getSellerTrust(seller.id),
+    getTierLabels(),
+  ]);
   const [{ count: total }, { count: live }, { data: prof }] = await Promise.all([
     supabase.from("listings").select("id", { count: "exact", head: true }).eq("seller_id", seller.id).is("deleted_at", null),
     supabase.from("listings").select("id", { count: "exact", head: true }).eq("seller_id", seller.id).is("deleted_at", null).eq("availability", "available"),
@@ -47,6 +54,18 @@ export default async function SellDashboard() {
           <p className="font-display text-2xl font-bold">{st.label}</p>
           <p className="mt-1 text-white/90">{st.body}</p>
           {seller.verified && <p className="mt-3 inline-block rounded-full bg-sand px-3 py-1 text-sm font-bold text-navy">✓ Verified Incubation Hub member</p>}
+        </div>
+        <div className="rounded-xl bg-mist p-5">
+          <p className="text-sm text-muted">Enquiries</p>
+          <p className="font-display text-3xl font-bold text-navy">{newEnq ?? 0} <span className="text-base font-normal text-muted">new</span></p>
+          <div className="mt-4"><ButtonLink href="/sell/enquiries" variant="sand">Open enquiries</ButtonLink></div>
+        </div>
+        <div className="rounded-xl bg-mist p-5">
+          <p className="text-sm text-muted">Your trust badge</p>
+          <div className="mt-1"><TrustBadge tier={trust?.tier} label={trust ? tierLabels[trust.tier] : undefined} /></div>
+          <ReplyTime band={trust?.reply_band} className="mt-2 text-sm text-ink" />
+          <p className="mt-2 text-sm text-muted">{trust ? `${trust.confirmed_sales} confirmed ${trust.confirmed_sales === 1 ? "sale" : "sales"}${trust.response_rate !== null ? ` · ${Math.round(Number(trust.response_rate) * 100)}% replied within 48h` : ""}` : "Reply to enquiries to earn your badge."}</p>
+          <a href="/how-trust-works" className="mt-2 inline-flex min-h-11 items-center font-semibold text-royal underline">How trust works</a>
         </div>
         <div data-tour="listings" className="rounded-xl bg-mist p-5">
           <p className="text-sm text-muted">Listings</p>

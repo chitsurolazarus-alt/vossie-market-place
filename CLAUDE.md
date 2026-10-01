@@ -51,7 +51,7 @@ realistic South African seed data, no lorem ipsum.
   currently not approved, and lint/build work without it.
 
 ## Status
-Phases 0-2 complete. Next: Phase 3 (discovery).
+Phases 0-4 complete (v0.1-mvp). Next: Phase 5 (safety, accessibility, onboarding, POPIA).
 
 ## Phase 1-2 decisions
 - Sign-up allow-list in DB tables (`vossie.net`, `eduvos.com`, named test emails); roles by promotion only.
@@ -59,3 +59,13 @@ Phases 0-2 complete. Next: Phase 3 (discovery).
 - WhatsApp numbers live in `seller_private` (owner-only); `/go/whatsapp/[slug]` redirects signed-in users.
 - Client uploads images straight to Storage under `{user_id}/`; server actions validate paths and write rows.
 - Tailwind v4 tokens; `proxy.ts` (Next 16) only refreshes auth cookies; pages call `requireUser`.
+
+## Phase 3-4 decisions
+- Discovery: `browse_listings` is a `security_invoker` view (visibility rule lives there); search is `search_listings()` (FTS + trigram).
+- Messaging: writes go through server actions with the user's client (RLS + guard triggers), never the service role. Send is idempotent on a
+  client-generated message id. Realtime on `messages`, `notifications`, `conversations`, `enquiries`; UI uses the browser client for live state.
+- Trust: tier rules in `trust_tiers` (editable by admin), scores in `seller_trust` (definer-function writes only). Only buyer-confirmed sales count
+  (auto-confirm after 7 days). WhatsApp leads are logged as `whatsapp_handoff` events and excluded from response-rate maths.
+- Email skipped for now (`email_queue` has no sender); web push is a flag + table only. Notifications are in-app.
+- Tests: `test:messaging` (rules), `test:flow` and `test:ui` (real browser, need `npx next start -p 3111`). Seed is rerunnable.
+- Gotchas: never put an inline `onClose` in a Modal effect dependency list; low-data mode still prefetches links (Phase 5 polish).

@@ -9,6 +9,19 @@ const CHROME = process.env.CHROME_PATH ?? "C:/Program Files/Google/Chrome/Applic
 const OUT = process.env.SHOTS_DIR ?? "shots";
 fs.mkdirSync(OUT, { recursive: true });
 
+// Reset the demo student so the run is repeatable (tour shown again, nothing saved/followed).
+import { createClient } from "@supabase/supabase-js";
+{
+  const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
+  const { data: list } = await db.auth.admin.listUsers({ perPage: 1000 });
+  const u = list?.users.find((x) => x.email === "20250109@vossie.net");
+  if (u) {
+    await db.from("saved_listings").delete().eq("user_id", u.id);
+    await db.from("follows").delete().eq("user_id", u.id);
+    await db.from("profiles").update({ onboarding_seen: false, low_data_mode: false }).eq("id", u.id);
+  }
+}
+
 const browser = await puppeteer.launch({ executablePath: CHROME, headless: true, args: ["--no-sandbox"] });
 let pass = 0, fail = 0;
 const check = (n, ok, x = "") => { if (ok) pass++; else fail++; console.log(`${ok ? "PASS" : "FAIL"}  ${n}${ok ? "" : "  " + x}`); };
@@ -39,6 +52,8 @@ async function audit(page, name) {
       const b = el.getBoundingClientRect(); const cs = getComputedStyle(el);
       if (b.width === 0 || b.height === 0 || cs.visibility === "hidden" || el.className?.toString().includes("sr-only")) return false;
       if (el.type === "checkbox" || el.type === "radio") return false; // wrapped by 44px labels
+      // WCAG 2.5.8 exempts links that sit inline inside a sentence
+      if (el.tagName === "A" && cs.display === "inline" && [...el.parentElement.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim().length > 3)) return false;
       return b.height < 43.5 || b.width < 43.5;
     }).slice(0, 6).map((el) => `${el.tagName.toLowerCase()} "${(el.innerText || el.getAttribute("aria-label") || "").trim().slice(0, 24)}" ${Math.round(el.getBoundingClientRect().width)}x${Math.round(el.getBoundingClientRect().height)}`);
     const noAlt = [...document.querySelectorAll("img:not([alt])")].length;
@@ -49,12 +64,13 @@ async function audit(page, name) {
   check(`${name}: every image has alt`, r.noAlt === 0);
   check(`${name}: no console errors`, page.errors.length === 0, page.errors.slice(0, 2).join(" || ").slice(0, 200));
 }
+const idle = (page) => page.waitForNetworkIdle({ timeout: 8000 }).catch(() => console.log('  note: network did not go idle within 8s'));
 const shot = (page, name, full = true) => page.screenshot({ path: `${OUT}/${name}.png`, fullPage: full });
 const go = async (page, path) => { await page.goto(BASE + path, { waitUntil: "networkidle0", timeout: 45000 }); };
 
 // ---------------- public pages
 let page = await newPage();
-const pages = [["home", "/"], ["browse", "/browse"], ["browse-search", "/browse?q=braids"], ["browse-empty", "/browse?q=zzqxv"], ["seller", "/s/thandis-kitchen"], ["how-featured", "/how-featured-works"], ["settings", "/settings"], ["login", "/login"]];
+const pages = [["home", "/"], ["browse", "/browse"], ["browse-search", "/browse?q=braids"], ["browse-empty", "/browse?q=zzqxv"], ["seller", "/s/thandis-kitchen"], ["how-featured", "/how-featured-works"], ["how-trust", "/how-trust-works"], ["settings", "/settings"], ["login", "/login"]];
 for (const [name, path] of pages) {
   page.errors.length = 0;
   await go(page, path);
@@ -86,7 +102,7 @@ await go(page, "/browse");
 const before = await page.$$eval("main li a[href^='/l/']", (a) => a.length);
 await page.$$eval("a", (as) => as.find((a) => a.textContent.trim() === "Load more")?.click());
 await page.waitForFunction(() => location.search.includes("n=2"), { timeout: 15000 });
-await page.waitForNetworkIdle();
+await idle(page);
 const after = await page.$$eval("main li a[href^='/l/']", (a) => a.length);
 check(`Load more adds results (${before} -> ${after})`, after > before);
 
@@ -100,9 +116,9 @@ check("signed-out heart sends you to sign in with a return path", decodeURICompo
 await page.$$eval("button", (bs) => bs.find((b) => b.textContent.includes("New student"))?.click());
 await page.waitForFunction(() => location.pathname === "/browse", { timeout: 20000 });
 check("after sign-in you return to the page you came from", page.url().includes("/browse?q=braids"));
-await page.waitForNetworkIdle();
+await idle(page);
 // welcome tour appears for a new user; skip it
-const tour = await page.$("[role=dialog][aria-label='Welcome tour']");
+const tour = await page.waitForSelector("[role=dialog][aria-label='Welcome tour']", { timeout: 8000 }).catch(() => null);
 check("first-time welcome tour is shown", !!tour);
 if (tour) { await shot(page, "welcome-tour", false); await page.$$eval("[role=dialog] button", (bs) => bs.find((b) => b.textContent.trim() === "Skip")?.click()); }
 const heart = "button[aria-label^='Save ']";
@@ -125,14 +141,14 @@ check("followed seller appears under Saved > Sellers", (await page.content()).in
 await go(page, "/browse");
 await page.$eval("header button[aria-pressed]", (b) => b.click());
 await page.waitForFunction(() => document.documentElement.dataset.lowdata === "true", { timeout: 10000 });
-await page.waitForNetworkIdle();
+await idle(page);
 await shot(page, "browse-lowdata");
 check("low-data toggle switches the whole page", (await page.$$eval("main li img", (i) => i.length)) >= 1 && (await page.content()).includes("Tap to load"));
 check("low-data mode has no animation", await page.evaluate(() => getComputedStyle(document.querySelector("header button[aria-pressed]")).transitionDuration === "0s"));
 await page.$$eval("button", (bs) => bs.find((b) => b.textContent.includes("Tap to load"))?.click());
-await page.waitForNetworkIdle();
+await idle(page);
 check("tap-to-load loads the photo", true);
-audit && await audit(page, "browse-lowdata");
+await audit(page, "browse-lowdata");
 // reset
 await page.$eval("header button[aria-pressed]", (b) => b.click());
 await page.waitForFunction(() => document.documentElement.dataset.lowdata === "false", { timeout: 10000 });

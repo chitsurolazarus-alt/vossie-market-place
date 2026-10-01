@@ -155,7 +155,10 @@ for (const s of SELLERS) {
   await db.from("seller_pickup_points").delete().eq("seller_id", seller.id);
   for (const p of mine.slice(0, 2)) must(await db.from("seller_pickup_points").insert({ seller_id: seller.id, pickup_point_id: p.id }), "pickup");
 
-  // replace demo listings (images cascade)
+  s.sellerId = seller.id; s.uid = uid; s.listingIds = [];
+  // replace demo listings (images cascade); conversations/enquiries/messages go first so the rerun is clean
+  must(await db.from("conversations").delete().eq("seller_id", seller.id), "wipe conversations");
+  await db.from("quick_replies").delete().eq("seller_id", seller.id);
   await db.from("listings").delete().eq("seller_id", seller.id);
   for (const [kind, title, price, mode, swap, desc, tagStr] of s.listings) {
     const listing = must(await db.from("listings").insert({
@@ -165,6 +168,7 @@ for (const s of SELLERS) {
       pickup_point_id: kind === "product" ? mine[0].id : null, delivered_on_campus: kind === "service",
     }).select("id").single(), `listing ${title}`);
 
+    s.listingIds.push(listing.id);
     const path = `${uid}/${listing.id}/1.webp`;
     must(await db.storage.from("listing-images").upload(path, await tile(title, CATEGORY_COLOURS[s.cat], s.biz), { contentType: "image/webp", upsert: true }), "image");
     must(await db.from("listing_images").insert({ listing_id: listing.id, path, alt: `${title} by ${s.biz}`, position: 0 }), "listing image");
@@ -177,4 +181,119 @@ for (const s of SELLERS) {
   }
   console.log(`seeded ${s.biz} (${s.listings.length} listings)`);
 }
+
+// ---------------------------------------------------------------------------
+// Phase 4: demo buyers, backdated accounts and enquiries so every trust tier has a seller.
+// Target tiers: Top Hustler = Thandi; Trusted = Zanele, Amahle; Responsive = Kagiso, Naledi, Sipho;
+// New seller = Lwazi (WhatsApp-only leads), Ethan.
+// ---------------------------------------------------------------------------
+const BUYERS = [
+  ["20250201@vossie.net", "Lerato Mahlangu"], ["20250202@vossie.net", "Siyabonga Dube"], ["20250203@vossie.net", "Palesa Nkosi"],
+  ["20250204@vossie.net", "Thabo Mthembu"], ["20250205@vossie.net", "Zinhle Mkhize"], ["20250206@vossie.net", "Dineo Radebe"],
+];
+const buyerIds = [];
+for (const [email, name] of BUYERS) {
+  const id = await ensureUser(email, name);
+  must(await db.from("profiles").update({ display_name: name, onboarding_seen: true }).eq("id", id), "buyer profile");
+  buyerIds.push(id);
+}
+const ayanda = STAFF.find((x) => x.email === "20250109@vossie.net").id;
+const by = (biz) => SELLERS.find((x) => x.biz === biz);
+const ACCOUNT_AGE_DAYS = { "Thandi's Kitchen": 130, "Lwazi Cuts": 100, "Naledi Notes": 20, "Pixel & Pen Studio": 25,
+  "Zanele's Braids": 60, "CodeCraft Fixers": 5, "Sipho Sneaker Spot": 14, "Amahle Events & Decor": 45 };
+for (const sl of SELLERS) {
+  must(await db.from("seller_profiles").update({ created_at: new Date(Date.now() - ACCOUNT_AGE_DAYS[sl.biz] * 864e5).toISOString() }).eq("id", sl.sellerId), "backdate");
+}
+
+const ago = (days) => new Date(Date.now() - days * 864e5).toISOString();
+const plus = (iso, minutes) => new Date(new Date(iso).getTime() + minutes * 6e4).toISOString();
+const REPLIES = ["Hi! Yes, it's still available. When would suit you?", "Sure, I can do collection at the pickup point after your last class."];
+let seq = 0;
+
+/** Creates a conversation + enquiry (via the real triggers) and a short, backdated thread. */
+async function enquire(sl, buyer, li, o) {
+  const created = plus(ago(o.days), -(seq++ % 7) * 17);
+  const conv = must(await db.from("conversations").insert({
+    buyer_id: buyer, seller_id: sl.sellerId, listing_id: li === null ? null : sl.listingIds[li], created_at: created, origin: o.origin ?? "in_app",
+  }).select("id").single(), "conversation");
+  const title = li === null ? "your hustle" : sl.listings[li][1];
+  if (o.origin !== "whatsapp") {
+    must(await db.from("messages").insert({ conversation_id: conv.id, sender_id: buyer, body: `Hi! Is ${title} still available?`, created_at: created }), "msg");
+    if (o.replyMin != null) {
+      const t1 = plus(created, o.replyMin);
+      must(await db.from("messages").insert({ conversation_id: conv.id, sender_id: sl.uid, body: REPLIES[0], created_at: t1 }), "reply");
+      if (o.chat) {
+        const t2 = plus(t1, 8);
+        must(await db.from("messages").insert({ conversation_id: conv.id, sender_id: buyer, body: "Perfect, tomorrow at 1pm?", created_at: t2 }), "msg2");
+        must(await db.from("messages").insert({ conversation_id: conv.id, sender_id: sl.uid, body: REPLIES[1], created_at: plus(t2, 5) }), "reply2");
+      }
+    }
+  }
+  const upd = {};
+  if (o.status === "in_progress" || o.status === "declined") upd.status = o.status;
+  if (o.status === "completed") {
+    const done = plus(created, 2 * 1440);
+    Object.assign(upd, { status: "completed", sale_happened: true, completed_at: done, completion_requested_at: done, buyer_confirmed_at: plus(done, 1440) });
+  }
+  if (o.status === "completed_pending") {
+    const done = ago(1);
+    Object.assign(upd, { status: "completed", sale_happened: true, completed_at: done, completion_requested_at: done });
+  }
+  if (Object.keys(upd).length) {
+    const { data: enq } = await db.from("enquiries").select("id").eq("conversation_id", conv.id).single();
+    must(await db.from("enquiries").update(upd).eq("id", enq.id), "enquiry state");
+  }
+  return conv.id;
+}
+
+// All distinct (buyer, listing) pairs for a seller: 6 buyers x 4 listings.
+const pairs = []; for (let l = 0; l < 4; l++) for (let b = 0; b < 6; b++) pairs.push([b, l]);
+const spread = (n, from, to) => Array.from({ length: n }, (_, i) => Math.round(from + ((to - from) * i) / Math.max(1, n - 1)));
+
+async function history(biz, plan) {
+  const sl = by(biz); let k = 0;
+  for (const [count, status, replyMin, from, to] of plan) {
+    const days = spread(count, from, to);
+    for (let i = 0; i < count; i++) {
+      const [b, l] = pairs[k++];
+      await enquire(sl, buyerIds[b], l, { days: days[i], status, replyMin: replyMin == null ? null : replyMin + (i % 3) * 5, chat: i % 2 === 0 });
+    }
+  }
+}
+// [count, status, first-reply minutes (null = never replied), oldest days ago, newest days ago]
+await history("Thandi's Kitchen", [[17, "completed", 15, 80, 4], [1, "declined", 30, 12, 12], [1, "new", null, 6, 6]]);
+await history("Zanele's Braids", [[6, "completed", 150, 50, 6], [1, "declined", 180, 20, 20], [1, "new", null, 9, 9]]);
+await history("Amahle Events & Decor", [[5, "completed", 620, 40, 5], [1, "in_progress", 700, 8, 8], [1, "new", null, 11, 11]]);
+await history("Pixel & Pen Studio", [[2, "completed", 45, 20, 12], [1, "in_progress", 60, 6, 6], [1, "declined", 50, 3, 3]]);
+await history("Naledi Notes", [[1, "completed", 90, 15, 15], [1, "in_progress", 100, 7, 7], [1, "declined", 80, 4, 4], [1, "new", null, 9, 9]]);
+await history("Sipho Sneaker Spot", [[1, "completed", 120, 10, 10], [2, "in_progress", 140, 4, 2]]);
+await history("CodeCraft Fixers", [[1, "in_progress", 240, 3, 3]]);
+
+// Lwazi is WhatsApp-only: leads are logged as handoffs and never count against his response rate.
+{
+  const sl = by("Lwazi Cuts");
+  for (let i = 0; i < 3; i++) {
+    const cid = await enquire(sl, buyerIds[i], i, { days: 4 + i * 6, origin: "whatsapp" });
+    const { data: enq } = await db.from("enquiries").select("id").eq("conversation_id", cid).single();
+    must(await db.from("enquiry_events").insert({ enquiry_id: enq.id, type: "whatsapp_handoff", actor_id: buyerIds[i], data: { source: "listing" }, created_at: ago(4 + i * 6) }), "wa event");
+  }
+}
+
+// Quick replies for the demo seller.
+for (const [i, body] of ["Hi! Yes, it's available. When would you like to collect?", "Thanks for your enquiry! Pre-order by 10am for same-day pickup.",
+  "I can meet at the library entrance after your last class."].entries()) {
+  must(await db.from("quick_replies").insert({ seller_id: by("Thandi's Kitchen").sellerId, body, position: i }), "quick reply");
+}
+
+// Clear notifications produced by backdated seeding, then create the live demo state (fresh notifications).
+must(await db.from("notifications").delete().neq("id", "00000000-0000-0000-0000-000000000000"), "wipe notifications");
+await db.from("email_queue").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+const thandi = by("Thandi's Kitchen");
+await enquire(thandi, buyerIds[1], 3, { days: 0.01, status: "new", replyMin: null });   // fresh, unread enquiry
+await enquire(thandi, buyerIds[2], 3, { days: 0.003, status: "new", replyMin: null });  // fresh, unread enquiry
+await enquire(thandi, ayanda, 2, { days: 5, status: "completed_pending", replyMin: 25, chat: true }); // Ayanda: confirm prompt waiting
+await enquire(by("Naledi Notes"), ayanda, 0, { days: 1, status: "in_progress", replyMin: 40, chat: true }); // Ayanda: in progress
+await enquire(by("Pixel & Pen Studio"), buyerIds[3], 1, { days: 0.005, status: "new", replyMin: null });
+
+console.log("seeded Phase 4 demo data (buyers, enquiries, trust tiers)");
 console.log(`\nDemo password for all demo users: ${DEMO_PASSWORD}`);

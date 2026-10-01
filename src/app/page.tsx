@@ -73,7 +73,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
             <h2 id="featured-h" className="font-display text-2xl font-bold text-navy">Featured Hustles</h2>
             <Link href="/how-featured-works" className="min-h-11 py-2 text-sm font-semibold text-royal underline">How we pick</Link>
           </div>
-          <ul className="mt-3 flex snap-x gap-3 overflow-x-auto pb-2 [scrollbar-width:none] sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-4">
+          <ul className="relative mt-3 flex snap-x gap-3 overflow-x-auto pb-2 [scrollbar-width:none] sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-4">
             {featured.map((f, i) => {
               const s = f.seller_profiles;
               return (
@@ -105,7 +105,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
         {fresh.length === 0 ? (
           <p className="mt-3 rounded-xl bg-mist p-6 text-center text-muted">Nothing here yet. Be the first to list something on this campus.</p>
         ) : (
-          <ul className={lowData ? "mt-3 flex flex-col gap-2" : "mt-3 flex snap-x gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&>li]:w-44 [&>li]:shrink-0 [&>li]:snap-start sm:[&>li]:w-52"}>
+          <ul className={lowData ? "mt-3 flex flex-col gap-2" : "relative mt-3 flex snap-x gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&>li]:w-44 [&>li]:shrink-0 [&>li]:snap-start sm:[&>li]:w-52"}>
             {fresh.map((t, i) => (
               <ListingTile key={t.id} t={t} index={i} saved={saved.has(t.id)} authed={!!user} lowData={lowData} />
             ))}

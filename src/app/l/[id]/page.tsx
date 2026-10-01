@@ -10,7 +10,11 @@ import ShareButton from "@/components/ShareButton";
 import { getUser } from "@/lib/auth";
 import { sellerTiles, similarTiles } from "@/lib/browse";
 import { priceLabel, publicImageUrl } from "@/lib/format";
+import EnquireButton from "@/components/messages/EnquireButton";
+import { ReplyTime, TrustBadge } from "@/components/trust";
+import { getExistingConversationId, getMyListingsForSwap } from "@/lib/inbox-data";
 import { getListing } from "@/lib/listing-data";
+import { getSellerTrust, getTierLabels } from "@/lib/trust";
 import { recordView } from "@/lib/views";
 import { getLowData, getSavedIds, isFollowing } from "@/lib/viewer";
 
@@ -30,8 +34,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   };
 }
 
-export default async function ListingPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function ListingPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ compose?: string }> }) {
   const { id } = await params;
+  const { compose } = await searchParams;
   if (!uuid.safeParse(id).success) notFound();
 
   const l = await getListing(id);
@@ -44,11 +49,15 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
   if (!isPublic && !isOwner) notFound();
   if (isPublic) await recordView(l.id, seller.user_id);
 
-  const [lowData, more, similar, following] = await Promise.all([
+  const [lowData, more, similar, following, trust, tierLabels, existingConv, myListings] = await Promise.all([
     getLowData(),
     sellerTiles(seller.id, l.id, 4),
     similarTiles(l.category_id, seller.id, l.id, 4),
     isFollowing(seller.id),
+    getSellerTrust(seller.id),
+    getTierLabels(),
+    user && !isOwner ? getExistingConversationId(user.id, seller.id, l.id) : Promise.resolve(null),
+    user && !isOwner && l.pricing_mode !== "cash" ? getMyListingsForSwap(user.id, null) : Promise.resolve([]),
   ]);
   const saved = await getSavedIds([l.id, ...more.map((t) => t.id), ...similar.map((t) => t.id)]);
 
@@ -61,9 +70,9 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
   return (
     <article className="mx-auto max-w-5xl px-4 py-6 sm:py-8">
       {!isPublic && <p className="mb-4 rounded-lg bg-sand p-3 font-medium text-navy">Preview only: this listing isn&apos;t public yet.</p>}
-      <nav aria-label="Breadcrumb" className="mb-4 text-sm text-muted">
-        <Link href="/browse" className="underline">Browse</Link>
-        {l.categories && <> / <Link href={`/browse?category=${l.categories.slug}`} className="underline">{l.categories.name}</Link></>}
+      <nav aria-label="Breadcrumb" className="mb-2 flex flex-wrap items-center gap-x-1 text-sm text-muted">
+        <Link href="/browse" className="inline-flex min-h-11 min-w-11 items-center justify-center underline">Browse</Link>
+        {l.categories && <> / <Link href={`/browse?category=${l.categories.slug}`} className="inline-flex min-h-11 min-w-11 items-center justify-center underline">{l.categories.name}</Link></>}
       </nav>
 
       <div className="grid gap-6 md:grid-cols-2">
@@ -91,13 +100,15 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
           {l.description && <p className="mt-4 whitespace-pre-line text-ink">{l.description}</p>}
           {tags.length > 0 && (
             <ul className="mt-4 flex flex-wrap gap-2" aria-label="Tags">
-              {tags.map((t) => <li key={t}><Link href={`/browse?q=${encodeURIComponent(t)}`} className="inline-flex min-h-9 items-center rounded-full bg-mist px-3 text-sm text-navy">#{t}</Link></li>)}
+              {tags.map((t) => <li key={t}><Link href={`/browse?q=${encodeURIComponent(t)}`} className="inline-flex min-h-11 items-center rounded-full bg-mist px-3 text-sm text-navy">#{t}</Link></li>)}
             </ul>
           )}
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             {!isOwner && wantsInApp && (
-              <button type="button" disabled aria-describedby="enq-note" className="inline-flex min-h-12 items-center justify-center rounded-lg bg-navy/40 px-5 font-semibold text-white">Enquire</button>
+              <EnquireButton authed={!!user} sellerId={seller.id} listingId={l.id} listingTitle={l.title} sellerName={seller.business_name}
+                swapAllowed={l.pricing_mode !== "cash"} myListings={myListings} openInitially={compose === "1"}
+                returnTo={`/l/${l.id}`} existingConversationId={existingConv} />
             )}
             {!isOwner && wantsWhatsapp && (
               <a href={`/go/whatsapp/${seller.slug}?listing=${l.id}`} rel="nofollow" className="inline-flex min-h-12 items-center justify-center rounded-lg bg-navy px-5 font-semibold text-white hover:bg-royal">Chat on WhatsApp</a>
@@ -105,7 +116,6 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
             {isOwner && <Link href={`/sell/listings/${l.id}/edit`} className="inline-flex min-h-12 items-center justify-center rounded-lg bg-sand px-5 font-semibold text-navy">Edit listing</Link>}
             <ShareButton title={l.title} text={`${l.title} · ${priceLabel(l)} on Vossie Market Place`} />
           </div>
-          {!isOwner && wantsInApp && <p id="enq-note" className="mt-2 text-sm text-muted">In-app enquiries are coming soon.</p>}
 
           <div className="mt-6 rounded-2xl bg-navy p-4 text-white">
             <div className="flex items-center gap-3">
@@ -113,8 +123,10 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
                 ? <Image src={seller.photo_url} alt="" width={56} height={56} quality={lowData ? 35 : 75} className="h-14 w-14 rounded-xl object-cover" />
                 : <div aria-hidden="true" className="flex h-14 w-14 items-center justify-center rounded-xl bg-sand font-display text-2xl font-bold text-navy">{seller.business_name.slice(0, 1)}</div>}
               <div className="min-w-0">
-                <Link href={`/s/${seller.slug}`} className="block truncate font-display text-lg font-bold underline-offset-2 hover:underline">{seller.business_name}</Link>
+                <Link href={`/s/${seller.slug}`} className="flex min-h-11 items-center truncate font-display text-lg font-bold underline-offset-2 hover:underline">{seller.business_name}</Link>
                 {seller.verified && <p className="text-sm font-semibold text-sand">✓ Verified Incubation Hub member</p>}
+                <div className="mt-1"><TrustBadge tier={trust?.tier} label={trust ? tierLabels[trust.tier] : undefined} size="sm" /></div>
+                <ReplyTime band={trust?.reply_band} className="mt-1 text-sm text-white/90" />
                 {seller.tagline && <p className="truncate text-sm text-white/85">{seller.tagline}</p>}
               </div>
             </div>

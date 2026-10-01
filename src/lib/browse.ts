@@ -10,11 +10,11 @@ export type Tile = {
   swap_for: string | null; availability: "available" | "sold_out" | "paused";
   business_name: string; seller_slug: string; seller_verified: boolean;
   category_name: string | null; campus_name: string | null; cover_path: string | null; cover_alt: string | null;
-  created_at: string;
+  created_at: string; seller_tier: string | null; seller_reply_band: string | null; seller_tier_label: string | null;
 };
 
 const TILE_COLUMNS =
-  "id,seller_id,title,kind,pricing_mode,price_zar,price_is_from,swap_for,availability,business_name,seller_slug,seller_verified,category_name,campus_name,cover_path,cover_alt,created_at";
+  "id,seller_id,title,kind,pricing_mode,price_zar,price_is_from,swap_for,availability,business_name,seller_slug,seller_verified,category_name,campus_name,cover_path,cover_alt,created_at,seller_tier,seller_reply_band,seller_tier_label";
 
 export const getReference = cache(async () => {
   const supabase = await createClient();
