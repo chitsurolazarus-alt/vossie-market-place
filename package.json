@@ -12,6 +12,7 @@
     "test:rls": "node --env-file=.env.local scripts/rls-test.mjs",
     "db:audit": "node scripts/db-audit.mjs",
     "test:smoke": "node --env-file=.env.local scripts/smoke.mjs",
+    "test:theme": "node --env-file=.env.local scripts/theme-check.mjs",
     "test:phase5": "node --env-file=.env.local scripts/phase5-flow.mjs",
     "test:moderation": "node --env-file=.env.local scripts/moderation-test.mjs",
     "test:messaging": "node --env-file=.env.local scripts/messaging-test.mjs",

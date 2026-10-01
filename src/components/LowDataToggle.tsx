@@ -31,11 +31,11 @@ export default function LowDataToggle({ initial, variant = "header" }: { initial
 
   return (
     <button type="button" onClick={click} aria-pressed={on} disabled={pending} title="Low-data mode: smaller photos, no animations"
-      className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-sm font-semibold ${on ? "border-navy bg-navy text-white" : "border-navy/30 text-navy hover:bg-mist"}`}>
+      className={`inline-flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-full border px-3 text-sm font-semibold ${on ? "border-navy bg-navy text-white" : "border-navy/30 text-navy hover:bg-mist"}`}>
       <span aria-hidden="true">{on ? "📶" : "📡"}</span>
       <span className="hidden sm:inline">Data saver</span>
       <span className="sr-only sm:hidden">Data saver</span>
-      <span className="text-xs">{on ? "On" : "Off"}</span>
+      <span className="hidden text-xs sm:inline">{on ? "On" : "Off"}</span><span className="sr-only sm:hidden">{on ? "On" : "Off"}</span>
     </button>
   );
 }

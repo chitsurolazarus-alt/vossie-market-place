@@ -3,6 +3,7 @@ import Logo from "./Logo";
 import LowDataToggle from "./LowDataToggle";
 import MessagesBadge from "./MessagesBadge";
 import NotificationBell from "./NotificationBell";
+import { ThemeIconButton } from "./ThemeToggle";
 import { getUnreadCounts } from "@/lib/inbox-data";
 import { getLowData } from "@/lib/viewer";
 
@@ -21,7 +22,7 @@ export default async function Header() {
     <header className="sticky top-0 z-40 border-b border-navy/10 bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-2">
         <Logo />
-        <div className="flex items-center gap-1">
+        <div className="flex shrink-0 items-center gap-0.5 sm:gap-1">
           <nav aria-label="Main" className="hidden gap-1 md:flex">
             {NAV.map((n) => (
               <Link key={n.href} href={n.href} className="inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 font-medium text-navy hover:bg-mist">
@@ -31,6 +32,7 @@ export default async function Header() {
             ))}
           </nav>
           {unread.userId && <NotificationBell userId={unread.userId} initialUnread={unread.notifications} />}
+          <ThemeIconButton />
           <LowDataToggle initial={lowData} />
         </div>
       </div>

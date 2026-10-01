@@ -51,3 +51,79 @@ html[data-lowdata="true"] *::after {
   transition: none !important;
   scroll-behavior: auto !important;
 }
+
+/* ---------------------------------------------------------------------------------------------
+   Dark theme. Selected with <html data-theme="dark"> (set from the saved choice, or from the device
+   setting by a tiny script before first paint). Brand backgrounds (bg-navy, bg-royal, bg-sand) are kept;
+   what changes is the page surface and the text/border colours that assume a light surface.
+   Contrast (WCAG AA) on the dark surface #121c31: text #e8eef9 14.6:1, muted #a8b4cc 7.6:1,
+   headings #dce7ff 13.4:1, links #8db0ff 7.4:1. Sand stays background-only.
+   --------------------------------------------------------------------------------------------- */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #0b1322;
+  --foreground: #e8eef9;
+  --color-mist: #1a2742;
+  --color-ink: #e8eef9;
+  --color-muted: #a8b4cc;
+}
+:root[data-theme="dark"] :focus-visible { outline-color: #8db0ff; }
+
+/* surfaces */
+:root[data-theme="dark"] .bg-white { background-color: #121c31; }
+:root[data-theme="dark"] .bg-white\/95,
+:root[data-theme="dark"] .bg-white\/90 { background-color: rgb(18 28 49 / 0.92); }
+:root[data-theme="dark"] .bg-white\/60 { background-color: rgb(18 28 49 / 0.6); }
+
+/* text that was navy/royal on a light surface */
+:root[data-theme="dark"] .text-navy,
+:root[data-theme="dark"] .hover\:text-navy:hover { color: #dce7ff; }
+:root[data-theme="dark"] .text-royal { color: #8db0ff; }
+/* ...but navy text on a sand background stays navy */
+:root[data-theme="dark"] .bg-sand.text-navy,
+:root[data-theme="dark"] .bg-sand .text-navy,
+:root[data-theme="dark"] .bg-sand .text-royal { color: #16305e; }
+
+/* borders, dividers, tints */
+:root[data-theme="dark"] .border-navy { border-color: #8ea6d9; }
+:root[data-theme="dark"] .border-navy\/10 { border-color: rgb(255 255 255 / 0.12); }
+:root[data-theme="dark"] .border-navy\/15 { border-color: rgb(255 255 255 / 0.15); }
+:root[data-theme="dark"] .border-navy\/20,
+:root[data-theme="dark"] .border-navy\/25,
+:root[data-theme="dark"] .border-navy\/30 { border-color: rgb(255 255 255 / 0.28); }
+:root[data-theme="dark"] .divide-navy\/10 > :not(:last-child) { border-color: rgb(255 255 255 / 0.12); }
+:root[data-theme="dark"] .ring-navy\/10 { --tw-ring-color: rgb(255 255 255 / 0.15); }
+:root[data-theme="dark"] .bg-navy\/10,
+:root[data-theme="dark"] .hover\:bg-navy\/10:hover { background-color: rgb(255 255 255 / 0.09); }
+:root[data-theme="dark"] .bg-navy\/15,
+:root[data-theme="dark"] .bg-navy\/20,
+:root[data-theme="dark"] .bg-navy\/30 { background-color: rgb(255 255 255 / 0.22); }
+
+/* alerts and status colours: dark tinted surfaces with light text */
+:root[data-theme="dark"] .bg-red-50,
+:root[data-theme="dark"] .hover\:bg-red-50:hover { background-color: #3a1519; }
+:root[data-theme="dark"] .bg-red-100 { background-color: #4a1b20; }
+:root[data-theme="dark"] .bg-blue-50 { background-color: #14284d; }
+:root[data-theme="dark"] .bg-amber-50 { background-color: #3a2a0c; }
+:root[data-theme="dark"] .bg-emerald-50 { background-color: #0e2f22; }
+:root[data-theme="dark"] .bg-emerald-100 { background-color: #134030; }
+:root[data-theme="dark"] .text-red-800,
+:root[data-theme="dark"] .text-red-900,
+:root[data-theme="dark"] .text-red-950 { color: #ffb4b4; }
+:root[data-theme="dark"] .text-amber-900,
+:root[data-theme="dark"] .text-amber-950 { color: #ffe0a3; }
+:root[data-theme="dark"] .text-emerald-800,
+:root[data-theme="dark"] .text-emerald-900,
+:root[data-theme="dark"] .text-emerald-950 { color: #8fe3b8; }
+:root[data-theme="dark"] .border-red-800 { border-color: #f87171; }
+:root[data-theme="dark"] .border-red-800\/40,
+:root[data-theme="dark"] .border-red-800\/50 { border-color: rgb(248 113 113 / 0.55); }
+:root[data-theme="dark"] .border-amber-700 { border-color: #f5b546; }
+
+/* the Eduvos logo is dark artwork: give it a light plate on the dark header */
+:root[data-theme="dark"] header img[alt="Eduvos"] { background: #fff; border-radius: 0.375rem; padding: 0.125rem 0.5rem; }
+
+/* theme toggle icon: show the sun in dark mode (tap for light) and the moon in light mode */
+.theme-sun { display: none; }
+:root[data-theme="dark"] .theme-sun { display: block; }
+:root[data-theme="dark"] .theme-moon { display: none; }

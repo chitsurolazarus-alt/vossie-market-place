@@ -139,18 +139,18 @@ check("followed seller appears under Saved > Sellers", (await page.content()).in
 
 // low-data toggle in the header
 await go(page, "/browse");
-await page.$eval("header button[aria-pressed]", (b) => b.click());
+await page.$eval("header button[title^='Low-data']", (b) => b.click());
 await page.waitForFunction(() => document.documentElement.dataset.lowdata === "true", { timeout: 10000 });
 await idle(page);
 await shot(page, "browse-lowdata");
 check("low-data toggle switches the whole page", (await page.$$eval("main li img", (i) => i.length)) >= 1 && (await page.content()).includes("Tap to load"));
-check("low-data mode has no animation", await page.evaluate(() => getComputedStyle(document.querySelector("header button[aria-pressed]")).transitionDuration === "0s"));
+check("low-data mode has no animation", await page.evaluate(() => getComputedStyle(document.querySelector("header button[title^='Low-data']")).transitionDuration === "0s"));
 await page.$$eval("button", (bs) => bs.find((b) => b.textContent.includes("Tap to load"))?.click());
 await idle(page);
 check("tap-to-load loads the photo", true);
 await audit(page, "browse-lowdata");
 // reset
-await page.$eval("header button[aria-pressed]", (b) => b.click());
+await page.$eval("header button[title^='Low-data']", (b) => b.click());
 await page.waitForFunction(() => document.documentElement.dataset.lowdata === "false", { timeout: 10000 });
 
 // ---------------- listing: gallery + share fallback

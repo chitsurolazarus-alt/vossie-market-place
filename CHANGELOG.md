@@ -102,3 +102,13 @@
 - **Tests:** `test:moderation` (161 access-control and rule checks), `test:phase5` (134-check browser flow at 360px, screenshots in `shots/phase5`),
   plus the existing `test:rls` 30, `test:messaging` 83, `test:smoke` 31, `test:ui` and `test:flow`.
 
+## Theme - light and dark mode
+- **Dark theme** across the whole app (public pages, seller dashboard, messages, admin, mentor, Hub, privacy). It follows the device setting by default; a
+  moon/sun button in the header flips it in one tap, and Settings has "Match my device / Light / Dark". The choice is saved in a cookie (`vossie_theme`)
+  and an inline script sets `<html data-theme>` before first paint, so there is no flash of the wrong theme.
+- Brand colours are kept (navy, royal and sand backgrounds, sand buttons with navy text); the page surface, cards, borders, alerts and text colours are remapped.
+  Light mode is unchanged.
+- The header gained a toggle and still fits at 360px (the data-saver pill is icon-only on phones; its On/Off state is announced to screen readers).
+- **Tests:** `test:theme` (79 checks): device default, no flash, toggle, persistence across reloads and pages, Auto following the device, and a WCAG AA
+  contrast audit of every visible text element on 28 pages in both themes (0 failures). Screenshots in `shots/theme`.
+

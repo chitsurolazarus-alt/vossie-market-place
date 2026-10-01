@@ -31,6 +31,7 @@ Vercel: import the repo and add the three env vars (service role key as a non-pu
   trust badges (no stars) with a public explainer, notification bell, WhatsApp handoff logging.
 - **Phase 5:** report/flag with auto-hide, admin panel (approvals, reports queue, moderation, config, users, audit log), suspensions and bans,
   mentor view with support flags and CSV, Hub Growth corner, POPIA privacy policy with data export and account deletion.
+- **Theme:** light and dark mode (follows your device, one-tap toggle in the header, saved per browser, no flash on load).
 - Planned: accessibility and onboarding polish, barter polish, Looking For board, payments (see CLAUDE.md).
 
 ## MVP tour (360px phone screenshots)
@@ -53,7 +54,7 @@ To get a live URL, import this repo into Vercel and add the three environment va
 
 ## Scripts
 `npm run db:seed` (demo data, safe to rerun), `npm run test:rls`, `npm run test:messaging`, `npm run test:smoke`,
-`npm run test:moderation`, `npm run test:ui`, `npm run test:flow` and `npm run test:phase5` (the last three need a production server: `npm run build && npx next start -p 3111`),
+`npm run test:moderation`, `npm run test:theme`, `npm run test:ui`, `npm run test:flow` and `npm run test:phase5` (the last three need a production server: `npm run build && npx next start -p 3111`),
 `npm run test:discovery` and `npm run db:audit` (need DATABASE_URL). Demo logins: set `DEMO_LOGIN_ENABLED=true` locally only.
 
 ## Two-phone test (about 5 minutes)

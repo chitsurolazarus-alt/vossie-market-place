@@ -81,3 +81,7 @@ Phases 0-5 complete. Next: Phase 6 (accessibility, onboarding and polish; email 
 - Gotchas: migrations are applied through the Supabase MCP and kept in `supabase/migrations`; `src/types/database.ts` is regenerated after each. Email still
   needs custom SMTP before user testing (see `docs/EMAIL_SETUP.md`).
 
+## Theme
+- Light/dark is `<html data-theme>` set before paint by `THEME_INIT_SCRIPT` (saved cookie `vossie_theme`, else the device). React never renders that attribute, so it is never overwritten.
+- Dark overrides live at the end of `globals.css` and target the Tailwind utilities that assume a light surface (`bg-white`, `text-navy`, `text-royal`, `border-navy/*`, pastel alert colours). `bg-navy`, `bg-royal` and `bg-sand` keep their brand colours; navy text on sand stays navy. New components should use these existing classes so dark mode works automatically; run `npm run test:theme` after UI changes.
+

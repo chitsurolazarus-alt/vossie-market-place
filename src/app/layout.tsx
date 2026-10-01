@@ -7,6 +7,7 @@ import BottomNav from "@/components/BottomNav";
 import RegisterSW from "@/components/RegisterSW";
 import AccountNotice from "@/components/AccountNotice";
 import { WelcomeGate } from "@/components/Tours";
+import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import { getLowData } from "@/lib/viewer";
 
 const display = Playfair_Display({ variable: "--font-display-face", subsets: ["latin"] });
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#16305e",
+  themeColor: [{ media: "(prefers-color-scheme: light)", color: "#16305e" }, { media: "(prefers-color-scheme: dark)", color: "#0b1322" }],
   width: "device-width",
   initialScale: 1,
 };
@@ -28,7 +29,9 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const lowData = await getLowData();
   return (
-    <html lang="en" data-lowdata={lowData ? "true" : "false"} className={`${display.variable} ${body.variable} h-full antialiased`}>
+    // data-theme is set by the inline script below before first paint (saved choice, else the device setting).
+    <html lang="en" suppressHydrationWarning data-lowdata={lowData ? "true" : "false"} className={`${display.variable} ${body.variable} h-full antialiased`}>
+      <head><script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} /></head>
       <body className="min-h-full flex flex-col font-sans">
         <a href="#main" className="skip-link">Skip to content</a>
         <Header />
