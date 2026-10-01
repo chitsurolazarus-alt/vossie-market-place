@@ -37,6 +37,13 @@ erDiagram
   profiles ||--o| notification_prefs : sets
   profiles ||--o{ email_queue : queued
   profiles ||--o{ push_subscriptions : registers
+  reports ||--o{ report_context : "message snapshot"
+  profiles ||--o{ user_warnings : warned
+  seller_profiles ||--o{ mentor_notes : "private notes"
+  seller_profiles ||--o{ mentor_checkins : "check-ins"
+  hub_posts ||--o{ hub_rsvps : "RSVPs"
+  hub_posts ||--o{ hub_bookings : "office-hours requests"
+  profiles ||--o{ hub_posts : "staff author"
   enquiries ||--o| reviews : "flagged"
   enquiries ||--o{ payments : "flagged"
   profiles ||--o{ reports : files
@@ -70,6 +77,10 @@ erDiagram
 | `quick_replies` | Up to 5 canned seller replies. |
 | `notifications` | In-app bell. Server-created only; the owner may only set `read_at`. Realtime. |
 | `notification_prefs`, `email_queue`, `push_subscriptions` | Email/digest/push preferences, an email outbox (no sender connected yet) and web-push subscriptions (flag off). |
+| `reports`, `report_context`, `user_warnings` | Reports against a listing, seller, user or message (7 reasons, one open per reporter and target, 10 a day). A message report snapshots the message and up to 5 around it (`report_context`, admin-only). Warnings sent by admins. |
+| `site_settings` | Admin-editable: auto-hide threshold, POPIA Information Officer, policy version. Public read. |
+| `mentor_notes`, `mentor_checkins` | A mentor's private notes and check-ins for an assigned seller. |
+| `hub_posts`, `hub_rsvps`, `hub_bookings` | Hub Growth corner: tips, events (capacity, RSVPs) and mentor office hours (booking requests). Cover images in the public `hub-covers` bucket. |
 | `trust_tiers` | Admin-editable badge rules (min enquiries, response rate, confirmed sales, account age, verified). Public read. |
 | `seller_trust` | Computed tier, response rate, confirmed sales and reply-time band per seller. Public read for approved sellers; **no client write policy or privilege**. |
 | `reports`, `audit_log`, `feature_flags` | Moderation, admin audit trail, feature toggles. |
@@ -111,7 +122,31 @@ domain never grants a role.
   restricted to the `{user_id}/` folder. `message-images` (512 KB) is **private**: path `{conversation_id}/{user_id}/{message_id}.webp`, readable and
   uploadable only by the conversation's participants (signed URLs). There is no anonymous listing policy, so buckets cannot be enumerated.
 
+## Phase 5: moderation, admin, mentors, POPIA
+
+- **Reports**: inserting a report fills `target_owner_id`, enforces 10/day (`rate_limit_reports`) and the one-open-report index, and for messages snapshots
+  the context. When unique reporters pending on a listing reach `site_settings.auto_hide_threshold` (3) the listing is hidden (`moderation_hidden_reason =
+  'auto'`) and the seller is notified, without any reporter detail. Resolving a report notifies every reporter. Reporters are `set null` on deletion.
+- **Suspension, ban, deletion**: `profiles.suspended_until / banned_at / deleted_at`. `private.is_blocked()` hides a blocked owner's seller profile and
+  listings (policies, `seller_approved()`, `browse_listings`) and `guard_not_blocked` stops them creating listings, conversations or messages. A ban also
+  blocks sign-in (auth ban set by the server). Users cannot edit these fields or undo a deletion.
+- **Audit log**: columns `before`, `after`, `reason`. Triggers make it append-only for every role; the only permitted change is clearing `actor_id` when an
+  account is removed. Admin actions are SECURITY INVOKER SQL functions (`admin_review_seller`, `admin_set_verified`, `admin_moderate_listing`,
+  `admin_resolve_report`, `admin_unsuspend`, `admin_set_role`, `admin_assign_mentor`) that check the admin role, change the data and write the audit row in
+  one transaction. Edits to categories, campuses, pickup points, flags, allowed emails/domains, tiers, featured slots and settings are audited by trigger.
+- **Last admin**: `guard_last_admin` blocks demoting, banning, soft-deleting or deleting the only active admin (also for the service role).
+- **Messages and admins**: admins have no blanket message access any more; they read only `report_context` snapshots.
+- **Mentors**: `seller_trust` gained activity columns (enquiries, WhatsApp handoffs, views, last active, last listing update, recently hidden). Mentors read
+  them only for assigned sellers. They have no policy on messages, conversations or enquiries.
+- **Account deletion**: soft delete triggers `profile_scrub` (names, email, WhatsApp number, seller profile text, saved items, notifications cleared; listings
+  deleted; conversation names become "Deleted user"; audit actor anonymised). `hard_delete_accounts` (pg_cron, 00:45) removes the login after 30 days.
+  `messages.sender_id`, `conversations.buyer_id`, `enquiries.buyer_id`, `seller_profiles.user_id`, `reports.reporter_id` and `payments.buyer_id` are now `ON
+  DELETE SET NULL` so other people's history survives.
+
 ## Verification
+
+- `npm run test:moderation` runs 161 checks (reports, auto-hide, admin authorisation, suspension, audit immutability, last admin, approvals, mentors, Hub, deletion).
+- `npm run test:phase5` drives admin, mentor, buyer, seller and a throwaway user through the Phase 5 flows in a real browser at 360px.
 
 - `npm run test:messaging` runs 83 checks on conversations, messages, enquiry rules, trust, notifications, quick replies, private images and rate limits.
 - `npm run test:flow` drives a two-user flow in a real browser at 360px.

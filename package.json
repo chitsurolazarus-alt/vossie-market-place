@@ -12,6 +12,8 @@
     "test:rls": "node --env-file=.env.local scripts/rls-test.mjs",
     "db:audit": "node scripts/db-audit.mjs",
     "test:smoke": "node --env-file=.env.local scripts/smoke.mjs",
+    "test:phase5": "node --env-file=.env.local scripts/phase5-flow.mjs",
+    "test:moderation": "node --env-file=.env.local scripts/moderation-test.mjs",
     "test:messaging": "node --env-file=.env.local scripts/messaging-test.mjs",
     "test:flow": "node --env-file=.env.local scripts/two-user-flow.mjs",
     "test:discovery": "node --env-file=.env.local scripts/discovery-test.mjs",

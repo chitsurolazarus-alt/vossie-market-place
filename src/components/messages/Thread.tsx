@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { confirmCompletion } from "@/app/actions/enquiries";
 import { sendMessage, type SentMessage } from "@/app/actions/messages";
+import ReportButton from "@/components/ReportButton";
 import StatusActions, { STATUS_LABEL } from "@/components/sell/StatusActions";
 import { compressMessageImage } from "@/lib/image";
 import { AUTO_CONFIRM_DAYS, clockTime, dayKey, dayLabel, detectRisk, linkify, MAX_BODY, RISK_TIPS } from "@/lib/messages";
@@ -19,7 +20,7 @@ export type EnquiryState = {
 type Payload = { body: string; swap: { listingId: string | null; text: string } | null; blob: Blob | null; uploaded: boolean };
 
 type Props = {
-  conversationId: string; meId: string; role: "buyer" | "seller"; otherName: string;
+  conversationId: string; meId: string; otherUserId: string | null; role: "buyer" | "seller"; otherName: string;
   sellerSlug: string | null; listing: { id: string; title: string; price: string; availability: string } | null;
   listingTitle: string | null; coverUrl: string | null; source: string;
   initialMessages: SentMessage[]; images: Record<string, string>; hasMore: boolean; initialEnquiry: EnquiryState;
@@ -253,7 +254,10 @@ export default function Thread(p: Props) {
         {flagged?.risk_flag && (
           <p role="status" className="rounded-lg border-l-4 border-amber-700 bg-amber-50 p-3 text-sm text-amber-950">{RISK_TIPS[flagged.risk_flag as "payment" | "bank"]}</p>
         )}
-        <p className="text-center text-xs text-muted">Meet at a campus pickup point. Never pay a deposit before you&apos;ve seen the item.</p>
+        <div className="flex flex-wrap items-center justify-center gap-x-2 text-center text-xs text-muted">
+          <span>Meet at a campus pickup point. Never pay a deposit before you&apos;ve seen the item.</span>
+          {p.otherUserId && <ReportButton targetType="user" targetId={p.otherUserId} authed returnTo={`/messages/${p.conversationId}`} label={`Report ${p.otherName}`} />}
+        </div>
       </div>
 
       {/* Messages */}
@@ -268,7 +272,8 @@ export default function Thread(p: Props) {
             <Fragment key={m.id}>
               {newDay && <li className="py-2 text-center text-xs font-semibold uppercase tracking-wide text-muted"><span className="rounded-full bg-mist px-3 py-1">{dayLabel(m.created_at)}</span></li>}
               <li className={`flex flex-col ${mine ? "items-end" : "items-start"}`}>
-                <div className={`max-w-[85%] rounded-2xl px-3 py-2 ${mine ? "rounded-br-sm bg-navy text-white" : "rounded-bl-sm bg-mist text-ink"} ${m._state === "failed" ? "ring-2 ring-red-700" : ""}`}>
+                <div className={`flex max-w-full items-start gap-1 ${mine ? "flex-row-reverse" : ""}`}>
+                <div className={`max-w-[78%] rounded-2xl px-3 py-2 ${mine ? "rounded-br-sm bg-navy text-white" : "rounded-bl-sm bg-mist text-ink"} ${m._state === "failed" ? "ring-2 ring-red-700" : ""}`}>
                   {m.kind === "swap_offer" && (
                     <div className={`mb-2 rounded-xl border-2 p-3 ${mine ? "border-sand bg-white/10" : "border-navy/30 bg-white"}`}>
                       <p className={`text-xs font-bold uppercase tracking-wide ${mine ? "text-sand" : "text-royal"}`}>Swap offer</p>
@@ -288,6 +293,8 @@ export default function Thread(p: Props) {
                         : <Fragment key={k}>{s.text}</Fragment>)}
                     </p>
                   )}
+                </div>
+                {!mine && <ReportButton targetType="message" targetId={m.id} authed returnTo={`/messages/${p.conversationId}`} label="" className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-muted hover:bg-mist hover:text-navy" />}
                 </div>
                 {!mine && m.risk_flag && <p className="mt-1 max-w-[85%] text-xs font-semibold text-amber-900">⚠ Be careful with this message</p>}
                 <p className="mt-0.5 px-1 text-xs text-muted">

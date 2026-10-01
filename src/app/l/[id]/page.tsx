@@ -6,6 +6,7 @@ import { z } from "zod";
 import Gallery from "@/components/Gallery";
 import ListingTile from "@/components/ListingTile";
 import { FollowButton, SaveButton } from "@/components/SaveButton";
+import ReportButton from "@/components/ReportButton";
 import ShareButton from "@/components/ShareButton";
 import { getUser } from "@/lib/auth";
 import { sellerTiles, similarTiles } from "@/lib/browse";
@@ -116,6 +117,7 @@ export default async function ListingPage({ params, searchParams }: { params: Pr
             {isOwner && <Link href={`/sell/listings/${l.id}/edit`} className="inline-flex min-h-12 items-center justify-center rounded-lg bg-sand px-5 font-semibold text-navy">Edit listing</Link>}
             <ShareButton title={l.title} text={`${l.title} · ${priceLabel(l)} on Vossie Market Place`} />
           </div>
+          {!isOwner && <div className="mt-1"><ReportButton targetType="listing" targetId={l.id} authed={!!user} returnTo={`/l/${l.id}`} label="Report this listing" /></div>}
 
           <div className="mt-6 rounded-2xl bg-navy p-4 text-white">
             <div className="flex items-center gap-3">

@@ -70,7 +70,7 @@ const go = async (page, path) => { await page.goto(BASE + path, { waitUntil: "ne
 
 // ---------------- public pages
 let page = await newPage();
-const pages = [["home", "/"], ["browse", "/browse"], ["browse-search", "/browse?q=braids"], ["browse-empty", "/browse?q=zzqxv"], ["seller", "/s/thandis-kitchen"], ["how-featured", "/how-featured-works"], ["how-trust", "/how-trust-works"], ["settings", "/settings"], ["login", "/login"]];
+const pages = [["home", "/"], ["browse", "/browse"], ["browse-search", "/browse?q=braids"], ["browse-empty", "/browse?q=zzqxv"], ["seller", "/s/thandis-kitchen"], ["how-featured", "/how-featured-works"], ["how-trust", "/how-trust-works"], ["growth", "/growth"], ["privacy", "/privacy"], ["settings", "/settings"], ["login", "/login"]];
 for (const [name, path] of pages) {
   page.errors.length = 0;
   await go(page, path);

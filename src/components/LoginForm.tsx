@@ -10,6 +10,7 @@ const DEMO = [
   ["Thandi's Kitchen (seller)", "20250101@vossie.net"],
   ["Lwazi Cuts (seller)", "20250102@vossie.net"],
   ["New student (not a seller yet)", "20250109@vossie.net"],
+  ["Aisha (seller waiting for approval)", "20250110@vossie.net"],
   ["Admin (staff)", "admin.demo@eduvos.com"],
   ["Mentor (staff)", "mentor.demo@eduvos.com"],
 ];

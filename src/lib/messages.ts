@@ -52,6 +52,7 @@ export function friendlyDbError(message: string | undefined, fallback = "Somethi
   const m = message ?? "";
   if (m.includes("rate_limit_messages")) return "You're sending messages too fast. Wait a moment and try again (limit: 30 a minute).";
   if (m.includes("rate_limit_conversations")) return "You've started a lot of conversations. Please wait a while before starting another (limit: 10 an hour).";
+  if (m.includes("account_suspended")) return "Your account is suspended, so you can't send messages right now.";
   if (m.includes("own_listing")) return "You can't message your own hustle.";
   if (m.includes("cash only")) return "That listing is cash only, so swap offers aren't available.";
   if (m.includes("your own listings")) return "You can only offer one of your own listings.";

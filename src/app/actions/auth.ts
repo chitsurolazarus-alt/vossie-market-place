@@ -42,7 +42,7 @@ export async function verifyCode(email: string, token: string): Promise<Result> 
 }
 
 const DEMO_EMAILS = new Set([
-  "admin.demo@eduvos.com", "mentor.demo@eduvos.com", "20250109@vossie.net",
+  "admin.demo@eduvos.com", "mentor.demo@eduvos.com", "20250109@vossie.net", "20250110@vossie.net",
   ...Array.from({ length: 8 }, (_, i) => `2025010${i + 1}@vossie.net`),
 ]);
 

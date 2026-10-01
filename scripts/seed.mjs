@@ -273,9 +273,9 @@ await history("CodeCraft Fixers", [[1, "in_progress", 240, 3, 3]]);
 {
   const sl = by("Lwazi Cuts");
   for (let i = 0; i < 3; i++) {
-    const cid = await enquire(sl, buyerIds[i], i, { days: 4 + i * 6, origin: "whatsapp" });
+    const cid = await enquire(sl, buyerIds[i], i, { days: 18 + i * 6, origin: "whatsapp" });
     const { data: enq } = await db.from("enquiries").select("id").eq("conversation_id", cid).single();
-    must(await db.from("enquiry_events").insert({ enquiry_id: enq.id, type: "whatsapp_handoff", actor_id: buyerIds[i], data: { source: "listing" }, created_at: ago(4 + i * 6) }), "wa event");
+    must(await db.from("enquiry_events").insert({ enquiry_id: enq.id, type: "whatsapp_handoff", actor_id: buyerIds[i], data: { source: "listing" }, created_at: ago(18 + i * 6) }), "wa event");
   }
 }
 
@@ -295,5 +295,46 @@ await enquire(thandi, ayanda, 2, { days: 5, status: "completed_pending", replyMi
 await enquire(by("Naledi Notes"), ayanda, 0, { days: 1, status: "in_progress", replyMin: 40, chat: true }); // Ayanda: in progress
 await enquire(by("Pixel & Pen Studio"), buyerIds[3], 1, { days: 0.005, status: "new", replyMin: null });
 
+
+// ---------------------------------------------------------------------------
+// Phase 5: a seller waiting for approval, Hub Growth posts, and an open report.
+// Lwazi's WhatsApp leads are now older than 14 days, so he shows up in the mentor "may need support" list.
+// ---------------------------------------------------------------------------
+{
+  const aishaId = await ensureUser("20250110@vossie.net", "Aisha Patel");
+  must(await db.from("profiles").update({ display_name: "Aisha Patel", campus_id: campuses.midrand, onboarding_seen: true, seller_tour_seen: true }).eq("id", aishaId), "aisha profile");
+  const aisha = must(await db.from("seller_profiles").upsert({
+    user_id: aishaId, campus_id: campuses.midrand, category_id: cats.food, business_name: "Aisha's Bakes", slug: "aishas-bakes",
+    tagline: "Custom cupcakes and cookie boxes for birthdays and exams.", bio: "Home baker studying Marketing. Cupcakes, cookie boxes and cakes made to order, collected on campus.",
+    contact_pref: "in_app", status: "pending", verified: false, mentor_id: null, submitted_at: new Date().toISOString(), review_reason: null, reviewed_at: null, reviewed_by: null, approved_at: null,
+  }, { onConflict: "user_id" }).select("id").single(), "aisha seller");
+  await db.from("seller_pickup_points").delete().eq("seller_id", aisha.id);
+  const aishaPickups = pickups.filter((p) => p.campus_id === campuses.midrand).slice(0, 1);
+  for (const p of aishaPickups) must(await db.from("seller_pickup_points").insert({ seller_id: aisha.id, pickup_point_id: p.id }), "aisha pickup");
+  await db.from("listings").delete().eq("seller_id", aisha.id);
+  must(await db.from("listings").insert({
+    seller_id: aisha.id, campus_id: campuses.midrand, category_id: cats.food, kind: "product", title: "Birthday cupcake box (12)",
+    description: "Twelve vanilla and chocolate cupcakes with buttercream. Order 2 days ahead.", pricing_mode: "cash", price_zar: 180, pickup_point_id: aishaPickups[0]?.id ?? null,
+  }), "aisha listing");
+
+  const admin = STAFF.find((x) => x.role === "admin").id;
+  await db.from("hub_posts").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+  const posts = [
+    { kind: "tip", title: "Price your hustle without undercharging", author_id: mentorId, campus_id: null, published: true,
+      body: "## Know your costs\nWrite down what each item costs you: ingredients, data, transport and your **time**.\n\n## A simple formula\n1. Add up your costs\n2. Add a margin of 30% or more\n3. Compare with 2 similar listings on Vossie\n\nNeed help? Book [mentor office hours](https://example.com) or message your mentor." },
+    { kind: "event", title: "Incubation Hub Pitch Night", author_id: admin, campus_id: null, published: true, venue: "Main auditorium", capacity: 80,
+      event_at: new Date(Date.now() + 9 * 864e5).toISOString(), body: "Practise a 2-minute pitch for your hustle in front of friendly mentors.\n\n- Bring a product or a photo\n- Snacks provided\n- Open to all campuses" },
+    { kind: "office_hours", title: "Mentor office hours with Pieter", author_id: mentorId, campus_id: campuses.midrand, published: true, venue: "Incubation Hub, Block C",
+      event_at: new Date(Date.now() + 3 * 864e5).toISOString(), body: "Every Thursday 14:00 to 16:00. Ask about pricing, branding, handling enquiries or getting your first 10 customers.\n\nRequest a slot and I'll confirm a time." },
+  ];
+  for (const p of posts) must(await db.from("hub_posts").insert(p), "hub post");
+
+  await db.from("reports").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+  const sipho = by("Sipho Sneaker Spot");
+  must(await db.from("reports").insert({
+    reporter_id: buyerIds[0], target_type: "listing", target_id: sipho.listingIds[1], reason: "scam",
+    note: "Asked me to pay a deposit before I could see the sneakers.",
+  }), "demo report");
+}
 console.log("seeded Phase 4 demo data (buyers, enquiries, trust tiers)");
 console.log(`\nDemo password for all demo users: ${DEMO_PASSWORD}`);

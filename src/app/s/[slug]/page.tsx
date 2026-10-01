@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import EnquireButton from "@/components/messages/EnquireButton";
+import ReportButton from "@/components/ReportButton";
 import { FollowButton } from "@/components/SaveButton";
 import { ReplyTime, TrustBadge } from "@/components/trust";
 import { ButtonLink } from "@/components/ui";
@@ -105,6 +106,10 @@ export default async function SellerPage({ params, searchParams }: { params: Pro
             </>
           )}
         </div>
+
+        {!isOwner && seller.status === "approved" && (
+          <div className="mt-2"><ReportButton targetType="seller" targetId={seller.id} authed={!!user} returnTo={`/s/${seller.slug}`} label="Report this profile" /></div>
+        )}
 
         {seller.bio && (
           <section className="mt-8" aria-labelledby="about-h">

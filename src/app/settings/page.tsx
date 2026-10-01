@@ -14,6 +14,7 @@ export default async function Settings() {
         <p className="text-sm text-muted">
           {user ? "This is saved to your account and works on every device you sign in on." : "Saved on this device. Sign in to keep it across devices."}
         </p>
+        {user && <ButtonLink href="/settings/privacy" variant="secondary">Privacy and my data</ButtonLink>}
         {user
           ? <ButtonLink href="/account" variant="secondary">Account</ButtonLink>
           : <ButtonLink href="/login?next=/settings" variant="secondary">Sign in</ButtonLink>}

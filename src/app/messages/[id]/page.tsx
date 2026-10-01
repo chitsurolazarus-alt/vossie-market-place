@@ -27,7 +27,7 @@ export default async function ThreadPage({ params }: { params: Promise<{ id: str
         </Link>
       </div>
       <Thread
-        conversationId={conv.id} meId={user.id} role={role} otherName={otherName} sellerSlug={t.seller?.slug ?? null}
+        conversationId={conv.id} meId={user.id} otherUserId={role === "buyer" ? t.seller?.user_id ?? null : conv.buyer_id} role={role} otherName={otherName} sellerSlug={t.seller?.slug ?? null}
         listing={t.listing ? { id: t.listing.id, title: t.listing.title, price: priceLabel(t.listing), availability: t.listing.availability } : null}
         listingTitle={conv.listing_title} coverUrl={conv.listing_cover ? publicImageUrl(conv.listing_cover) : null} source={t.enquiry.source}
         initialMessages={t.messages} images={t.images} hasMore={t.hasMore}

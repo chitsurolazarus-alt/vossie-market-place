@@ -66,3 +66,39 @@
 - **Fixes found by the new end-to-end test:** `Modal` re-ran its focus effect on every render and stole focus from the textarea on each keystroke.
 - **Tests:** `test:messaging` (83 access-control/rule checks), `test:flow` (46-check two-user browser flow at 360px with screenshots in
   `shots/flow`), `test:ui` 67, `test:smoke` 31, `test:rls` 30.
+
+## Phase 5 - Safety, moderation, admin panel, mentor layer and POPIA
+- **Report / flag:** report a listing, seller profile, user or an individual message (reasons: scam or fraud, prohibited item, offensive
+  content, harassment, fake profile, wrong category or spam, other; optional note up to 500 characters). One open report per reporter per
+  target, 10 reports a day. A listing auto-hides after **3** unique reporters pending review (editable in Admin > Manage > Settings); the seller is
+  told it is under review, never who reported. Reporters are notified when a report is resolved. Reporter identity is hidden from the reported
+  person by RLS.
+- **Admin panel (`/admin`):** dashboard (waiting sellers, open reports, new listings today, active users in 7 days), seller approvals
+  (approve / reject with reason / request changes, Verified badge, mentor assignment), reports queue with context (a reported message plus up to
+  5 surrounding messages, snapshotted when reported) and actions dismiss / hide / warn / suspend (1 to 365 days) / ban, listing moderation (hide,
+  restore, change category), user search with role changes and suspension lifting, an audit-log viewer with filters, and Manage screens for
+  categories, campuses, pickup points, trust tier thresholds, feature flags, allowed email domains and addresses, Featured Hustle overrides and
+  settings. Admin access is enforced three times: the proxy (404 for other roles), server checks and RLS.
+- **Suspension and bans:** suspended, banned or deleted users can still sign in and browse, but cannot list or message (database triggers).
+  Their profile and listings are hidden publicly while it lasts and return automatically when a suspension ends. Bans also block sign-in.
+- **Audit log:** append-only for everyone, including admins and the service role (triggers). Admin actions run as RLS-protected SQL functions that
+  write their audit row (actor, action, target, before, after, reason) in the same transaction; configuration changes are logged by trigger. The
+  last admin can never be demoted, banned or deleted.
+- **Mentor view (`/mentor`):** read-only; mentors see only their assigned sellers (admins see all) with enquiry volume (in-app and WhatsApp
+  handoffs), response rate, reply-time band, confirmed sales, listing views, trust tier and last active, "may need support" flags (no enquiries
+  in 14 days, response rate under 50%, no listing updated in 21 days, content recently hidden by moderation), private notes, check-ins and a CSV
+  export. Mentors have no access to message content.
+- **Hub Growth corner (`/growth`):** tips, Incubation Hub events (RSVP with capacity) and mentor office hours (booking requests with
+  notifications), staff-managed with a safe markdown subset, cover image and campus targeting, plus a "From the Hub" card on the seller dashboard.
+- **POPIA:** full plain-language `/privacy` policy (Information Officer is an editable setting), `/settings/privacy` with the consent record,
+  JSON data export, the reports you made and **Delete my account** (type DELETE): personal data is scrubbed immediately, the login is removed after
+  30 days by a nightly job, and messages other people rely on are kept as "Deleted user". Messages, enquiries and reports now survive a deleted
+  user (foreign keys set null).
+- **Email readiness:** `docs/EMAIL_SETUP.md` with step-by-step Resend and Brevo setup for Supabase custom SMTP.
+- **Database:** 6 migrations (report enums; site settings, suspension, audit, reports, admin functions; mentor, Hub and account deletion;
+  admins see report context only; admin_set_role audit ordering; duplicate indexes dropped).
+- **Privacy tightening:** admins no longer have blanket read access to message threads (Phase 4 allowed it for moderation).
+- **Seed:** a seller waiting for approval (Aisha, demo login), 3 Hub posts, an open demo report, and a seller who shows up as "may need support".
+- **Tests:** `test:moderation` (161 access-control and rule checks), `test:phase5` (134-check browser flow at 360px, screenshots in `shots/phase5`),
+  plus the existing `test:rls` 30, `test:messaging` 83, `test:smoke` 31, `test:ui` and `test:flow`.
+

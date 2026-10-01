@@ -75,7 +75,7 @@ const sendSchema = z.object({
 });
 
 export type SentMessage = {
-  id: string; conversation_id: string; sender_id: string; body: string; kind: string; image_path: string | null;
+  id: string; conversation_id: string; sender_id: string | null; body: string; kind: string; image_path: string | null;
   swap_listing_id: string | null; swap_listing_title: string | null; risk_flag: string | null; read_at: string | null; created_at: string;
 };
 

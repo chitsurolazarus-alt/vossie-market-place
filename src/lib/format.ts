@@ -18,3 +18,13 @@ export const memberSince = (iso: string) =>
   new Date(iso).toLocaleDateString("en-ZA", { month: "long", year: "numeric" });
 
 export const isWithinDays = (iso: string, days: number) => Date.now() - new Date(iso).getTime() < days * 24 * 3600 * 1000;
+
+export const hubCoverUrl = (path: string) =>
+  `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/hub-covers/${path}`;
+
+export const dateTimeSA = (iso: string) =>
+  new Date(iso).toLocaleString("en-ZA", { weekday: "short", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Africa/Johannesburg" });
+
+/** ISO instant -> value for <input type="datetime-local"> in South African time. */
+export const toLocalInput = (iso: string | null) =>
+  iso ? new Date(iso).toLocaleString("sv-SE", { timeZone: "Africa/Johannesburg" }).replace(" ", "T").slice(0, 16) : "";

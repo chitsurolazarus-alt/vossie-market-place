@@ -15,6 +15,7 @@ export default function Footer() {
           </span>
           <p className="text-sm text-white/80 mt-3">
             An Eduvos Incubation Hub project &middot;{" "}
+            <Link href="/growth" className="underline min-h-11 inline-flex items-center">Hub Growth</Link>{" "}&middot;{" "}
             <Link href="/how-trust-works" className="underline min-h-11 inline-flex items-center">How trust works</Link>{" "}&middot;{" "}
             <Link href="/privacy" className="underline min-h-11 inline-flex items-center">Privacy</Link>
           </p>

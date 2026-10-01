@@ -2,6 +2,8 @@ import { SellerTour } from "@/components/Tours";
 import { ButtonLink, PageShell } from "@/components/ui";
 import { ReplyTime, TrustBadge } from "@/components/trust";
 import { getSellerTrust, getTierLabels } from "@/lib/trust";
+import { getHubPosts, KIND_LABEL } from "@/lib/hub";
+import Link from "next/link";
 import { getMySeller, requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
@@ -34,10 +36,11 @@ export default async function SellDashboard() {
   }
 
   const supabase = await createClient();
-  const [{ count: newEnq }, trust, tierLabels] = await Promise.all([
+  const [{ count: newEnq }, trust, tierLabels, hubPosts] = await Promise.all([
     supabase.from("enquiries").select("id", { count: "exact", head: true }).eq("seller_id", seller.id).eq("status", "new"),
     getSellerTrust(seller.id),
     getTierLabels(),
+    getHubPosts({ campusId: seller.campus_id, limit: 1 }),
   ]);
   const [{ count: total }, { count: live }, { data: prof }] = await Promise.all([
     supabase.from("listings").select("id", { count: "exact", head: true }).eq("seller_id", seller.id).is("deleted_at", null),
@@ -67,6 +70,13 @@ export default async function SellDashboard() {
           <p className="mt-2 text-sm text-muted">{trust ? `${trust.confirmed_sales} confirmed ${trust.confirmed_sales === 1 ? "sale" : "sales"}${trust.response_rate !== null ? ` · ${Math.round(Number(trust.response_rate) * 100)}% replied within 48h` : ""}` : "Reply to enquiries to earn your badge."}</p>
           <a href="/how-trust-works" className="mt-2 inline-flex min-h-11 items-center font-semibold text-royal underline">How trust works</a>
         </div>
+        {hubPosts[0] && (
+          <div className="rounded-xl border-2 border-sand bg-white p-5 sm:col-span-2">
+            <p className="text-sm font-semibold text-muted">From the Hub · {KIND_LABEL[hubPosts[0].kind]}</p>
+            <Link href={`/growth/${hubPosts[0].id}`} className="mt-1 block font-display text-xl font-bold text-navy hover:underline">{hubPosts[0].title}</Link>
+            <Link href="/growth" className="mt-2 inline-flex min-h-11 items-center font-semibold text-royal underline">More from the Hub Growth corner</Link>
+          </div>
+        )}
         <div data-tour="listings" className="rounded-xl bg-mist p-5">
           <p className="text-sm text-muted">Listings</p>
           <p className="font-display text-3xl font-bold text-navy">{total ?? 0}</p>

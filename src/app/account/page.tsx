@@ -26,8 +26,12 @@ export default async function Account() {
         <div><dt className="text-sm text-muted">Role</dt><dd className="font-semibold capitalize text-navy">{profile?.role ?? "buyer"}</dd></div>
         <div><dt className="text-sm text-muted">Seller status</dt><dd className="font-semibold text-navy">{seller ? STATUS_COPY[seller.status] : "Not a seller yet"}</dd></div>
       </dl>
-      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <ButtonLink href="/sell" variant="sand">{seller ? "Seller dashboard" : "Start selling"}</ButtonLink>
+        {profile?.role === "admin" && <ButtonLink href="/admin" variant="primary">Admin panel</ButtonLink>}
+        {(profile?.role === "mentor" || profile?.role === "admin") && <ButtonLink href="/mentor" variant="primary">Mentor view</ButtonLink>}
+        <ButtonLink href="/growth" variant="secondary">Hub Growth corner</ButtonLink>
+        <ButtonLink href="/settings/privacy" variant="secondary">Privacy settings</ButtonLink>
         <form action={signOut}><Button type="submit" variant="secondary" className="w-full">Sign out</Button></form>
       </div>
     </PageShell>

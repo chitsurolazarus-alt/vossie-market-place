@@ -46,6 +46,7 @@ export async function saveListing(input: unknown): Promise<Result<{ id: string }
     ? await supabase.from("listings").update(row).eq("id", v.id)
     : await supabase.from("listings").insert({ ...row, id: v.id, campus_id: "00000000-0000-0000-0000-000000000000" });
   if (write.error) {
+    if (write.error.message.includes("account_suspended")) return { ok: false, error: "Your account is suspended, so you can't create or edit listings right now." };
     if (write.error.message.includes("Daily listing limit")) return { ok: false, error: "You've reached today's limit of 20 new listings. Try again tomorrow." };
     if (write.error.message.includes("pickup point")) return { ok: false, error: "Choose one of your approved pickup points", fieldErrors: { pickupPointId: "Choose one of your approved pickup points" } };
     return { ok: false, error: "We couldn't save your listing. Please try again." };

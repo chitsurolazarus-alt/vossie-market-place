@@ -86,7 +86,7 @@ check("seller can read the thread", (await read(sipho)) >= 1);
 check("a non-participant seller cannot read the thread", (await read(thandi)) === 0);
 check("another buyer cannot read the thread", (await read(rateBuyer)) === 0);
 check("a mentor cannot read message content", (await read(mentor)) === 0);
-check("an admin can read the thread (moderation)", (await read(adminU)) >= 1);
+check("an admin cannot browse threads (they only see reported messages and context)", (await read(adminU)) === 0);
 check("anonymous visitors cannot read conversations, messages or enquiries",
   (await anon.from("messages").select("id").limit(1)).data?.length !== 1 && (await anon.from("conversations").select("id").limit(1)).data?.length !== 1 && (await anon.from("enquiries").select("id").limit(1)).data?.length !== 1);
 const nonParticipantSend = await thandi.c.from("messages").insert({ conversation_id: conv.id, sender_id: thandi.id, body: "hello?" });
@@ -176,7 +176,7 @@ check("a seller cannot edit the tier rules", !!forgeTier.error || (forgeTier.dat
 check("tier rules are publicly readable", ((await anon.from("trust_tiers").select("tier")).data ?? []).length === 4);
 check("trust scores of approved sellers are publicly readable", ((await anon.from("seller_trust").select("tier")).data ?? []).length >= 8);
 check("seeded tiers: 1 Top Hustler, 2 Trusted, 3 Responsive, 2 New",
-  await (async () => { const t = await one(admin.from("seller_trust").select("tier")); const n = (k) => t.filter((r) => r.tier === k).length; return n("top_hustler") === 1 && n("trusted") === 2 && n("responsive") === 3 && n("new") === 2; })());
+  await (async () => { const t = await one(admin.from("seller_trust").select("tier, seller_profiles!inner(status)").eq("seller_profiles.status", "approved")); const n = (k) => t.filter((r) => r.tier === k).length; return n("top_hustler") === 1 && n("trusted") === 2 && n("responsive") === 3 && n("new") === 2; })());
 const thandiTrust = await one(admin.from("seller_trust").select("tier").eq("seller_id", thandiSeller.id).single());
 check("Thandi's Kitchen is the Top Hustler", thandiTrust.tier === "top_hustler", thandiTrust.tier);
 

@@ -33,7 +33,7 @@ export default function ListingCard({ l, sellerLive }: { l: ManagerListing; sell
         <span className="absolute left-2 top-2 rounded bg-white/95 px-2 py-0.5 text-xs font-bold capitalize text-navy">{l.kind}</span>
         {(l.hidden || !sellerLive) && (
           <span className="absolute right-2 top-2 rounded bg-navy px-2 py-0.5 text-xs font-bold text-white">
-            {l.hidden ? "Hidden by moderator" : "Hidden until approved"}
+            {l.hidden ? "Under review by the Hub team" : "Hidden until approved"}
           </span>
         )}
       </div>

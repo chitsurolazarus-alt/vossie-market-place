@@ -51,7 +51,7 @@ realistic South African seed data, no lorem ipsum.
   currently not approved, and lint/build work without it.
 
 ## Status
-Phases 0-4 complete (v0.1-mvp). Next: Phase 5 (safety, accessibility, onboarding, POPIA).
+Phases 0-5 complete. Next: Phase 6 (accessibility, onboarding and polish; email provider).
 
 ## Phase 1-2 decisions
 - Sign-up allow-list in DB tables (`vossie.net`, `eduvos.com`, named test emails); roles by promotion only.
@@ -69,3 +69,15 @@ Phases 0-4 complete (v0.1-mvp). Next: Phase 5 (safety, accessibility, onboarding
 - Email skipped for now (`email_queue` has no sender); web push is a flag + table only. Notifications are in-app.
 - Tests: `test:messaging` (rules), `test:flow` and `test:ui` (real browser, need `npx next start -p 3111`). Seed is rerunnable.
 - Gotchas: never put an inline `onClose` in a Modal effect dependency list; low-data mode still prefetches links (Phase 5 polish).
+
+## Phase 5 decisions
+- Auto-hide at 3 unique reporters (`site_settings`). Information Officer is an editable setting (placeholder until named). Data export is a route handler.
+- Roles are gated three times: `proxy.ts` (404 for other roles), `requireRole`/`actionAuth` on the server, RLS in the database. Admin writes go through
+  SECURITY INVOKER SQL functions in `public` that write the audit row atomically; the audit log is append-only for everyone.
+- Admins do not have blanket message access: they read `report_context` snapshots only. Mentors read activity aggregates in `seller_trust`, never content.
+- Blocked (suspended, banned, deleted) owners disappear from public views automatically; use `private.is_blocked()`.
+- Deleting an account scrubs personal data at once and keeps others' history as "Deleted user" (FKs set null); hard delete after 30 days via cron.
+- Tests: `test:moderation` (rules), `test:phase5` (browser). Test-created audit rows are permanent and tagged "[automated test]".
+- Gotchas: migrations are applied through the Supabase MCP and kept in `supabase/migrations`; `src/types/database.ts` is regenerated after each. Email still
+  needs custom SMTP before user testing (see `docs/EMAIL_SETUP.md`).
+

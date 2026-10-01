@@ -51,27 +51,36 @@ export type Database = {
         Row: {
           action: string
           actor_id: string | null
+          after: Json | null
+          before: Json | null
           created_at: string
           detail: Json | null
           id: number
+          reason: string | null
           target_id: string | null
           target_type: string | null
         }
         Insert: {
           action: string
           actor_id?: string | null
+          after?: Json | null
+          before?: Json | null
           created_at?: string
           detail?: Json | null
           id?: never
+          reason?: string | null
           target_id?: string | null
           target_type?: string | null
         }
         Update: {
           action?: string
           actor_id?: string | null
+          after?: Json | null
+          before?: Json | null
           created_at?: string
           detail?: Json | null
           id?: never
+          reason?: string | null
           target_id?: string | null
           target_type?: string | null
         }
@@ -138,7 +147,7 @@ export type Database = {
       }
       conversations: {
         Row: {
-          buyer_id: string
+          buyer_id: string | null
           buyer_name: string | null
           created_at: string
           id: string
@@ -153,7 +162,7 @@ export type Database = {
           seller_name: string | null
         }
         Insert: {
-          buyer_id: string
+          buyer_id?: string | null
           buyer_name?: string | null
           created_at?: string
           id?: string
@@ -168,7 +177,7 @@ export type Database = {
           seller_name?: string | null
         }
         Update: {
-          buyer_id?: string
+          buyer_id?: string | null
           buyer_name?: string | null
           created_at?: string
           id?: string
@@ -263,7 +272,7 @@ export type Database = {
           auto_confirmed: boolean
           buyer_confirmed_at: string | null
           buyer_disputed_at: string | null
-          buyer_id: string
+          buyer_id: string | null
           completed_at: string | null
           completion_requested_at: string | null
           conversation_id: string
@@ -281,7 +290,7 @@ export type Database = {
           auto_confirmed?: boolean
           buyer_confirmed_at?: string | null
           buyer_disputed_at?: string | null
-          buyer_id: string
+          buyer_id?: string | null
           completed_at?: string | null
           completion_requested_at?: string | null
           conversation_id: string
@@ -299,7 +308,7 @@ export type Database = {
           auto_confirmed?: boolean
           buyer_confirmed_at?: string | null
           buyer_disputed_at?: string | null
-          buyer_id?: string
+          buyer_id?: string | null
           completed_at?: string | null
           completion_requested_at?: string | null
           conversation_id?: string
@@ -486,6 +495,150 @@ export type Database = {
           },
         ]
       }
+      hub_bookings: {
+        Row: {
+          created_at: string
+          host_note: string | null
+          id: string
+          message: string | null
+          post_id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          host_note?: string | null
+          id?: string
+          message?: string | null
+          post_id: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          host_note?: string | null
+          id?: string
+          message?: string | null
+          post_id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hub_bookings_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "hub_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hub_bookings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hub_posts: {
+        Row: {
+          author_id: string | null
+          body: string
+          campus_id: string | null
+          capacity: number | null
+          cover_path: string | null
+          created_at: string
+          event_at: string | null
+          id: string
+          kind: string
+          published: boolean
+          rsvp_count: number
+          title: string
+          updated_at: string
+          venue: string | null
+        }
+        Insert: {
+          author_id?: string | null
+          body?: string
+          campus_id?: string | null
+          capacity?: number | null
+          cover_path?: string | null
+          created_at?: string
+          event_at?: string | null
+          id?: string
+          kind: string
+          published?: boolean
+          rsvp_count?: number
+          title: string
+          updated_at?: string
+          venue?: string | null
+        }
+        Update: {
+          author_id?: string | null
+          body?: string
+          campus_id?: string | null
+          capacity?: number | null
+          cover_path?: string | null
+          created_at?: string
+          event_at?: string | null
+          id?: string
+          kind?: string
+          published?: boolean
+          rsvp_count?: number
+          title?: string
+          updated_at?: string
+          venue?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hub_posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hub_posts_campus_id_fkey"
+            columns: ["campus_id"]
+            isOneToOne: false
+            referencedRelation: "campuses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hub_rsvps: {
+        Row: {
+          created_at: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hub_rsvps_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "hub_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hub_rsvps_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       listing_images: {
         Row: {
           alt: string
@@ -629,6 +782,8 @@ export type Database = {
           hidden_by_moderation: boolean
           id: string
           kind: Database["public"]["Enums"]["listing_kind"]
+          moderation_hidden_at: string | null
+          moderation_hidden_reason: string | null
           pickup_point_id: string | null
           price_is_from: boolean
           price_zar: number | null
@@ -650,6 +805,8 @@ export type Database = {
           hidden_by_moderation?: boolean
           id?: string
           kind?: Database["public"]["Enums"]["listing_kind"]
+          moderation_hidden_at?: string | null
+          moderation_hidden_reason?: string | null
           pickup_point_id?: string | null
           price_is_from?: boolean
           price_zar?: number | null
@@ -671,6 +828,8 @@ export type Database = {
           hidden_by_moderation?: boolean
           id?: string
           kind?: Database["public"]["Enums"]["listing_kind"]
+          moderation_hidden_at?: string | null
+          moderation_hidden_reason?: string | null
           pickup_point_id?: string | null
           price_is_from?: boolean
           price_zar?: number | null
@@ -712,6 +871,87 @@ export type Database = {
           },
         ]
       }
+      mentor_checkins: {
+        Row: {
+          checked_in_at: string
+          created_at: string
+          id: string
+          mentor_id: string | null
+          note: string | null
+          seller_id: string
+        }
+        Insert: {
+          checked_in_at?: string
+          created_at?: string
+          id?: string
+          mentor_id?: string | null
+          note?: string | null
+          seller_id: string
+        }
+        Update: {
+          checked_in_at?: string
+          created_at?: string
+          id?: string
+          mentor_id?: string | null
+          note?: string | null
+          seller_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_checkins_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mentor_checkins_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "seller_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentor_notes: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          mentor_id: string | null
+          seller_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          mentor_id?: string | null
+          seller_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          mentor_id?: string | null
+          seller_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_notes_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mentor_notes_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "seller_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           body: string
@@ -722,7 +962,7 @@ export type Database = {
           kind: string
           read_at: string | null
           risk_flag: string | null
-          sender_id: string
+          sender_id: string | null
           swap_listing_id: string | null
           swap_listing_title: string | null
         }
@@ -735,7 +975,7 @@ export type Database = {
           kind?: string
           read_at?: string | null
           risk_flag?: string | null
-          sender_id: string
+          sender_id?: string | null
           swap_listing_id?: string | null
           swap_listing_title?: string | null
         }
@@ -748,7 +988,7 @@ export type Database = {
           kind?: string
           read_at?: string | null
           risk_flag?: string | null
-          sender_id?: string
+          sender_id?: string | null
           swap_listing_id?: string | null
           swap_listing_title?: string | null
         }
@@ -882,7 +1122,7 @@ export type Database = {
       payments: {
         Row: {
           amount_zar: number
-          buyer_id: string
+          buyer_id: string | null
           created_at: string
           enquiry_id: string | null
           id: string
@@ -891,7 +1131,7 @@ export type Database = {
         }
         Insert: {
           amount_zar: number
-          buyer_id: string
+          buyer_id?: string | null
           created_at?: string
           enquiry_id?: string | null
           id?: string
@@ -900,7 +1140,7 @@ export type Database = {
         }
         Update: {
           amount_zar?: number
-          buyer_id?: string
+          buyer_id?: string | null
           created_at?: string
           enquiry_id?: string | null
           id?: string
@@ -962,45 +1202,63 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          ban_reason: string | null
+          banned_at: string | null
           campus_id: string | null
           created_at: string
           deleted_at: string | null
           display_name: string | null
+          email: string | null
           id: string
+          last_seen_at: string | null
           low_data_mode: boolean
           onboarding_seen: boolean
           phone: string | null
           popia_consent_at: string | null
           role: Database["public"]["Enums"]["user_role"]
           seller_tour_seen: boolean
+          suspended_until: string | null
+          suspension_reason: string | null
         }
         Insert: {
           avatar_url?: string | null
+          ban_reason?: string | null
+          banned_at?: string | null
           campus_id?: string | null
           created_at?: string
           deleted_at?: string | null
           display_name?: string | null
+          email?: string | null
           id: string
+          last_seen_at?: string | null
           low_data_mode?: boolean
           onboarding_seen?: boolean
           phone?: string | null
           popia_consent_at?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           seller_tour_seen?: boolean
+          suspended_until?: string | null
+          suspension_reason?: string | null
         }
         Update: {
           avatar_url?: string | null
+          ban_reason?: string | null
+          banned_at?: string | null
           campus_id?: string | null
           created_at?: string
           deleted_at?: string | null
           display_name?: string | null
+          email?: string | null
           id?: string
+          last_seen_at?: string | null
           low_data_mode?: boolean
           onboarding_seen?: boolean
           phone?: string | null
           popia_consent_at?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           seller_tour_seen?: boolean
+          suspended_until?: string | null
+          suspension_reason?: string | null
         }
         Relationships: [
           {
@@ -1079,41 +1337,133 @@ export type Database = {
           },
         ]
       }
+      report_context: {
+        Row: {
+          body: string
+          created_at: string
+          has_image: boolean
+          id: number
+          is_reported: boolean
+          kind: string
+          message_id: string | null
+          position: number
+          report_id: string
+          sender_is_reported: boolean
+          sender_role: string
+          swap_title: string | null
+        }
+        Insert: {
+          body: string
+          created_at: string
+          has_image?: boolean
+          id?: never
+          is_reported?: boolean
+          kind: string
+          message_id?: string | null
+          position: number
+          report_id: string
+          sender_is_reported?: boolean
+          sender_role: string
+          swap_title?: string | null
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          has_image?: boolean
+          id?: never
+          is_reported?: boolean
+          kind?: string
+          message_id?: string | null
+          position?: number
+          report_id?: string
+          sender_is_reported?: boolean
+          sender_role?: string
+          swap_title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "report_context_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reports: {
         Row: {
+          conversation_id: string | null
           created_at: string
           id: string
           note: string | null
           reason: Database["public"]["Enums"]["report_reason"]
-          reporter_id: string
+          reporter_id: string | null
+          resolution: string | null
+          resolution_note: string | null
+          resolved_at: string | null
+          resolved_by: string | null
           status: Database["public"]["Enums"]["report_status"]
           target_id: string
+          target_owner_id: string | null
           target_type: Database["public"]["Enums"]["report_target"]
         }
         Insert: {
+          conversation_id?: string | null
           created_at?: string
           id?: string
           note?: string | null
           reason: Database["public"]["Enums"]["report_reason"]
-          reporter_id: string
+          reporter_id?: string | null
+          resolution?: string | null
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
           status?: Database["public"]["Enums"]["report_status"]
           target_id: string
+          target_owner_id?: string | null
           target_type: Database["public"]["Enums"]["report_target"]
         }
         Update: {
+          conversation_id?: string | null
           created_at?: string
           id?: string
           note?: string | null
           reason?: Database["public"]["Enums"]["report_reason"]
-          reporter_id?: string
+          reporter_id?: string | null
+          resolution?: string | null
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
           status?: Database["public"]["Enums"]["report_status"]
           target_id?: string
+          target_owner_id?: string | null
           target_type?: Database["public"]["Enums"]["report_target"]
         }
         Relationships: [
           {
+            foreignKeyName: "reports_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "reports_reporter_id_fkey"
             columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_resolved_by_fkey"
+            columns: ["resolved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_target_owner_id_fkey"
+            columns: ["target_owner_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -1413,12 +1763,15 @@ export type Database = {
           id: string
           mentor_id: string | null
           photo_url: string | null
+          review_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
           slug: string
           slug_edited: boolean
           status: Database["public"]["Enums"]["seller_status"]
           submitted_at: string | null
           tagline: string | null
-          user_id: string
+          user_id: string | null
           verified: boolean
         }
         Insert: {
@@ -1432,12 +1785,15 @@ export type Database = {
           id?: string
           mentor_id?: string | null
           photo_url?: string | null
+          review_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           slug: string
           slug_edited?: boolean
           status?: Database["public"]["Enums"]["seller_status"]
           submitted_at?: string | null
           tagline?: string | null
-          user_id: string
+          user_id?: string | null
           verified?: boolean
         }
         Update: {
@@ -1451,12 +1807,15 @@ export type Database = {
           id?: string
           mentor_id?: string | null
           photo_url?: string | null
+          review_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           slug?: string
           slug_edited?: boolean
           status?: Database["public"]["Enums"]["seller_status"]
           submitted_at?: string | null
           tagline?: string | null
-          user_id?: string
+          user_id?: string | null
           verified?: boolean
         }
         Relationships: [
@@ -1482,6 +1841,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "seller_profiles_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "seller_profiles_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: true
@@ -1494,7 +1860,13 @@ export type Database = {
         Row: {
           account_days: number
           confirmed_sales: number
+          enquiries_14d: number
+          enquiries_30d: number
           enquiries_90d: number
+          hidden_listings_14d: number
+          last_active_at: string | null
+          last_listing_update_at: string | null
+          listing_views_30d: number
           median_reply_seconds: number | null
           replied_90d: number
           reply_band: string | null
@@ -1504,12 +1876,19 @@ export type Database = {
           tier: string
           updated_at: string
           verified: boolean
+          whatsapp_30d: number
           whatsapp_leads_90d: number
         }
         Insert: {
           account_days?: number
           confirmed_sales?: number
+          enquiries_14d?: number
+          enquiries_30d?: number
           enquiries_90d?: number
+          hidden_listings_14d?: number
+          last_active_at?: string | null
+          last_listing_update_at?: string | null
+          listing_views_30d?: number
           median_reply_seconds?: number | null
           replied_90d?: number
           reply_band?: string | null
@@ -1519,12 +1898,19 @@ export type Database = {
           tier?: string
           updated_at?: string
           verified?: boolean
+          whatsapp_30d?: number
           whatsapp_leads_90d?: number
         }
         Update: {
           account_days?: number
           confirmed_sales?: number
+          enquiries_14d?: number
+          enquiries_30d?: number
           enquiries_90d?: number
+          hidden_listings_14d?: number
+          last_active_at?: string | null
+          last_listing_update_at?: string | null
+          listing_views_30d?: number
           median_reply_seconds?: number | null
           replied_90d?: number
           reply_band?: string | null
@@ -1534,6 +1920,7 @@ export type Database = {
           tier?: string
           updated_at?: string
           verified?: boolean
+          whatsapp_30d?: number
           whatsapp_leads_90d?: number
         }
         Relationships: [
@@ -1550,6 +1937,38 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "trust_tiers"
             referencedColumns: ["tier"]
+          },
+        ]
+      }
+      site_settings: {
+        Row: {
+          description: string | null
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          description?: string | null
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value: Json
+        }
+        Update: {
+          description?: string | null
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "site_settings_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1606,6 +2025,55 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      user_warnings: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          message: string
+          report_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          message: string
+          report_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          message?: string
+          report_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_warnings_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_warnings_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "reports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_warnings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -1672,6 +2140,48 @@ export type Database = {
       }
     }
     Functions: {
+      admin_assign_mentor: {
+        Args: { p_mentor: string; p_reason?: string; p_seller: string }
+        Returns: undefined
+      }
+      admin_moderate_listing: {
+        Args: {
+          p_action: string
+          p_category?: string
+          p_listing: string
+          p_reason?: string
+        }
+        Returns: undefined
+      }
+      admin_resolve_report: {
+        Args: {
+          p_action: string
+          p_days?: number
+          p_note?: string
+          p_report: string
+        }
+        Returns: undefined
+      }
+      admin_review_seller: {
+        Args: { p_decision: string; p_reason?: string; p_seller: string }
+        Returns: undefined
+      }
+      admin_set_role: {
+        Args: {
+          p_reason?: string
+          p_role: Database["public"]["Enums"]["user_role"]
+          p_user: string
+        }
+        Returns: undefined
+      }
+      admin_set_verified: {
+        Args: { p_reason?: string; p_seller: string; p_verified: boolean }
+        Returns: undefined
+      }
+      admin_unsuspend: {
+        Args: { p_reason?: string; p_user: string }
+        Returns: undefined
+      }
       search_listings: {
         Args: {
           p_available_only?: boolean
@@ -1706,8 +2216,11 @@ export type Database = {
         | "unsafe"
         | "wrong_category"
         | "other"
+        | "prohibited_item"
+        | "harassment"
+        | "fake_profile"
       report_status: "pending" | "actioned" | "dismissed"
-      report_target: "listing" | "user" | "request"
+      report_target: "listing" | "user" | "request" | "seller" | "message"
       request_status: "open" | "fulfilled" | "closed"
       seller_status: "draft" | "pending" | "approved" | "rejected" | "suspended"
       user_role: "buyer" | "seller" | "mentor" | "admin"
@@ -1851,9 +2364,12 @@ export const Constants = {
         "unsafe",
         "wrong_category",
         "other",
+        "prohibited_item",
+        "harassment",
+        "fake_profile",
       ],
       report_status: ["pending", "actioned", "dismissed"],
-      report_target: ["listing", "user", "request"],
+      report_target: ["listing", "user", "request", "seller", "message"],
       request_status: ["open", "fulfilled", "closed"],
       seller_status: ["draft", "pending", "approved", "rejected", "suspended"],
       user_role: ["buyer", "seller", "mentor", "admin"],

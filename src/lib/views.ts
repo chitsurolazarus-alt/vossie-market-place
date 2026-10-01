@@ -13,7 +13,7 @@ export const VISITOR_COOKIE = "vossie_vid";
  * anonymous viewers use a salted hash of a random cookie id. No IP address is read or stored.
  * The seller's own views are excluded.
  */
-export async function recordView(listingId: string, sellerUserId: string) {
+export async function recordView(listingId: string, sellerUserId: string | null) {
   const user = await getUser();
   if (user?.id === sellerUserId) return;
   const vid = (await cookies()).get(VISITOR_COOKIE)?.value;

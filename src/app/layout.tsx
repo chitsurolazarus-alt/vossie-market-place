@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BottomNav from "@/components/BottomNav";
 import RegisterSW from "@/components/RegisterSW";
+import AccountNotice from "@/components/AccountNotice";
 import { WelcomeGate } from "@/components/Tours";
 import { getLowData } from "@/lib/viewer";
 
@@ -31,6 +32,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="min-h-full flex flex-col font-sans">
         <a href="#main" className="skip-link">Skip to content</a>
         <Header />
+        <AccountNotice />
         <main id="main" className="flex-1 pb-24 md:pb-0">{children}</main>
         <Footer />
         <BottomNav />
