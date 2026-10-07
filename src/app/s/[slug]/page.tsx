@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!seller || seller.status !== "approved") return { title: "Seller" };
   return {
     title: seller.business_name,
-    description: seller.tagline ?? `${seller.business_name} on Vossie Market Place`,
+    description: seller.tagline ?? `${seller.business_name} on HustleHub`,
     openGraph: { title: seller.business_name, description: seller.tagline ?? undefined, images: seller.photo_url ? [seller.photo_url] : undefined },
   };
 }

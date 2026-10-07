@@ -26,7 +26,7 @@ export async function getInbox(userId: string): Promise<InboxRow[]> {
     const role = r.buyer_id === userId ? "buyer" : "seller";
     return {
       id: r.id, role,
-      otherName: (role === "buyer" ? r.seller_name : r.buyer_name) ?? "Vossie user",
+      otherName: (role === "buyer" ? r.seller_name : r.buyer_name) ?? "HustleHub user",
       listingTitle: r.listing_title,
       coverUrl: r.listing_cover ? publicImageUrl(r.listing_cover) : null,
       preview: r.last_message_preview ?? "", lastAt: r.last_message_at!, unread: counts.get(r.id) ?? 0,

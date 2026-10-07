@@ -4,12 +4,12 @@ import { TrustBadge } from "@/components/trust";
 import { REPLY_BAND_LABEL } from "@/lib/trust-shared";
 import { describeTier, getTiers } from "@/lib/trust";
 
-export const metadata = { title: "How trust works", description: "How Vossie badges and reply times are earned. No stars, no reviews to game." };
+export const metadata = { title: "How trust works", description: "How HustleHub badges and reply times are earned. No stars, no reviews to game." };
 
 export default async function HowTrustWorks() {
   const tiers = await getTiers();
   return (
-    <PageShell title="How trust works" intro="Vossie shows badges, not star ratings. They're worked out by the system from what sellers actually do, and sellers can't edit them." width="max-w-3xl">
+    <PageShell title="How trust works" intro="HustleHub shows badges, not star ratings. They're worked out by the system from what sellers actually do, and sellers can't edit them." width="max-w-3xl">
       <section aria-labelledby="tiers-h">
         <h2 id="tiers-h" className="font-display text-2xl font-bold text-navy">The four badges</h2>
         <ol className="mt-4 space-y-4">
@@ -32,7 +32,7 @@ export default async function HowTrustWorks() {
         <dl className="mt-4 space-y-4">
           <div>
             <dt className="font-semibold text-navy">Response rate</dt>
-            <dd className="text-ink">Of the enquiries a seller received in the last 90 days, the share they replied to within 48 hours. Enquiries that are still inside their 48-hour window don&apos;t count against anyone. WhatsApp leads aren&apos;t counted because Vossie can&apos;t see the reply.</dd>
+            <dd className="text-ink">Of the enquiries a seller received in the last 90 days, the share they replied to within 48 hours. Enquiries that are still inside their 48-hour window don&apos;t count against anyone. WhatsApp leads aren&apos;t counted because HustleHub can&apos;t see the reply.</dd>
           </div>
           <div>
             <dt className="font-semibold text-navy">Confirmed sales and swaps</dt>
@@ -40,7 +40,7 @@ export default async function HowTrustWorks() {
           </div>
           <div>
             <dt className="font-semibold text-navy">Account age</dt>
-            <dd className="text-ink">How long the seller profile has existed on Vossie.</dd>
+            <dd className="text-ink">How long the seller profile has existed on HustleHub.</dd>
           </div>
           <div>
             <dt className="font-semibold text-navy">Verified badge</dt>

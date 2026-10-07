@@ -14,7 +14,7 @@ const RULES: [string, string][] = [
 
 export default function Guidelines() {
   return (
-    <PageShell title="Seller guidelines" intro="Vossie only works when buyers can trust student sellers. These rules keep it that way.">
+    <PageShell title="Seller guidelines" intro="HustleHub only works when buyers can trust student sellers. These rules keep it that way.">
       <ol className="space-y-4">
         {RULES.map(([t, d], i) => (
           <li key={t} className="rounded-xl bg-mist p-5">

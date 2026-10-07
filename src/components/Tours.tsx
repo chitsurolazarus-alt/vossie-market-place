@@ -8,9 +8,9 @@ import { Button } from "@/components/ui";
 type Slide = { icon: string; title: string; body: string };
 
 const WELCOME: Slide[] = [
-  { icon: "🎓", title: "Welcome to Vossie", body: "The marketplace for Eduvos student hustles. Buy from students on your campus, or sell your own products and services." },
+  { icon: "🎓", title: "Welcome to HustleHub", body: "The marketplace for Eduvos student hustles. Buy from students on your campus, or sell your own products and services." },
   { icon: "🔎", title: "Browse local", body: "Explore food, beauty, tutoring, design and more. Filter by category and campus, and find the hustles closest to you." },
-  { icon: "💬", title: "Enquire safely", body: "Message a seller inside Vossie or hop over to WhatsApp. Always meet at a campus pickup point, never at someone's home." },
+  { icon: "💬", title: "Enquire safely", body: "Message a seller inside HustleHub or hop over to WhatsApp. Always meet at a campus pickup point, never at someone's home." },
   { icon: "🚀", title: "Start selling", body: "Got a hustle? Set up your seller profile in about 3 minutes. The Incubation Hub team approves it and you're live." },
 ];
 

@@ -30,8 +30,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const price = priceLabel(l);
   return {
     title: l.title,
-    description: `${price} · ${s.business_name} on Vossie Market Place. ${l.description ?? ""}`.slice(0, 200),
-    openGraph: { title: `${l.title} · ${price}`, description: `From ${s.business_name} on Vossie Market Place` },
+    description: `${price} · ${s.business_name} on HustleHub. ${l.description ?? ""}`.slice(0, 200),
+    openGraph: { title: `${l.title} · ${price}`, description: `From ${s.business_name} on HustleHub` },
   };
 }
 
@@ -115,7 +115,7 @@ export default async function ListingPage({ params, searchParams }: { params: Pr
               <a href={`/go/whatsapp/${seller.slug}?listing=${l.id}`} rel="nofollow" className="inline-flex min-h-12 items-center justify-center rounded-lg bg-navy px-5 font-semibold text-white hover:bg-royal">Chat on WhatsApp</a>
             )}
             {isOwner && <Link href={`/sell/listings/${l.id}/edit`} className="inline-flex min-h-12 items-center justify-center rounded-lg bg-sand px-5 font-semibold text-navy">Edit listing</Link>}
-            <ShareButton title={l.title} text={`${l.title} · ${priceLabel(l)} on Vossie Market Place`} />
+            <ShareButton title={l.title} text={`${l.title} · ${priceLabel(l)} on HustleHub`} />
           </div>
           {!isOwner && <div className="mt-1"><ReportButton targetType="listing" targetId={l.id} authed={!!user} returnTo={`/l/${l.id}`} label="Report this listing" /></div>}
 

@@ -2,7 +2,7 @@ import { PageShell } from "@/components/ui";
 
 export const metadata = {
   title: "How Featured Hustles are chosen",
-  description: "The fair, rotating rules behind Vossie's Featured Hustle slots.",
+  description: "The fair, rotating rules behind HustleHub's Featured Hustle slots.",
 };
 
 const STEPS: [string, string][] = [

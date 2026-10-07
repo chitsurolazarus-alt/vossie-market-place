@@ -1,6 +1,6 @@
-# Vossie Market Place
+# HustleHub
 
-Student hustles. Campus customers. A multi-campus marketplace for Eduvos student entrepreneurs,
+Student hustles. Nationwide. A multi-campus marketplace for Eduvos student entrepreneurs,
 built for the Eduvos Hack Jam 2026 (Incubation Hub Marketplace).
 
 ## Setup
@@ -64,7 +64,7 @@ To get a live URL, import this repo into Vercel and add the three environment va
 ## Two-phone test (about 5 minutes)
 Run the app (`npm run build && npm start`) or use the deployed URL, with `DEMO_LOGIN_ENABLED=true`.
 1. **Phone A (buyer):** open `/login`, tap "New student". Browse to *Thandi's Kitchen > Chicken kota with atchar*.
-2. Tap **Message on Vossie**, edit the text, **Send**. You land in the thread.
+2. Tap **Message on HustleHub**, edit the text, **Send**. You land in the thread.
 3. **Phone B (seller):** `/login`, tap "Thandi's Kitchen". The bell shows a new enquiry; open **/sell/enquiries** (New tab) and open the chat.
 4. Reply from B: it appears on A instantly, and B's message shows "Seen" once A has it open. Try typing "pay a deposit first" on A for the safety tip.
 5. On B tap **Start**, then **Mark completed > Yes, it happened**. A sees "Did this go ahead?"; tap **Yes, it went ahead**.

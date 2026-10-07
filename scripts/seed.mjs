@@ -140,7 +140,7 @@ for (const s of SELLERS) {
   must(await db.from("profiles").update({ display_name: s.name, campus_id: campuses[s.campus], onboarding_seen: true, seller_tour_seen: true }).eq("id", uid), "profile");
 
   const photoPath = `${uid}/profile.webp`;
-  must(await db.storage.from("avatars").upload(photoPath, await tile(s.biz, CATEGORY_COLOURS[s.cat], "Vossie Market Place", 512), { contentType: "image/webp", upsert: true }), "avatar");
+  must(await db.storage.from("avatars").upload(photoPath, await tile(s.biz, CATEGORY_COLOURS[s.cat], "HustleHub", 512), { contentType: "image/webp", upsert: true }), "avatar");
   const photoUrl = db.storage.from("avatars").getPublicUrl(photoPath).data.publicUrl;
 
   const row = {
@@ -321,7 +321,7 @@ await enquire(by("Pixel & Pen Studio"), buyerIds[3], 1, { days: 0.005, status: "
   await db.from("hub_posts").delete().neq("id", "00000000-0000-0000-0000-000000000000");
   const posts = [
     { kind: "tip", title: "Price your hustle without undercharging", author_id: mentorId, campus_id: null, published: true,
-      body: "## Know your costs\nWrite down what each item costs you: ingredients, data, transport and your **time**.\n\n## A simple formula\n1. Add up your costs\n2. Add a margin of 30% or more\n3. Compare with 2 similar listings on Vossie\n\nNeed help? Book [mentor office hours](https://example.com) or message your mentor." },
+      body: "## Know your costs\nWrite down what each item costs you: ingredients, data, transport and your **time**.\n\n## A simple formula\n1. Add up your costs\n2. Add a margin of 30% or more\n3. Compare with 2 similar listings on HustleHub\n\nNeed help? Book [mentor office hours](https://example.com) or message your mentor." },
     { kind: "event", title: "Incubation Hub Pitch Night", author_id: admin, campus_id: null, published: true, venue: "Main auditorium", capacity: 80,
       event_at: new Date(Date.now() + 9 * 864e5).toISOString(), body: "Practise a 2-minute pitch for your hustle in front of friendly mentors.\n\n- Bring a product or a photo\n- Snacks provided\n- Open to all campuses" },
     { kind: "office_hours", title: "Mentor office hours with Pieter", author_id: mentorId, campus_id: campuses.midrand, published: true, venue: "Incubation Hub, Block C",

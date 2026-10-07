@@ -112,3 +112,16 @@
 - **Tests:** `test:theme` (79 checks): device default, no flash, toggle, persistence across reloads and pages, Auto following the device, and a WCAG AA
   contrast audit of every visible text element on 28 pages in both themes (0 failures). Screenshots in `shots/theme`.
 
+
+## Rebrand stage 1 - HustleHub identity
+- Product renamed **Vossie Market Place -> HustleHub** (metadata, manifest, titles, OG image, share/WhatsApp text, notifications, policy pages, seed copy, README, docs).
+  Tagline: "Student hustles. Nationwide." Repo name, routes, cookie names and the `vossie.net` sign-up domain are unchanged.
+- Migration `20261007000001_rebrand_hustlehub`: trigger-function texts and existing notification/Hub rows say HustleHub (logic untouched).
+- New original logo: market-stall awning over an H. `public/brand/hustlehub-mark.svg` and `hustlehub-wordmark.svg` (text outlined, light/dark aware).
+- Header shows the **mark only** (accessible name "HustleHub home"). The footer and the Eduvos logo are gone from every page.
+- Settings gained **About & legal** (privacy, terms, seller guidelines, how trust works, how Featured Hustle works, Hub Growth, contact) plus a
+  "Built for the Eduvos Incubation Hub" credit. New `/terms` page (draft for legal review). All pages stay reachable by URL.
+- Icon set from the mark: `favicon.ico` (16/32/48), `icon.svg`, 192/512 PNG, maskable 512 (glyph inside the safe zone), apple-touch-icon 180.
+  Service-worker cache renamed `hustlehub-shell-v2`.
+- ESLint ignores `.claude/` (vendored skill scripts).
+- Checks: lint, typecheck, build; `test:rls` 30, `test:messaging` 83, `test:moderation` 161, `test:flow` 46, `test:smoke` 31, `test:ui` 75, `test:theme` 79, `test:phase5` 134.

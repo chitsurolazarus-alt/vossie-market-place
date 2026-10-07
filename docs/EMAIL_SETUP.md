@@ -1,6 +1,6 @@
 # Email setup: custom SMTP for Supabase (do this before user testing on 19 October)
 
-Vossie signs people in with a **6-digit code sent by email**. Out of the box Supabase sends those emails from a shared
+HustleHub signs people in with a **6-digit code sent by email**. Out of the box Supabase sends those emails from a shared
 address with a very low limit, and it only delivers to people who are members of your Supabase organisation. That is fine
 for the team and **not enough for students**. You need your own SMTP provider.
 
@@ -53,7 +53,7 @@ start by about **10 October**.
 | Username | `resend` |
 | Password | your `re_...` API key |
 | Sender email | `no-reply@your-domain` (must be on the verified domain) |
-| Sender name | `Vossie Market Place` |
+| Sender name | `HustleHub` |
 
 ---
 
@@ -61,7 +61,7 @@ start by about **10 October**.
 
 ### 2.1 Create the account and a sender
 1. Go to <https://www.brevo.com> and sign up. New accounts may be asked to describe their use and can wait for approval, so do this first.
-2. **Senders, Domains & Dedicated IPs > Senders > Add a sender**. Enter the name `Vossie Market Place` and an address **on a domain you control** (for example `no-reply@vossie-market.co.za`). Brevo emails a confirmation link to that address. You must be able to receive mail there, so set up a forward or mailbox first.
+2. **Senders, Domains & Dedicated IPs > Senders > Add a sender**. Enter the name `HustleHub` and an address **on a domain you control** (for example `no-reply@vossie-market.co.za`). Brevo emails a confirmation link to that address. You must be able to receive mail there, so set up a forward or mailbox first.
 3. Strongly recommended: **Domains > Add a domain**, then add the **Brevo code (TXT)**, **DKIM (two CNAME or TXT records)** and a **DMARC (TXT)** record it shows. Click **Authenticate**. This stops your sign-in codes landing in junk.
 
 ### 2.2 Get your SMTP key
@@ -76,7 +76,7 @@ start by about **10 October**.
 | Username | the **Login** shown on the SMTP tab |
 | Password | the **SMTP key** you generated (not your account password) |
 | Sender email | the verified sender address |
-| Sender name | `Vossie Market Place` |
+| Sender name | `HustleHub` |
 
 ---
 
@@ -91,18 +91,18 @@ start by about **10 October**.
 7. **Authentication > Rate Limits**: raise **Rate limit for sending emails** to something your provider allows (for example 60 an hour while testing). The default for custom SMTP is low.
 
 ### The sign-in email must contain the code
-Vossie signs in with the 6-digit code, not a link.
+HustleHub signs in with the 6-digit code, not a link.
 1. **Authentication > Emails > Templates**. Open **Magic Link** (and **Confirm signup**, used the first time someone signs in).
 2. Make sure the body contains `{{ .Token }}`. A simple template:
 
 ```html
-<h2>Your Vossie sign-in code</h2>
-<p>Enter this code in Vossie Market Place:</p>
+<h2>Your HustleHub sign-in code</h2>
+<p>Enter this code in HustleHub:</p>
 <p style="font-size:28px;font-weight:700;letter-spacing:4px">{{ .Token }}</p>
 <p>It expires in an hour. If you didn't ask for it, ignore this email.</p>
 ```
 
-3. Set the subject to something recognisable, such as `Your Vossie sign-in code`.
+3. Set the subject to something recognisable, such as `Your HustleHub sign-in code`.
 
 ---
 

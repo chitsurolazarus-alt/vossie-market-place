@@ -23,7 +23,7 @@ export default async function SellDashboard() {
 
   if (!seller) {
     return (
-      <PageShell title="Sell on Vossie" intro="Turn your hustle into a campus-wide business." width="max-w-xl">
+      <PageShell title="Sell on HustleHub" intro="Turn your hustle into a campus-wide business." width="max-w-xl">
         <ul className="space-y-3 text-ink">
           <li className="flex gap-3"><span aria-hidden="true">📸</span> List products or services with photos and prices in rand</li>
           <li className="flex gap-3"><span aria-hidden="true">🤝</span> Accept cash, swaps or both</li>

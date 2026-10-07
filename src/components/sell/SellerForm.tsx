@@ -71,7 +71,7 @@ function StepAbout({ s, set, errors, userId }: Ctx) {
 
 function StepContact({ s, set, errors, maskedWhatsapp }: Ctx) {
   const opts = [
-    ["in_app", "In-app messages only", "Buyers message you inside Vossie."],
+    ["in_app", "In-app messages only", "Buyers message you inside HustleHub."],
     ["whatsapp", "WhatsApp only", "Buyers are sent to WhatsApp to chat."],
     ["both", "Both", "Buyers choose what suits them."],
   ] as const;
@@ -90,7 +90,7 @@ function StepContact({ s, set, errors, maskedWhatsapp }: Ctx) {
       </fieldset>
       {s.contactPref !== "in_app" && (
         <Field label="WhatsApp number" htmlFor="whatsapp" error={errors.whatsapp}
-          hint={maskedWhatsapp ? `Saved number: ${maskedWhatsapp}. Type a new one to replace it.` : "South African mobile, e.g. 082 123 4567. Kept private: buyers are sent to WhatsApp without ever seeing your number on Vossie."}>
+          hint={maskedWhatsapp ? `Saved number: ${maskedWhatsapp}. Type a new one to replace it.` : "South African mobile, e.g. 082 123 4567. Kept private: buyers are sent to WhatsApp without ever seeing your number on HustleHub."}>
           <input id="whatsapp" type="tel" inputMode="tel" autoComplete="tel" className={inputCls} value={s.whatsapp} maxLength={20}
             placeholder="082 123 4567" onChange={(e) => set({ whatsapp: e.target.value })} aria-invalid={!!errors.whatsapp}
             aria-describedby={describe("whatsapp", errors.whatsapp, true)} />

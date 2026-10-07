@@ -22,7 +22,7 @@ export function detectRisk(text: string): RiskFlag | null {
 
 export const RISK_TIPS: Record<RiskFlag, string> = {
   payment: "Safety tip: never pay a deposit or send money before you have met and seen the item or service. Pay on collection at a campus pickup point.",
-  bank: "Safety tip: be careful sharing bank details, card numbers or one-time PINs in chat. Vossie will never ask for them.",
+  bank: "Safety tip: be careful sharing bank details, card numbers or one-time PINs in chat. HustleHub will never ask for them.",
 };
 
 export type Segment = { type: "text"; text: string } | { type: "link"; text: string; href: string };

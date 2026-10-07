@@ -37,7 +37,7 @@ export async function GET() {
 
   const body = {
     exported_at: new Date().toISOString(),
-    about: "Everything Vossie Market Place holds about you that you can access. Messages are limited to those you sent.",
+    about: "Everything HustleHub holds about you that you can access. Messages are limited to those you sent.",
     account: mine(profile),
     seller_profile: sellerData,
     messages_i_sent: messages.data ?? [],

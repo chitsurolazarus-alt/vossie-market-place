@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata = { title: "Privacy policy", description: "What Vossie Market Place collects, why, who sees it, how long we keep it and how to use your POPIA rights." };
+export const metadata = { title: "Privacy policy", description: "What HustleHub collects, why, who sees it, how long we keep it and how to use your POPIA rights." };
 export const dynamic = "force-dynamic";
 
 type Officer = { name?: string; email?: string | null; phone?: string | null; note?: string | null };
@@ -30,14 +30,14 @@ export default async function Privacy() {
       </p>
 
       <Section id="who" title="Who we are">
-        <p>Vossie Market Place is a student marketplace run by the Eduvos Incubation Hub. It connects Eduvos students and staff who sell products and services with buyers on their campus. The Incubation Hub is the &quot;responsible party&quot; under POPIA.</p>
+        <p>HustleHub is a student marketplace run by the Eduvos Incubation Hub. It connects Eduvos students and staff who sell products and services with buyers on their campus. The Incubation Hub is the &quot;responsible party&quot; under POPIA.</p>
       </Section>
 
       <Section id="collect" title="What we collect, and why">
         <ul className="list-disc space-y-2 pl-6">
-          <li><strong>Your account:</strong> your Eduvos email address, name (if you give one), campus and the time you accepted this policy. We need these to sign you in and to keep Vossie limited to the Eduvos community.</li>
+          <li><strong>Your account:</strong> your Eduvos email address, name (if you give one), campus and the time you accepted this policy. We need these to sign you in and to keep HustleHub limited to the Eduvos community.</li>
           <li><strong>If you sell:</strong> business name, tagline, bio, profile photo, category, campus, pickup points, listings with photos and prices, and your WhatsApp number if you choose WhatsApp contact. We need these to show your hustle to buyers.</li>
-          <li><strong>Messages and enquiries:</strong> the messages and photos you send in Vossie, the status of each enquiry and whether a sale was confirmed. We need these to run conversations and to work out trust badges.</li>
+          <li><strong>Messages and enquiries:</strong> the messages and photos you send in HustleHub, the status of each enquiry and whether a sale was confirmed. We need these to run conversations and to work out trust badges.</li>
           <li><strong>Things you save or do:</strong> saved listings, followed sellers, RSVPs, office-hours requests, notification settings and reports you file.</li>
           <li><strong>Basic usage:</strong> when you were last active (to help mentors support sellers and to count active users), and an anonymous random cookie that counts one listing view per visitor per day. We do not use advertising trackers and we do not sell data.</li>
           <li><strong>Your settings:</strong> for example low-data mode, saved in a cookie and on your profile.</li>
@@ -48,7 +48,7 @@ export default async function Privacy() {
         <ul className="list-disc space-y-2 pl-6">
           <li><strong>Everyone:</strong> approved seller profiles and available listings, plus the trust badge and reply-time band.</li>
           <li><strong>The other person in a conversation:</strong> your messages and your first name with a last initial. Your email address is never shown to other users.</li>
-          <li><strong>Your WhatsApp number</strong> is never put on a web page. Signed-in buyers are sent to WhatsApp through a redirect, and Vossie records that a handoff happened (not what was said).</li>
+          <li><strong>Your WhatsApp number</strong> is never put on a web page. Signed-in buyers are sent to WhatsApp through a redirect, and HustleHub records that a handoff happened (not what was said).</li>
           <li><strong>Incubation Hub admins:</strong> account details and reports. Admins can read only the message you report and a few messages around it, not your other conversations.</li>
           <li><strong>Mentors:</strong> activity numbers for the sellers assigned to them (enquiries, response rate, confirmed sales, views). Mentors cannot read any messages.</li>
           <li><strong>Our service providers:</strong> Supabase (database, sign-in and file storage, hosted in Ireland, EU) and our web host. They process data for us under their own security commitments. Moving data outside South Africa is allowed under POPIA section 72 where the provider is bound to protect it to a comparable standard.</li>

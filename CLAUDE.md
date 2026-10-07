@@ -1,8 +1,8 @@
-# Vossie Market Place — Project Brief (read every session)
+# HustleHub — Project Brief (read every session)
 
 Team entry for the **Eduvos Hack Jam 2026** (Incubation Hub Marketplace brief, with Suitable Focus).
 Judged on: Innovative, User-focused, Practical, Scalable (multi-campus), Accessible, Sustainable.
-Demo Day: 2–6 November 2026. Tagline: "Student hustles. Campus customers."
+Demo Day: 2–6 November 2026. Tagline: "Student hustles. Nationwide."
 
 ## Working rules
 - One phase per session, in order (Phase 0 → 9). Do not jump ahead.
@@ -26,7 +26,9 @@ Payments later via Paystack (ZAR) behind a feature flag.
 ## Brand
 Deep navy #16305E, royal blue #2352C4, sand #CFAE7E, white, light grey. Serif display headings
 (Playfair Display), sans body (Inter). Sand is background-only (fails AA as text on white).
-Eduvos logo: `public/brand/eduvos-logo.png`.
+Product name **HustleHub** (renamed from Vossie Market Place; repo, routes and `vossie.net` sign-up domain unchanged). Logo: stall-awning + H mark in
+`public/brand/hustlehub-mark.svg` / `hustlehub-wordmark.svg`. The header shows the mark only (aria-label "HustleHub home"); there is no footer. Legal and
+about links live in Settings → About & legal. The Eduvos logo file is no longer shown in the UI.
 
 ## Roles (enforced in RLS, not only UI)
 buyer, seller (needs approval), mentor (read-only analytics), admin (full moderation).
@@ -51,7 +53,7 @@ realistic South African seed data, no lorem ipsum.
   currently not approved, and lint/build work without it.
 
 ## Status
-Phases 0-5 complete. Next: Phase 6 (accessibility, onboarding and polish; email provider).
+Phases 0-5 complete. Rebrand Stage 1 (HustleHub identity) done; Stages 2-10 follow the rebrand brief. Email provider (SMTP) is still outstanding.
 
 ## Phase 1-2 decisions
 - Sign-up allow-list in DB tables (`vossie.net`, `eduvos.com`, named test emails); roles by promotion only.

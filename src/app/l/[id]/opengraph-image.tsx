@@ -4,7 +4,7 @@ import sharp from "sharp";
 import { priceLabel, publicImageUrl } from "@/lib/format";
 
 export const runtime = "nodejs";
-export const alt = "Vossie Market Place listing";
+export const alt = "HustleHub listing";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -12,8 +12,8 @@ export const contentType = "image/png";
 // visible listings (approved seller, not hidden, not deleted) get a photo and details.
 export default async function Image({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  let title = "Vossie Market Place";
-  let price = "Student hustles. Campus customers.";
+  let title = "HustleHub";
+  let price = "Student hustles. Nationwide.";
   let seller = "Eduvos Incubation Hub";
   let photo: string | null = null;
 
@@ -53,8 +53,8 @@ export default async function Image({ params }: { params: Promise<{ id: string }
             <div style={{ fontSize: 30, marginTop: 12, color: "#dbe3f3" }}>{seller}</div>
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ fontSize: 34, fontWeight: 700 }}>Vossie Market Place</div>
-            <div style={{ fontSize: 24, color: "#dbe3f3" }}>Student hustles. Campus customers.</div>
+            <div style={{ fontSize: 34, fontWeight: 700 }}>HustleHub</div>
+            <div style={{ fontSize: 24, color: "#dbe3f3" }}>Student hustles. Nationwide.</div>
           </div>
         </div>
       </div>

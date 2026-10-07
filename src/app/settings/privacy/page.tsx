@@ -39,7 +39,7 @@ export default async function PrivacySettings() {
 
       {(warnings ?? []).length > 0 && (
         <section aria-labelledby="warn-h" className="mt-6 rounded-2xl border-l-4 border-amber-700 bg-amber-50 p-4">
-          <h2 id="warn-h" className="font-display text-xl font-bold text-amber-950">Messages from the Vossie team</h2>
+          <h2 id="warn-h" className="font-display text-xl font-bold text-amber-950">Messages from the HustleHub team</h2>
           <ul className="mt-2 space-y-2 text-amber-950">{warnings!.map((w) => <li key={w.id}><span className="block text-xs">{fmt(w.created_at)}</span>{w.message}</li>)}</ul>
         </section>
       )}

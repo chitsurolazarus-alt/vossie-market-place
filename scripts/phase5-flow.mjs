@@ -247,7 +247,7 @@ try {
     await go(buyerP, `/l/${kota.id}`);
     check("a suspended user sees a clear notice", /Your account is suspended/.test(await text(buyerP)));
     await shot(buyerP, "14-suspended-notice"); await audit(buyerP, "suspended notice");
-    await clickText(buyerP, "button", "Message on Vossie");
+    await clickText(buyerP, "button", "Message on HustleHub");
     await buyerP.waitForSelector("[role=dialog][aria-label^='Message']");
     await clickText(buyerP, "[role=dialog] button[type=submit]", "Send message");
     await waitText(buyerP, "account is suspended");

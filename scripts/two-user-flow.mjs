@@ -61,9 +61,9 @@ async function audit(p, name) {
 }
 
 try {
-  // ===== 1. Buyer, signed out, taps Message on Vossie -> sign in -> back with the composer open and prefilled
+  // ===== 1. Buyer, signed out, taps Message on HustleHub -> sign in -> back with the composer open and prefilled
   await go(buyer, `/l/${listing.id}`);
-  await clickText(buyer, "button", "Message on Vossie");
+  await clickText(buyer, "button", "Message on HustleHub");
   await buyer.waitForFunction(() => location.pathname === "/login", { timeout: 15000 });
   check("signed-out tap sends the buyer to sign in and remembers the page", decodeURIComponent(buyer.url()).includes(`next=/l/${listing.id}?compose=1`), buyer.url());
   await shot(buyer, "01-buyer-signin");

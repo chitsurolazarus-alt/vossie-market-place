@@ -33,7 +33,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     if (l) { subject = l.title; validListing = listingId; }
   }
   if (seller.user_id !== auth.user.id) await logHandoff(admin, auth.user.id, seller.id, validListing);
-  const text = `Hi ${seller.business_name}, I found ${subject} on Vossie Market Place and I'm interested.`;
+  const text = `Hi ${seller.business_name}, I found ${subject} on HustleHub and I'm interested.`;
   const number = priv.whatsapp_e164.replace(/\D/g, "");
   return NextResponse.redirect(`https://wa.me/${number}?text=${encodeURIComponent(text)}`, 302);
 }

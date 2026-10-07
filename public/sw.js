@@ -1,6 +1,6 @@
 // Offline shell: cache the app shell, network-first for navigations.
-const CACHE = "vossie-shell-v1";
-const SHELL = ["/", "/offline", "/icons/icon-192.png", "/brand/eduvos-logo.png"];
+const CACHE = "hustlehub-shell-v2";
+const SHELL = ["/", "/offline", "/icons/icon-192.png", "/brand/hustlehub-mark.svg"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));

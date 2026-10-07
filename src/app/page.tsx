@@ -8,7 +8,7 @@ import { isWithinDays } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
 import { getLowData, getSavedIds } from "@/lib/viewer";
 
-export const metadata = { title: { absolute: "Vossie Market Place | Student hustles. Campus customers." } };
+export const metadata = { title: { absolute: "HustleHub | Student hustles. Nationwide." } };
 
 async function loadFeatured(campusId?: string) {
   const supabase = await createClient();
@@ -45,10 +45,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
       <section className="bg-navy text-white">
         <div className="mx-auto max-w-6xl px-4 py-10 sm:py-16">
           <p className="inline-block rounded-full bg-sand px-3 py-1 text-sm font-semibold text-navy">Eduvos Incubation Hub</p>
-          <h1 className="mt-4 max-w-2xl font-display text-4xl font-bold sm:text-5xl">Student hustles. Campus customers.</h1>
+          <h1 className="mt-4 max-w-2xl font-display text-4xl font-bold sm:text-5xl">Student hustles. Nationwide.</h1>
           <p className="mt-3 max-w-xl text-lg text-white/90">Find food, hair, tutoring, design and more from students on your campus.</p>
           <form action="/browse" method="get" role="search" className="mt-6 flex max-w-xl gap-2">
-            <label htmlFor="home-q" className="sr-only">Search Vossie</label>
+            <label htmlFor="home-q" className="sr-only">Search HustleHub</label>
             <input id="home-q" name="q" type="search" enterKeyHint="search" placeholder="Try braids, logo, kota…" className={`${inputCls} border-white`} />
             <button type="submit" className="min-h-11 shrink-0 rounded-lg bg-sand px-5 font-semibold text-navy hover:brightness-95">Search</button>
           </form>

@@ -90,7 +90,7 @@ export default function EnquireButton({ authed, sellerId, listingId, listingTitl
   return (
     <>
       <button type="button" onClick={tap} className={className ?? "inline-flex min-h-12 items-center justify-center rounded-lg bg-navy px-5 font-semibold text-white hover:bg-royal"}>
-        Message on Vossie
+        Message on HustleHub
       </button>
       {authed && existingConversationId && (
         <Link href={`/messages/${existingConversationId}`} className="inline-flex min-h-11 items-center text-sm font-semibold text-royal underline">You&apos;ve already messaged · open chat</Link>

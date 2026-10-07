@@ -17,7 +17,7 @@ export default async function ThreadPage({ params }: { params: Promise<{ id: str
   const t = await getThread(id, user.id);
   if (!t || !t.enquiry) notFound();
   const { conv, role } = t;
-  const otherName = (role === "buyer" ? conv.seller_name : conv.buyer_name) ?? "Vossie user";
+  const otherName = (role === "buyer" ? conv.seller_name : conv.buyer_name) ?? "HustleHub user";
 
   return (
     <>

@@ -55,7 +55,7 @@ export default function LoginForm({ next, demoEnabled }: { next: string; demoEna
           <label className="flex min-h-11 items-start gap-3">
             <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1 h-5 w-5 shrink-0" />
             <span className="text-sm text-ink">
-              I agree to Vossie processing my details as described in the{" "}
+              I agree to HustleHub processing my details as described in the{" "}
               <Link href="/privacy" className="font-semibold text-royal underline">privacy policy</Link> (POPIA).
             </span>
           </label>
