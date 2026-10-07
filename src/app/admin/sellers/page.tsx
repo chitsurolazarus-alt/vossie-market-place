@@ -3,6 +3,7 @@ import { EmptyState } from "@/components/ui";
 import { shortTime } from "@/lib/messages";
 import { createClient } from "@/lib/supabase/server";
 
+import Verified from "@/components/Verified";
 export const metadata = { title: "Seller approvals" };
 
 const TABS = [
@@ -34,7 +35,7 @@ export default async function AdminSellers({ searchParams }: { searchParams: Pro
               <li key={s.id}>
                 <Link href={`/admin/sellers/${s.id}`} className="flex min-h-16 items-center justify-between gap-3 rounded-xl border border-navy/15 bg-white p-3 hover:bg-mist">
                   <span className="min-w-0">
-                    <span className="block truncate font-semibold text-navy">{s.business_name}{s.verified && " ✓"}</span>
+                    <span className="block truncate font-semibold text-navy">{s.business_name}{s.verified && <Verified />}</span>
                     <span className="block truncate text-sm text-muted">{[s.categories?.name, s.campuses?.name].filter(Boolean).join(" · ")}</span>
                     {s.review_reason && active.key === "other" && <span className="block truncate text-xs text-muted">“{s.review_reason}”</span>}
                   </span>

@@ -12,6 +12,7 @@ import { AUTO_CONFIRM_DAYS, clockTime, dayKey, dayLabel, detectRisk, linkify, MA
 import { createClient } from "@/lib/supabase/client";
 import { RiskTip, SwapFields, type SwapValue } from "./EnquireButton";
 
+import Icon from "../Icon";
 type Msg = SentMessage & { _state?: "sending" | "failed"; _error?: string; _preview?: string };
 export type EnquiryState = {
   id: string; status: string; sale_happened: boolean | null; completion_requested_at: string | null;
@@ -226,7 +227,7 @@ export default function Thread(p: Props) {
             <StatusActions enquiryId={enq.id} status={enq.status} onChanged={(patch) => setEnq((e) => ({ ...e, status: patch.status, sale_happened: patch.sale_happened ?? e.sale_happened }))} />
             {enq.status === "completed" && enq.sale_happened && (
               <p className="text-sm text-ink">
-                {enq.buyer_confirmed_at ? `Sale confirmed${enq.auto_confirmed ? " automatically" : " by the buyer"} ✓ It counts toward your trust badge.`
+                {enq.buyer_confirmed_at ? `Sale confirmed${enq.auto_confirmed ? " automatically" : " by the buyer"}. It counts toward your trust badge.`
                   : enq.buyer_disputed_at ? "The buyer said this didn't go ahead, so it won't count toward your trust badge."
                   : `Waiting for the buyer to confirm${autoDate ? ` (auto-confirms on ${autoDate})` : ""}.`}
               </p>
@@ -296,7 +297,7 @@ export default function Thread(p: Props) {
                 </div>
                 {!mine && <ReportButton targetType="message" targetId={m.id} authed returnTo={`/messages/${p.conversationId}`} label="" className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-muted hover:bg-mist hover:text-navy" />}
                 </div>
-                {!mine && m.risk_flag && <p className="mt-1 max-w-[85%] text-xs font-semibold text-amber-900">⚠ Be careful with this message</p>}
+                {!mine && m.risk_flag && <p className="mt-1 inline-flex max-w-[85%] items-center gap-1 text-xs font-semibold text-amber-900"><Icon name="alert" size="sm" />Be careful with this message</p>}
                 <p className="mt-0.5 px-1 text-xs text-muted">
                   {clockTime(m.created_at)}
                   {mine && m.id === lastMine?.id && !m._state && (m.read_at ? " · Seen" : " · Sent")}
@@ -334,7 +335,7 @@ export default function Thread(p: Props) {
             {/* eslint-disable-next-line @next/next/no-img-element -- local blob preview */}
             <img src={file.preview} alt="Photo to send" className="h-14 w-14 rounded-lg object-cover" />
             <p className="flex-1 text-sm text-ink">Photo ready to send</p>
-            <button type="button" onClick={() => setFile(null)} aria-label="Remove photo" className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-xl text-navy hover:bg-white">×</button>
+            <button type="button" onClick={() => setFile(null)} aria-label="Remove photo" className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-navy hover:bg-white"><Icon name="close" /></button>
           </div>
         )}
         {swapOn && p.swapAllowed && <SwapFields idPrefix="thread" myListings={p.myListings} value={swap} onChange={setSwap} />}
@@ -345,12 +346,12 @@ export default function Thread(p: Props) {
           <input ref={fileInput} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" tabIndex={-1} aria-hidden="true" id="thread-photo" onChange={(e) => pickFile(e.target.files?.[0])} />
           <button type="button" onClick={() => fileInput.current?.click()} disabled={busyImage} aria-label="Attach a photo"
             className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border-2 border-navy/30 text-navy hover:bg-mist disabled:opacity-60">
-            <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current" aria-hidden="true"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z" /></svg>
+            <Icon name="image" />
           </button>
           {p.swapAllowed && (
             <button type="button" onClick={() => setSwapOn((v) => !v)} aria-pressed={swapOn} aria-label="Propose a swap" title="Propose a swap"
               className={`inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border-2 ${swapOn ? "border-navy bg-navy text-white" : "border-navy/30 text-navy hover:bg-mist"}`}>
-              <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current" aria-hidden="true"><path d="M7 7h11l-3-3 1.4-1.4L22 8l-5.6 5.4L15 12l3-3H7V7zm10 10H6l3 3-1.4 1.4L2 16l5.6-5.4L9 12l-3 3h11v2z" /></svg>
+              <Icon name="swap" />
             </button>
           )}
           <div className="min-w-0 flex-1">

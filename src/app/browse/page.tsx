@@ -4,9 +4,10 @@ import BrowseFilters from "@/components/BrowseFilters";
 import ListingTile from "@/components/ListingTile";
 import { ButtonLink, EmptyState, inputCls } from "@/components/ui";
 import { getUser } from "@/lib/auth";
-import { PAGE_SIZE, browseHref, getReference, parseParams, searchListings } from "@/lib/browse";
+import { CATEGORY_ICONS, PAGE_SIZE, browseHref, getReference, parseParams, searchListings } from "@/lib/browse";
 import { getLowData, getSavedIds } from "@/lib/viewer";
 
+import Icon from "@/components/Icon";
 export const metadata: Metadata = { title: "Browse", description: "Search products and services from Eduvos student entrepreneurs." };
 
 const SORTS = [
@@ -54,7 +55,22 @@ export default async function Browse({ searchParams }: { searchParams: Promise<R
             categories={ref.categories} campuses={ref.campuses} activeCount={chips.length} clearHref={clearHref} />
         </aside>
 
-        <section aria-label="Results">
+        <section aria-label="Results" className="min-w-0">
+          <nav aria-label="Categories" className="-mx-4 mb-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
+            <ul className="flex w-max gap-2">
+              {[{ slug: "", name: "All" }, ...ref.categories].map((c) => {
+                const on = p.category === c.slug;
+                return (
+                  <li key={c.slug || "all"}>
+                    <Link href={browseHref(p, { category: c.slug, n: 1 })} aria-current={on ? "true" : undefined}
+                      className={`inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full border-2 px-4 text-sm font-semibold transition-colors active:scale-[.97] ${on ? "border-navy bg-navy text-white" : "border-navy/20 bg-white text-navy hover:bg-mist"}`}>
+                      {c.slug && <Icon name={CATEGORY_ICONS[c.slug] ?? "other"} size="sm" />}{c.name}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
           <div className="flex flex-wrap items-center gap-2" aria-label="Sort and active filters">
             <nav aria-label="Sort" className="flex flex-wrap gap-2">
               {sortOptions.map(([k, label]) => (
@@ -69,7 +85,7 @@ export default async function Browse({ searchParams }: { searchParams: Promise<R
             <ul className="mt-3 flex flex-wrap gap-2" aria-label="Active filters">
               {chips.map(([label, href]) => (
                 <li key={label}><Link href={href} className="inline-flex min-h-11 items-center gap-1 rounded-full bg-mist px-4 text-sm font-medium text-navy">
-                  {label} <span aria-hidden="true">×</span><span className="sr-only">remove filter</span></Link></li>
+                  {label} <Icon name="close" size="sm" /><span className="sr-only">remove filter</span></Link></li>
               ))}
             </ul>
           )}

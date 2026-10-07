@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { addQuickReply, deleteQuickReply } from "@/app/actions/enquiries";
 
+import Icon from "@/components/Icon";
 /** Up to 5 canned responses a seller can drop into any thread. */
 export default function QuickReplies({ replies }: { replies: { id: string; body: string }[] }) {
   const router = useRouter();
@@ -32,7 +33,7 @@ export default function QuickReplies({ replies }: { replies: { id: string; body:
             <li key={r.id} className="flex items-start gap-2 rounded-lg bg-white p-3">
               <p className="min-w-0 flex-1 text-ink">{r.body}</p>
               <button type="button" onClick={() => remove(r.id)} disabled={pending} aria-label={`Delete quick reply: ${r.body.slice(0, 30)}`}
-                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-red-800 hover:bg-red-50">✕</button>
+                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-red-800 hover:bg-red-50"><Icon name="close" size="md" /></button>
             </li>
           ))}
         </ul>

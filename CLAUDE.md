@@ -24,6 +24,7 @@ Edge Functions, `@supabase/ssr`. Migrations in `supabase/migrations`; types via
 Payments later via Paystack (ZAR) behind a feature flag.
 
 ## Brand
+**Design source of truth: `design-system/hustlehub/MASTER.md`** (vibrant & block-based direction, our palette, Unicons, spacing/radius scale, component rules and the pre-delivery checklist). Read it before any UI work.
 Deep navy #16305E, royal blue #2352C4, sand #CFAE7E, white, light grey. Serif display headings
 (Playfair Display), sans body (Inter). Sand is background-only (fails AA as text on white).
 Product name **HustleHub** (renamed from Vossie Market Place; repo, routes and `vossie.net` sign-up domain unchanged). Logo: stall-awning + H mark in
@@ -92,3 +93,9 @@ Phases 0-5 complete. Rebrand Stage 1 (HustleHub identity) done; Stages 2-10 foll
 - Env vars are set for Production and Preview via `vercel env add` (service role and demo password are sensitive). `.vercel/` and `.env*` are git-ignored.
 - The demo login is enabled on Vercel only because the site is protected; turn it off once SMTP works.
 
+
+## Design system (Stage 2)
+- Icons: Unicons line via `src/components/Icon.tsx` only (sizes sm 16 / md 20 / lg 24, decorative = aria-hidden, standalone = `label`). No emoji or text glyphs as icons. `next.config.ts` transpiles the package.
+- Shared UI in `src/components/ui.tsx` (Button, EmptyState with icon, StatTile, LinkTabs, Skeleton) and `Toast.tsx` (`useToast()`); listing card is `ListingTile.tsx`.
+- Bottom nav until 1024px (`lg`), desktop nav from `lg`; fixed bars respect safe areas (`viewportFit: cover`).
+- `npm run test:audit` (responsive audit: 35 routes x 6 widths x light/dark) must stay at 0 issues; results in `docs/UI_AUDIT.md`.

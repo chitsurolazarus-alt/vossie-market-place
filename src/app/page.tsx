@@ -8,6 +8,8 @@ import { isWithinDays } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
 import { getLowData, getSavedIds } from "@/lib/viewer";
 
+import Verified from "@/components/Verified";
+import Icon from "@/components/Icon";
 export const metadata = { title: { absolute: "HustleHub | Student hustles. Nationwide." } };
 
 async function loadFeatured(campusId?: string) {
@@ -85,7 +87,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
                       <span className="absolute left-2 top-2 rounded bg-sand px-2 py-0.5 text-xs font-bold text-navy">Featured</span>
                     </div>
                     <div className="p-3">
-                      <h3 className="font-display text-lg font-bold leading-snug text-navy">{s.business_name}{s.verified && <span className="text-sm"> ✓<span className="sr-only"> Verified</span></span>}</h3>
+                      <h3 className="font-display text-lg font-bold leading-snug text-navy">{s.business_name}{s.verified && <Verified />}</h3>
                       {s.tagline && <p className="line-clamp-2 text-sm text-ink">{s.tagline}</p>}
                       <p className="mt-1 text-xs text-muted">{[s.categories?.name, s.campuses?.name].filter(Boolean).join(" · ")}</p>
                     </div>
@@ -119,7 +121,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           {ref.categories.map((c) => (
             <li key={c.slug}>
               <Link href={`/browse?category=${c.slug}${campus ? `&campus=${campus}` : ""}`} className="flex min-h-16 items-center gap-3 rounded-xl bg-mist px-4 font-semibold text-navy hover:bg-navy/10">
-                <span aria-hidden="true" className="text-2xl">{CATEGORY_ICONS[c.slug] ?? "✨"}</span>{c.name}
+                <Icon name={CATEGORY_ICONS[c.slug] ?? "other"} />{c.name}
               </Link>
             </li>
           ))}

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { getMySeller, requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
+import Icon from "@/components/Icon";
 export const metadata = { title: "Seller dashboard" };
 
 const STATUS: Record<string, { label: string; body: string }> = {
@@ -25,10 +26,10 @@ export default async function SellDashboard() {
     return (
       <PageShell title="Sell on HustleHub" intro="Turn your hustle into a campus-wide business." width="max-w-xl">
         <ul className="space-y-3 text-ink">
-          <li className="flex gap-3"><span aria-hidden="true">📸</span> List products or services with photos and prices in rand</li>
-          <li className="flex gap-3"><span aria-hidden="true">🤝</span> Accept cash, swaps or both</li>
-          <li className="flex gap-3"><span aria-hidden="true">📍</span> Hand over safely at campus pickup points</li>
-          <li className="flex gap-3"><span aria-hidden="true">✅</span> Earn the Verified Incubation Hub badge</li>
+          <li className="flex gap-3"><Icon name="camera" className="text-royal" /> List products or services with photos and prices in rand</li>
+          <li className="flex gap-3"><Icon name="swap" className="text-royal" /> Accept cash, swaps or both</li>
+          <li className="flex gap-3"><Icon name="pin" className="text-royal" /> Hand over safely at campus pickup points</li>
+          <li className="flex gap-3"><Icon name="check-circle" className="text-royal" /> Earn the Verified Incubation Hub badge</li>
         </ul>
         <div className="mt-8"><ButtonLink href="/sell/onboarding" variant="sand">Become a seller</ButtonLink></div>
       </PageShell>
@@ -56,7 +57,7 @@ export default async function SellDashboard() {
           <p className="text-sm text-white/80">Status</p>
           <p className="font-display text-2xl font-bold">{st.label}</p>
           <p className="mt-1 text-white/90">{st.body}</p>
-          {seller.verified && <p className="mt-3 inline-block rounded-full bg-sand px-3 py-1 text-sm font-bold text-navy">✓ Verified Incubation Hub member</p>}
+          {seller.verified && <p className="mt-3 inline-flex items-center gap-1 rounded-full bg-sand px-3 py-1 text-sm font-bold text-navy"><Icon name="check-circle" size="sm" />Verified Incubation Hub member</p>}
         </div>
         <div className="rounded-xl bg-mist p-5">
           <p className="text-sm text-muted">Enquiries</p>
@@ -73,7 +74,7 @@ export default async function SellDashboard() {
         {hubPosts[0] && (
           <div className="rounded-xl border-2 border-sand bg-white p-5 sm:col-span-2">
             <p className="text-sm font-semibold text-muted">From the Hub · {KIND_LABEL[hubPosts[0].kind]}</p>
-            <Link href={`/growth/${hubPosts[0].id}`} className="mt-1 block font-display text-xl font-bold text-navy hover:underline">{hubPosts[0].title}</Link>
+            <Link href={`/growth/${hubPosts[0].id}`} className="mt-1 flex min-h-11 items-center font-display text-xl font-bold text-navy hover:underline">{hubPosts[0].title}</Link>
             <Link href="/growth" className="mt-2 inline-flex min-h-11 items-center font-semibold text-royal underline">More from the Hub Growth corner</Link>
           </div>
         )}

@@ -5,13 +5,14 @@ import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui";
 
-type Slide = { icon: string; title: string; body: string };
+import Icon, { type IconName } from "@/components/Icon";
+type Slide = { icon: IconName; title: string; body: string };
 
 const WELCOME: Slide[] = [
-  { icon: "🎓", title: "Welcome to HustleHub", body: "The marketplace for Eduvos student hustles. Buy from students on your campus, or sell your own products and services." },
-  { icon: "🔎", title: "Browse local", body: "Explore food, beauty, tutoring, design and more. Filter by category and campus, and find the hustles closest to you." },
-  { icon: "💬", title: "Enquire safely", body: "Message a seller inside HustleHub or hop over to WhatsApp. Always meet at a campus pickup point, never at someone's home." },
-  { icon: "🚀", title: "Start selling", body: "Got a hustle? Set up your seller profile in about 3 minutes. The Incubation Hub team approves it and you're live." },
+  { icon: "graduation", title: "Welcome to HustleHub", body: "The marketplace for Eduvos student hustles. Buy from students on your campus, or sell your own products and services." },
+  { icon: "search", title: "Browse local", body: "Explore food, beauty, tutoring, design and more. Filter by category and campus, and find the hustles closest to you." },
+  { icon: "message", title: "Enquire safely", body: "Message a seller inside HustleHub or hop over to WhatsApp. Always meet at a campus pickup point, never at someone's home." },
+  { icon: "rocket", title: "Start selling", body: "Got a hustle? Set up your seller profile in about 3 minutes. The Incubation Hub team approves it and you're live." },
 ];
 
 export function WelcomeGate() {
@@ -63,7 +64,7 @@ function SlideDialog({ slides, label, onFinish }: { slides: Slide[]; label: stri
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-navy/70 p-4 sm:items-center" role="dialog" aria-modal="true" aria-label={label}>
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-        <p className="text-5xl" aria-hidden="true">{s.icon}</p>
+        <p><Icon name={s.icon} size="lg" className="h-12 w-12 text-royal" /></p>
         <h2 className="mt-3 font-display text-2xl font-bold text-navy" aria-live="polite">{s.title}</h2>
         <p className="mt-2 text-ink">{s.body}</p>
         <div className="mt-5 flex justify-center gap-2" aria-hidden="true">

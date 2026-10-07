@@ -18,9 +18,11 @@
     "test:messaging": "node --env-file=.env.local scripts/messaging-test.mjs",
     "test:flow": "node --env-file=.env.local scripts/two-user-flow.mjs",
     "test:discovery": "node --env-file=.env.local scripts/discovery-test.mjs",
-    "test:ui": "node --env-file=.env.local scripts/ui-check.mjs"
+    "test:ui": "node --env-file=.env.local scripts/ui-check.mjs",
+    "test:audit": "node --env-file=.env.local scripts/responsive-audit.mjs"
   },
   "dependencies": {
+    "@iconscout/react-unicons": "^2.2.5",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.117.2",
     "next": "16.3.7",

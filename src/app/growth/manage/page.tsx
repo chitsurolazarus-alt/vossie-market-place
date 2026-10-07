@@ -6,6 +6,7 @@ import { KIND_LABEL } from "@/lib/hub";
 import { requireStaff } from "@/lib/roles";
 import { createClient } from "@/lib/supabase/server";
 
+import Icon from "@/components/Icon";
 export const metadata = { title: "Manage Hub posts", robots: { index: false } };
 export const dynamic = "force-dynamic";
 
@@ -25,7 +26,7 @@ export default async function ManageHub() {
 
   return (
     <section className="mx-auto max-w-3xl px-4 py-8">
-      <Link href="/growth" className="inline-flex min-h-11 items-center text-sm font-semibold text-royal underline">← Hub Growth corner</Link>
+      <Link href="/growth" className="inline-flex min-h-11 items-center text-sm font-semibold text-royal underline"><Icon name="arrow-left" size="md" className="mr-1" />Hub Growth corner</Link>
       <h1 className="font-display text-3xl font-bold text-navy">Manage Hub posts</h1>
 
       <h2 className="mt-6 font-display text-xl font-bold text-navy">Office-hours requests ({requests.length})</h2>

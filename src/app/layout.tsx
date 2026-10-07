@@ -3,6 +3,7 @@ import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
+import ToastProvider from "@/components/Toast";
 import RegisterSW from "@/components/RegisterSW";
 import AccountNotice from "@/components/AccountNotice";
 import { WelcomeGate } from "@/components/Tours";
@@ -23,6 +24,7 @@ export const viewport: Viewport = {
   themeColor: [{ media: "(prefers-color-scheme: light)", color: "#16305e" }, { media: "(prefers-color-scheme: dark)", color: "#0b1322" }],
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -32,13 +34,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" suppressHydrationWarning data-lowdata={lowData ? "true" : "false"} className={`${display.variable} ${body.variable} h-full antialiased`}>
       <head><script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} /></head>
       <body className="min-h-full flex flex-col font-sans">
+        <ToastProvider>
         <a href="#main" className="skip-link">Skip to content</a>
         <Header />
         <AccountNotice />
-        <main id="main" className="flex-1 pb-24 md:pb-0">{children}</main>
+        <main id="main" className="flex-1 pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-0">{children}</main>
         <BottomNav />
         <RegisterSW />
         <WelcomeGate />
+        </ToastProvider>
       </body>
     </html>
   );

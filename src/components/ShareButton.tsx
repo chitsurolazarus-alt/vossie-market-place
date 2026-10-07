@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import Icon from "./Icon";
 export default function ShareButton({ title, text }: { title: string; text: string }) {
   const [msg, setMsg] = useState("");
 
@@ -21,7 +22,7 @@ export default function ShareButton({ title, text }: { title: string; text: stri
   return (
     <div className="inline-flex items-center gap-2">
       <button type="button" onClick={share} className="inline-flex min-h-12 items-center gap-2 rounded-lg border-2 border-navy px-5 font-semibold text-navy hover:bg-mist">
-        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v13" /></svg>
+        <Icon name="share" size="md" />
         Share
       </button>
       <span role="status" className="text-sm font-medium text-navy">{msg}</span>

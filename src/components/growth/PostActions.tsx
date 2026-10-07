@@ -13,7 +13,7 @@ export function RsvpButton({ postId, going, authed, full, returnTo }: { postId: 
   return (
     <div>
       <button type="button" disabled={pending || (full && !going)} aria-pressed={going} onClick={() => run(() => toggleRsvp(postId, !going))} className={going ? btnGhost : btnPrimary}>
-        {going ? "You're going ✓ (tap to cancel)" : full ? "Event is full" : "RSVP: I'm going"}
+        {going ? "You're going (tap to cancel)" : full ? "Event is full" : "RSVP: I'm going"}
       </button>
       {error && <p role="alert" className="mt-1 text-sm font-medium text-red-800">{error}</p>}
     </div>
@@ -29,7 +29,7 @@ export function BookingForm({ postId, authed, returnTo, existing }: { postId: st
   if (existing && existing.status !== "declined") {
     return (
       <p role="status" className="rounded-xl bg-mist p-4 text-ink">
-        {existing.status === "confirmed" ? "Your request is confirmed ✓" : "Your request is with the mentor. We'll notify you when they reply."}
+        {existing.status === "confirmed" ? "Your request is confirmed" : "Your request is with the mentor. We'll notify you when they reply."}
         {existing.host_note && <span className="mt-1 block text-sm text-muted">Note: {existing.host_note}</span>}
       </p>
     );

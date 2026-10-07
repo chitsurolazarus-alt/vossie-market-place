@@ -7,6 +7,7 @@ import { clockTime, dayLabel } from "@/lib/messages";
 import { REASON_LABEL, TARGET_LABEL } from "@/lib/moderation";
 import { createClient } from "@/lib/supabase/server";
 
+import Icon from "@/components/Icon";
 export const metadata = { title: "Report" };
 
 export default async function AdminReportDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -33,7 +34,7 @@ export default async function AdminReportDetail({ params }: { params: Promise<{ 
 
   return (
     <div>
-      <Link href="/admin/reports" className="inline-flex min-h-11 items-center text-sm font-semibold text-royal underline">← All reports</Link>
+      <Link href="/admin/reports" className="inline-flex min-h-11 items-center text-sm font-semibold text-royal underline"><Icon name="arrow-left" size="md" className="mr-1" />All reports</Link>
       <div className="mt-2 grid gap-6 lg:grid-cols-[1fr_22rem]">
         <div className="space-y-4">
           <section aria-labelledby="rep-h" className="rounded-2xl border border-navy/15 bg-white p-4">

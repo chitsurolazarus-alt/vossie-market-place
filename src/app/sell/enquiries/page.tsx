@@ -25,7 +25,7 @@ const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) 
 function doneNote(e: EnquiryRow) {
   if (e.status === "declined") return "Declined";
   if (e.saleHappened === false) return "Closed: didn't go ahead";
-  if (e.buyerConfirmedAt) return e.autoConfirmed ? "Sale confirmed automatically ✓" : "Sale confirmed by buyer ✓";
+  if (e.buyerConfirmedAt) return e.autoConfirmed ? "Sale confirmed automatically" : "Sale confirmed by buyer";
   if (e.buyerDisputedAt) return "Buyer says it didn't go ahead";
   return "Waiting for buyer to confirm";
 }

@@ -39,7 +39,7 @@ export default async function AdminDashboard() {
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         <section aria-labelledby="ps-h">
           <h2 id="ps-h" className="font-display text-xl font-bold text-navy">Waiting for approval</h2>
-          {(latestSellers.data ?? []).length === 0 ? <p className="mt-2 rounded-xl bg-mist p-4 text-muted">Nobody is waiting. 🎉</p> : (
+          {(latestSellers.data ?? []).length === 0 ? <p className="mt-2 rounded-xl bg-mist p-4 text-muted">Nobody is waiting.</p> : (
             <ul className="mt-2 divide-y divide-navy/10 rounded-xl border border-navy/15 bg-white">
               {latestSellers.data!.map((s) => (
                 <li key={s.id}><Link href={`/admin/sellers/${s.id}`} className="flex min-h-14 items-center justify-between gap-2 px-4 py-2 hover:bg-mist">

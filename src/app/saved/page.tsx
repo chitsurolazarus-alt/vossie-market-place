@@ -2,12 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import ListingTile from "@/components/ListingTile";
 import { FollowButton } from "@/components/SaveButton";
-import { ButtonLink, EmptyState, PageShell } from "@/components/ui";
+import { ButtonLink, EmptyState, LinkTabs, PageShell } from "@/components/ui";
 import { requireUser } from "@/lib/auth";
 import { fetchTiles } from "@/lib/browse";
 import { createClient } from "@/lib/supabase/server";
 import { getLowData } from "@/lib/viewer";
 
+import Icon from "@/components/Icon";
 export const metadata = { title: "Saved" };
 
 export default async function Saved({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
@@ -24,19 +25,17 @@ export default async function Saved({ searchParams }: { searchParams: Promise<{ 
   const tiles = active === "listings" ? await fetchTiles((savedRows ?? []).map((r) => r.listing_id)) : [];
   const sellers = (followRows ?? []).flatMap((r) => (r.seller_profiles && r.seller_profiles.status === "approved" ? [r.seller_profiles] : []));
 
-  const tabCls = (on: boolean) => `inline-flex min-h-12 flex-1 items-center justify-center rounded-lg border-2 px-4 font-semibold ${on ? "border-navy bg-navy text-white" : "border-navy/30 text-navy hover:bg-mist"}`;
-
   return (
     <PageShell title="Saved" width="max-w-5xl">
-      <nav aria-label="Saved tabs" className="flex gap-2">
-        <Link href="/saved" aria-current={active === "listings" ? "page" : undefined} className={tabCls(active === "listings")}>Listings ({savedRows?.length ?? 0})</Link>
-        <Link href="/saved?tab=sellers" aria-current={active === "sellers" ? "page" : undefined} className={tabCls(active === "sellers")}>Sellers ({sellers.length})</Link>
-      </nav>
+      <LinkTabs label="Saved tabs" tabs={[
+        { href: "/saved", label: `Listings (${savedRows?.length ?? 0})`, active: active === "listings" },
+        { href: "/saved?tab=sellers", label: `Sellers (${sellers.length})`, active: active === "sellers" },
+      ]} />
 
       <div className="mt-6">
         {active === "listings" ? (
           tiles.length === 0 ? (
-            <EmptyState title="Nothing saved yet" body="Tap the heart on any listing to keep it here for later."
+            <EmptyState icon="heart" title="Nothing saved yet" body="Tap the heart on any listing to keep it here for later."
               action={<ButtonLink href="/browse" variant="sand">Browse hustles</ButtonLink>} />
           ) : (
             <ul className={lowData ? "flex flex-col gap-2" : "grid grid-cols-2 gap-3 lg:grid-cols-4"}>
@@ -44,7 +43,7 @@ export default async function Saved({ searchParams }: { searchParams: Promise<{ 
             </ul>
           )
         ) : sellers.length === 0 ? (
-          <EmptyState title="You're not following anyone yet" body="Follow sellers you like to keep their hustles one tap away."
+          <EmptyState icon="users" title="You&apos;re not following anyone yet" body="Follow sellers you like to keep their hustles one tap away."
             action={<ButtonLink href="/browse" variant="sand">Find sellers</ButtonLink>} />
         ) : (
           <ul className="grid gap-3 sm:grid-cols-2">
@@ -56,7 +55,7 @@ export default async function Saved({ searchParams }: { searchParams: Promise<{ 
                     : <div aria-hidden="true" className="flex h-14 w-14 items-center justify-center rounded-xl bg-sand font-display text-2xl font-bold text-navy">{s.business_name.slice(0, 1)}</div>}
                   <div className="min-w-0">
                     <Link href={`/s/${s.slug}`} className="block truncate font-display text-lg font-bold hover:underline">{s.business_name}</Link>
-                    {s.verified && <p className="text-sm font-semibold text-sand">✓ Verified Incubation Hub member</p>}
+                    {s.verified && <p className="inline-flex items-center gap-1 text-sm font-semibold text-sand"><Icon name="check-circle" size="sm" />Verified Incubation Hub member</p>}
                     {s.tagline && <p className="truncate text-sm text-white/85">{s.tagline}</p>}
                   </div>
                 </div>

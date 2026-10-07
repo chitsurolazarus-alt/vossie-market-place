@@ -14,6 +14,7 @@ import { getExistingConversationId } from "@/lib/inbox-data";
 import { getSellerTrust, getTierLabels } from "@/lib/trust";
 import { isFollowing } from "@/lib/viewer";
 
+import Icon from "@/components/Icon";
 async function load(slug: string) {
   const supabase = await createClient();
   const { data: seller } = await supabase
@@ -73,7 +74,7 @@ export default async function SellerPage({ params, searchParams }: { params: Pro
             <h1 className="font-display text-3xl font-bold">{seller.business_name}</h1>
             {seller.tagline && <p className="mt-1 text-lg text-white/90">{seller.tagline}</p>}
             <ul className="mt-3 flex flex-wrap gap-2 text-sm">
-              {seller.verified && <li className="rounded-full bg-sand px-3 py-1 font-bold text-navy">✓ Verified Incubation Hub member</li>}
+              {seller.verified && <li className="inline-flex items-center gap-1 rounded-full bg-sand px-3 py-1 font-bold text-navy"><Icon name="check-circle" size="sm" />Verified Incubation Hub member</li>}
               {seller.categories?.name && <li className="rounded-full bg-white/15 px-3 py-1">{seller.categories.name}</li>}
               {seller.campuses?.name && <li className="rounded-full bg-white/15 px-3 py-1">{seller.campuses.name}</li>}
               <li className="rounded-full bg-white/15 px-3 py-1">Member since {memberSince(seller.created_at)}</li>

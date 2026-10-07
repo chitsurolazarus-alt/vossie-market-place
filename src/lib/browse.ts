@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 
+import type { IconName } from "@/components/Icon";
 export const PAGE_SIZE = 24;
 
 export type Tile = {
@@ -125,7 +126,7 @@ export async function similarTiles(categoryId: string | null, excludeSeller: str
   return (data ?? []) as unknown as Tile[];
 }
 
-export const CATEGORY_ICONS: Record<string, string> = {
-  food: "🍲", beauty: "💇", tutoring: "📚", design: "🎨", tech: "💻", fashion: "👗",
-  construction: "🛠️", trading: "🔄", events: "🎉", other: "✨",
+export const CATEGORY_ICONS: Record<string, IconName> = {
+  food: "food", beauty: "beauty", tutoring: "tutoring", design: "design", tech: "tech", fashion: "fashion",
+  construction: "build", trading: "trade", events: "events", transport: "truck", other: "other",
 };

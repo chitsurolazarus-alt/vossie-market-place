@@ -125,3 +125,13 @@
   Service-worker cache renamed `hustlehub-shell-v2`.
 - ESLint ignores `.claude/` (vendored skill scripts).
 - Checks: lint, typecheck, build; `test:rls` 30, `test:messaging` 83, `test:moderation` 161, `test:flow` 46, `test:smoke` 31, `test:ui` 75, `test:theme` 79, `test:phase5` 134.
+
+## Rebrand stage 2 - Design system, Unicons, mobile
+- `design-system/hustlehub/MASTER.md` is the single source of truth (ui-ux-pro-max generator + the "Vibrant & Block-based" style, our palette and fonts kept, purple ignored).
+- All icons are now **Unicons (line)** through one `Icon` component with a 16/20/24 size scale; every emoji and text glyph icon (check, cross, arrows, category and tour emoji) is gone.
+  New `Verified` tick component. `@iconscout/react-unicons` added; old inline SVGs removed.
+- Richer UI: new listing card (4:3 photo, price first, location line, kind chip, trust badge, press and hover feedback), browse category chips, filter sheet with drag handle,
+  `StatTile`, `LinkTabs` (Saved), icon empty states, `Toast` (save confirmations), button press feedback.
+- Mobile: header/desktop nav moved from 768px to 1024px (it overflowed at 768 on every page), safe-area insets (`viewport-fit=cover`), `dvh` sheet, fixed 44px tap target on `/sell`.
+- `scripts/responsive-audit.mjs` (`npm run test:audit`): 35 routes x 6 widths x light/dark. 80 issue instances before, 0 after. Report in `docs/UI_AUDIT.md`.
+- Checks: lint, typecheck, build; `test:ui` 75, `test:theme` 79, `test:phase5` 134, `test:flow` 46, `test:smoke` 31.

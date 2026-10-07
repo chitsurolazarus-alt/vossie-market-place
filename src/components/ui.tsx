@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode, ButtonHTMLAttributes, Ref } from "react";
+import Icon, { type IconName } from "./Icon";
 
 export const inputCls =
   "block w-full min-h-11 rounded-lg border border-navy/30 bg-white px-3 py-2 text-base text-ink placeholder:text-muted/70 focus:border-royal aria-[invalid=true]:border-red-700";
@@ -26,7 +27,7 @@ export const describe = (id: string, error?: string, hint?: boolean) =>
   [hint ? `${id}-hint` : "", error ? `${id}-error` : ""].filter(Boolean).join(" ") || undefined;
 
 const btnBase =
-  "inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-5 font-semibold transition-colors disabled:opacity-60 disabled:cursor-not-allowed";
+  "inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-5 font-semibold transition-[background-color,transform] duration-150 active:scale-[.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100";
 const variants = {
   primary: "bg-navy text-white hover:bg-royal",
   secondary: "border-2 border-navy text-navy hover:bg-mist",
@@ -55,9 +56,10 @@ export function Skeleton({ className = "" }: { className?: string }) {
   return <div aria-hidden="true" className={`animate-pulse rounded-lg bg-navy/10 ${className}`} />;
 }
 
-export function EmptyState({ title, body, action }: { title: string; body: string; action?: ReactNode }) {
+export function EmptyState({ title, body, action, icon = "search" }: { title: string; body: string; action?: ReactNode; icon?: IconName }) {
   return (
-    <div className="rounded-xl border-2 border-dashed border-navy/25 bg-mist px-6 py-10 text-center">
+    <div className="rounded-2xl border-2 border-dashed border-navy/25 bg-mist px-6 py-10 text-center">
+      <span className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-sand text-navy"><Icon name={icon} /></span>
       <h2 className="font-display text-xl font-bold text-navy">{title}</h2>
       <p className="mx-auto mt-2 max-w-md text-muted">{body}</p>
       {action && <div className="mt-5 flex justify-center">{action}</div>}
@@ -72,5 +74,33 @@ export function PageShell({ title, intro, children, width = "max-w-3xl" }: { tit
       {intro && <p className="mt-2 text-muted">{intro}</p>}
       <div className="mt-6">{children}</div>
     </section>
+  );
+}
+
+/** Big-number tile (block style). `tone` picks the block colour; text colours are chosen for AA contrast. */
+export function StatTile({ label, value, icon, tone = "mist" }: { label: string; value: ReactNode; icon?: IconName; tone?: "mist" | "navy" | "sand" }) {
+  const tones = { mist: "bg-mist text-navy", navy: "bg-navy text-white", sand: "bg-sand text-navy" };
+  return (
+    <div className={`rounded-xl p-4 ${tones[tone]}`}>
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-sm font-semibold">{label}</p>
+        {icon && <Icon name={icon} size="md" />}
+      </div>
+      <p className="mt-1 font-display text-3xl font-bold leading-none">{value}</p>
+    </div>
+  );
+}
+
+/** Tab strip made of links (the active tab is a page in the URL). Selected = navy block. */
+export function LinkTabs({ label, tabs }: { label: string; tabs: { href: string; label: string; active: boolean }[] }) {
+  return (
+    <nav aria-label={label} className="flex gap-2">
+      {tabs.map((t) => (
+        <Link key={t.href} href={t.href} aria-current={t.active ? "page" : undefined}
+          className={`inline-flex min-h-12 flex-1 items-center justify-center rounded-lg border-2 px-4 font-semibold transition-colors active:scale-[.98] ${t.active ? "border-navy bg-navy text-white" : "border-navy/30 text-navy hover:bg-mist"}`}>
+          {t.label}
+        </Link>
+      ))}
+    </nav>
   );
 }

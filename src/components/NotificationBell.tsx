@@ -5,6 +5,7 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react"
 import { createClient } from "@/lib/supabase/client";
 import { shortTime } from "@/lib/messages";
 
+import Icon from "./Icon";
 type Item = { id: string; type: string; title: string; body: string | null; url: string | null; count: number; read_at: string | null; created_at: string };
 
 /** In-app bell with a live unread count (Supabase Realtime) and mark-all-read. */
@@ -63,7 +64,7 @@ export default function NotificationBell({ userId, initialUnread }: { userId: st
       <button type="button" onClick={() => { const next = !open; setOpen(next); if (next) void load(); }} aria-expanded={open} aria-controls={`${uid}-panel`}
         aria-label={`Notifications${unread ? `, ${unread} unread` : ""}`}
         className="relative inline-flex h-11 w-11 items-center justify-center rounded-full text-navy hover:bg-mist">
-        <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current" aria-hidden="true"><path d="M12 22a2.5 2.5 0 0 0 2.5-2.5h-5A2.5 2.5 0 0 0 12 22zm7-6.5V11a7 7 0 0 0-5.5-6.8V3.5a1.5 1.5 0 0 0-3 0v.7A7 7 0 0 0 5 11v4.5L3 17.5V19h18v-1.5l-2-2z" /></svg>
+        <Icon name="bell" />
         {unread > 0 && (
           <span aria-hidden="true" className="absolute right-0 top-0 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-royal px-1 text-[11px] font-bold text-white">{unread > 9 ? "9+" : unread}</span>
         )}

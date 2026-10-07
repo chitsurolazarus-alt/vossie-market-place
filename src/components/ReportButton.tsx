@@ -6,6 +6,7 @@ import { submitReport } from "@/app/actions/reports";
 import Modal from "@/components/Modal";
 import { REPORT_REASONS, TARGET_LABEL, type ReportReason, type ReportTarget } from "@/lib/moderation";
 
+import Icon from "./Icon";
 type Props = {
   targetType: ReportTarget; targetId: string; authed: boolean; returnTo: string;
   /** Visible label; defaults to "Report". */
@@ -43,7 +44,7 @@ export default function ReportButton({ targetType, targetId, authed, returnTo, l
     <>
       <button type="button" onClick={tap} aria-haspopup="dialog"
         className={className ?? "inline-flex min-h-11 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold text-muted underline hover:text-navy"}>
-        <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true"><path d="M5 3v18h2v-7h11l-2-4 2-4H7V3H5z" /></svg>
+        <Icon name="flag" size="sm" />
         {label}
       </button>
       <Modal open={open} onClose={close} title={done ? "Thanks for telling us" : `Report this ${noun}`}>

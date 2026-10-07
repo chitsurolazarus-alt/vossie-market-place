@@ -19,6 +19,7 @@ import { getSellerTrust, getTierLabels } from "@/lib/trust";
 import { recordView } from "@/lib/views";
 import { getLowData, getSavedIds, isFollowing } from "@/lib/viewer";
 
+import Icon from "@/components/Icon";
 const uuid = z.uuid();
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -126,7 +127,7 @@ export default async function ListingPage({ params, searchParams }: { params: Pr
                 : <div aria-hidden="true" className="flex h-14 w-14 items-center justify-center rounded-xl bg-sand font-display text-2xl font-bold text-navy">{seller.business_name.slice(0, 1)}</div>}
               <div className="min-w-0">
                 <Link href={`/s/${seller.slug}`} className="flex min-h-11 items-center truncate font-display text-lg font-bold underline-offset-2 hover:underline">{seller.business_name}</Link>
-                {seller.verified && <p className="text-sm font-semibold text-sand">✓ Verified Incubation Hub member</p>}
+                {seller.verified && <p className="inline-flex items-center gap-1 text-sm font-semibold text-sand"><Icon name="check-circle" size="sm" />Verified Incubation Hub member</p>}
                 <div className="mt-1"><TrustBadge tier={trust?.tier} label={trust ? tierLabels[trust.tier] : undefined} size="sm" /></div>
                 <ReplyTime band={trust?.reply_band} className="mt-1 text-sm text-white/90" />
                 {seller.tagline && <p className="truncate text-sm text-white/85">{seller.tagline}</p>}

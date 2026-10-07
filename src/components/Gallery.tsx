@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRef, useState } from "react";
 
+import Icon from "@/components/Icon";
 type Img = { url: string; alt: string };
 
 export default function Gallery({ images, lowData }: { images: Img[]; lowData: boolean }) {
@@ -36,9 +37,9 @@ export default function Gallery({ images, lowData }: { images: Img[]; lowData: b
       {shown.length > 1 && (
         <>
           <button type="button" onClick={() => go(-1)} disabled={index === 0} aria-label="Previous photo"
-            className="absolute left-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-navy shadow disabled:opacity-40">‹</button>
+            className="absolute left-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-navy shadow disabled:opacity-40"><Icon name="chevron-left" /></button>
           <button type="button" onClick={() => go(1)} disabled={index >= shown.length - 1} aria-label="Next photo"
-            className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-navy shadow disabled:opacity-40">›</button>
+            className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-navy shadow disabled:opacity-40"><Icon name="chevron-right" /></button>
           <p className="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-navy/80 px-3 py-1 text-sm text-white" aria-live="polite">{index + 1} / {shown.length}</p>
         </>
       )}

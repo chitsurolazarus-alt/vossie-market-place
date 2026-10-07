@@ -3,6 +3,7 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { THEME_COOKIE, type ThemeChoice } from "@/lib/theme";
 
+import Icon from "./Icon";
 // <html data-theme> (light|dark) and data-theme-choice (auto|light|dark) are the single source of truth.
 // They are set before first paint by THEME_INIT_SCRIPT and updated here.
 function subscribe(cb: () => void) {
@@ -43,8 +44,8 @@ export function ThemeIconButton() {
     <button type="button" aria-pressed={theme === "dark"} onClick={() => apply(theme === "dark" ? "light" : "dark")}
       title="Dark mode" className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-navy hover:bg-mist">
       <span className="sr-only">Dark mode</span>
-      <svg className="theme-moon h-6 w-6 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /></svg>
-      <svg className="theme-sun h-6 w-6 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM1 11h3v2H1v-2zm19 0h3v2h-3v-2zM4.2 5.6l1.4-1.4 2.1 2.1-1.4 1.4-2.1-2.1zm12.1 12.1 1.4-1.4 2.1 2.1-1.4 1.4-2.1-2.1zM5.6 19.8l-1.4-1.4 2.1-2.1 1.4 1.4-2.1 2.1zM18.4 6.3l-1.4 1.4-2.1-2.1 1.4-1.4 2.1 2.1z" /></svg>
+      <Icon name="moon" className="theme-moon" />
+      <Icon name="sun" className="theme-sun" />
     </button>
   );
 }

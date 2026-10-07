@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type Ref } from "react";
+import Icon from "@/components/Icon";
 import { Button, inputCls } from "@/components/ui";
 
 type Opt = { slug: string; name: string };
@@ -12,6 +13,9 @@ export default function BrowseFilters({ v, categories, campuses, activeCount, cl
 }) {
   const [open, setOpen] = useState(false);
   const firstRef = useRef<HTMLSelectElement>(null);
+  // Drag the handle down to dismiss (sheet pattern adapted from a 21st.dev bottom sheet, without the animation library).
+  const startY = useRef<number | null>(null);
+  const [dy, setDy] = useState(0);
 
   useEffect(() => {
     if (!open) return;
@@ -25,14 +29,22 @@ export default function BrowseFilters({ v, categories, campuses, activeCount, cl
   return (
     <>
       <button type="button" onClick={() => setOpen(true)} aria-haspopup="dialog"
-        className="inline-flex min-h-11 items-center gap-2 rounded-lg border-2 border-navy px-4 font-semibold text-navy md:hidden">
-        Filters{activeCount > 0 && <span className="rounded-full bg-navy px-2 text-sm text-white">{activeCount}</span>}
+        className="inline-flex min-h-11 items-center gap-2 rounded-lg border-2 border-navy px-4 font-semibold text-navy transition-transform active:scale-[.98] md:hidden">
+        <Icon name="filter" size="md" />Filters{activeCount > 0 && <span className="rounded-full bg-navy px-2 text-sm text-white">{activeCount}</span>}
       </button>
 
       <div className={open ? "fixed inset-0 z-50 flex items-end bg-navy/60 md:static md:z-auto md:block md:bg-transparent" : "hidden md:block"}
         onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}>
         <div role={open ? "dialog" : undefined} aria-modal={open || undefined} aria-label={open ? "Filter listings" : undefined}
-          className={open ? "max-h-[88vh] w-full overflow-y-auto rounded-t-2xl bg-white p-5" : ""}>
+          style={open && dy ? { transform: `translateY(${dy}px)` } : undefined}
+          className={open ? "max-h-[88dvh] w-full overflow-y-auto overscroll-contain rounded-t-3xl bg-white p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-xl" : ""}>
+          <div aria-hidden="true" className="-mt-2 mb-2 flex h-6 cursor-grab touch-none justify-center md:hidden"
+            onPointerDown={(e) => { startY.current = e.clientY; e.currentTarget.setPointerCapture(e.pointerId); }}
+            onPointerMove={(e) => { if (startY.current !== null) setDy(Math.max(0, e.clientY - startY.current)); }}
+            onPointerUp={() => { if (dy > 100) setOpen(false); startY.current = null; setDy(0); }}
+            onPointerCancel={() => { startY.current = null; setDy(0); }}>
+            <span className="mt-2 h-1.5 w-10 rounded-full bg-navy/30" />
+          </div>
           <div className="mb-3 flex items-center justify-between md:hidden">
             <h2 className="font-display text-xl font-bold text-navy">Filters</h2>
             <button type="button" onClick={() => setOpen(false)} className="min-h-11 px-3 font-semibold text-royal underline">Close</button>

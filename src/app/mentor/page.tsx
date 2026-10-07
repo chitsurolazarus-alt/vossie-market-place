@@ -6,6 +6,8 @@ import { getSellerStats, supportFlags } from "@/lib/mentor";
 import { requireStaff } from "@/lib/roles";
 import { getTierLabels } from "@/lib/trust";
 
+import Verified from "@/components/Verified";
+import Icon from "@/components/Icon";
 export const metadata = { title: "Mentor view", robots: { index: false } };
 export const dynamic = "force-dynamic";
 
@@ -34,7 +36,7 @@ export default async function MentorHome() {
               <li key={s.id}>
                 <Link href={`/mentor/${s.id}`} className="block rounded-2xl border border-navy/15 bg-white p-4 hover:bg-mist">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <p className="font-display text-lg font-bold text-navy">{s.business_name}{s.verified && " ✓"}</p>
+                    <p className="font-display text-lg font-bold text-navy">{s.business_name}{s.verified && <Verified />}</p>
                     <TrustBadge tier={s.tier} label={labels[s.tier]} size="sm" />
                   </div>
                   <p className="text-sm text-muted">{s.campus}{s.last_active_at ? ` · active ${shortTime(s.last_active_at)} ago` : " · not seen yet"}</p>
@@ -46,7 +48,7 @@ export default async function MentorHome() {
                   </dl>
                   {flags.length > 0 && (
                     <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="May need support">
-                      {flags.map((f) => <li key={f} className="rounded-full bg-sand px-2.5 py-1 text-xs font-bold text-navy">⚑ {f}</li>)}
+                      {flags.map((f) => <li key={f} className="rounded-full bg-sand px-2.5 py-1 text-xs font-bold text-navy"><Icon name="flag" size="sm" className="mr-1 inline" />{f}</li>)}
                     </ul>
                   )}
                 </Link>

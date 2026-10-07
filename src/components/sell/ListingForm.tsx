@@ -9,6 +9,7 @@ import { compressListingImage } from "@/lib/image";
 import { listingSchema, issuesToErrors, type FieldErrors } from "@/lib/validation";
 import type { Option } from "./SellerForm";
 
+import Icon from "@/components/Icon";
 type Img = { path: string; url: string; alt: string };
 export type ListingInitial = {
   id: string; kind: "product" | "service"; title: string; description: string; categoryId: string; tags: string[];
@@ -43,7 +44,7 @@ function TagInput({ tags, onChange, error }: { tags: string[]; onChange: (t: str
         {tags.map((t) => (
           <span key={t} className="inline-flex min-h-9 items-center gap-1 rounded-full bg-mist pl-3 text-sm font-medium text-navy">
             {t}
-            <button type="button" onClick={() => onChange(tags.filter((x) => x !== t))} className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-navy/10" aria-label={`Remove tag ${t}`}>×</button>
+            <button type="button" onClick={() => onChange(tags.filter((x) => x !== t))} className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-navy/10" aria-label={`Remove tag ${t}`}><Icon name="close" size="sm" /></button>
           </span>
         ))}
       </div>
@@ -116,8 +117,8 @@ function ImageManager({ userId, listingId, images, onChange, title, error }: {
             <input id={`alt-${i}`} className={inputCls} value={img.alt} maxLength={200} placeholder={title || "e.g. Chicken kota with atchar"}
               onChange={(e) => onChange(images.map((x, j) => (j === i ? { ...x, alt: e.target.value } : x)))} />
             <div className="mt-2 flex gap-2">
-              <button type="button" onClick={() => move(i, i - 1)} disabled={i === 0} className="min-h-11 flex-1 rounded-lg border border-navy/30 font-medium disabled:opacity-40" aria-label={`Move photo ${i + 1} earlier`}>←</button>
-              <button type="button" onClick={() => move(i, i + 1)} disabled={i === images.length - 1} className="min-h-11 flex-1 rounded-lg border border-navy/30 font-medium disabled:opacity-40" aria-label={`Move photo ${i + 1} later`}>→</button>
+              <button type="button" onClick={() => move(i, i - 1)} disabled={i === 0} className="min-h-11 flex-1 rounded-lg border border-navy/30 font-medium disabled:opacity-40" aria-label={`Move photo ${i + 1} earlier`}><Icon name="arrow-left" size="md" /></button>
+              <button type="button" onClick={() => move(i, i + 1)} disabled={i === images.length - 1} className="min-h-11 flex-1 rounded-lg border border-navy/30 font-medium disabled:opacity-40" aria-label={`Move photo ${i + 1} later`}><Icon name="arrow-right" size="md" /></button>
               <button type="button" onClick={() => onChange(images.filter((_, j) => j !== i))} className="min-h-11 flex-1 rounded-lg border border-red-800 font-medium text-red-800" aria-label={`Remove photo ${i + 1}`}>Remove</button>
             </div>
           </li>

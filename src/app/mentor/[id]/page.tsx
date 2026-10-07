@@ -10,6 +10,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getTierLabels } from "@/lib/trust";
 import { REPLY_BAND_LABEL } from "@/lib/trust-shared";
 
+import Verified from "@/components/Verified";
+import Icon from "@/components/Icon";
 export const metadata = { title: "Seller (mentor view)", robots: { index: false } };
 export const dynamic = "force-dynamic";
 
@@ -38,9 +40,9 @@ export default async function MentorSeller({ params }: { params: Promise<{ id: s
 
   return (
     <section className="mx-auto max-w-5xl px-4 py-8">
-      <Link href="/mentor" className="inline-flex min-h-11 items-center text-sm font-semibold text-royal underline">← All sellers</Link>
+      <Link href="/mentor" className="inline-flex min-h-11 items-center text-sm font-semibold text-royal underline"><Icon name="arrow-left" size="md" className="mr-1" />All sellers</Link>
       <div className="mt-2 flex flex-wrap items-center gap-3">
-        <h1 className="font-display text-3xl font-bold text-navy">{s.business_name}{s.verified && " ✓"}</h1>
+        <h1 className="font-display text-3xl font-bold text-navy">{s.business_name}{s.verified && <Verified />}</h1>
         <TrustBadge tier={s.tier} label={labels[s.tier]} />
       </div>
       <p className="text-muted">{s.campus} · <Link href={`/s/${s.slug}`} className="font-semibold text-royal underline">public profile</Link></p>

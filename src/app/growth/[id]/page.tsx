@@ -10,6 +10,7 @@ import { Markdown } from "@/lib/markdown";
 import { getProfile } from "@/lib/roles";
 import { createClient } from "@/lib/supabase/server";
 
+import Icon from "@/components/Icon";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
@@ -34,7 +35,7 @@ export default async function GrowthPost({ params }: { params: Promise<{ id: str
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-8">
-      <Link href="/growth" className="inline-flex min-h-11 items-center text-sm font-semibold text-royal underline">← Hub Growth corner</Link>
+      <Link href="/growth" className="inline-flex min-h-11 items-center text-sm font-semibold text-royal underline"><Icon name="arrow-left" size="md" className="mr-1" />Hub Growth corner</Link>
       {post.cover_path && (
         <div className="relative mt-2 aspect-[16/9] overflow-hidden rounded-2xl bg-navy">
           <Image src={hubCoverUrl(post.cover_path)} alt="" fill sizes="(max-width: 768px) 100vw, 768px" quality={70} priority className="object-cover" />

@@ -7,6 +7,8 @@ import { TrustBadge } from "@/components/trust";
 import { memberSince } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
 
+import Verified from "@/components/Verified";
+import Icon from "@/components/Icon";
 export const metadata = { title: "Review seller" };
 
 export default async function AdminSellerDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -26,7 +28,7 @@ export default async function AdminSellerDetail({ params }: { params: Promise<{ 
 
   return (
     <div>
-      <Link href="/admin/sellers" className="inline-flex min-h-11 items-center text-sm font-semibold text-royal underline">← All sellers</Link>
+      <Link href="/admin/sellers" className="inline-flex min-h-11 items-center text-sm font-semibold text-royal underline"><Icon name="arrow-left" size="md" className="mr-1" />All sellers</Link>
       <div className="mt-2 grid gap-6 lg:grid-cols-[1fr_22rem]">
         <section aria-labelledby="det-h" className="rounded-2xl border border-navy/15 bg-white p-4">
           <div className="flex items-center gap-3">
@@ -35,7 +37,7 @@ export default async function AdminSellerDetail({ params }: { params: Promise<{ 
               : <div aria-hidden="true" className="flex h-[72px] w-[72px] items-center justify-center rounded-xl bg-sand font-display text-3xl font-bold text-navy">{s.business_name.slice(0, 1)}</div>}
             <div className="min-w-0">
               <h2 id="det-h" className="font-display text-2xl font-bold text-navy">{s.business_name}</h2>
-              <p className="text-sm text-muted capitalize">Status: <strong className="text-navy">{s.status}</strong>{s.verified && " · ✓ Verified"}</p>
+              <p className="text-sm text-muted capitalize">Status: <strong className="text-navy">{s.status}</strong>{s.verified && <> · <Verified /> Verified</>}</p>
               {s.status === "approved" && <div className="mt-1"><TrustBadge tier={trust?.tier} size="sm" /></div>}
             </div>
           </div>

@@ -4,6 +4,7 @@ import { Alert, ButtonLink, PageShell } from "@/components/ui";
 import { getMySeller, requireUser } from "@/lib/auth";
 import { loadReferenceData, loadSellerInitial } from "@/lib/sell-data";
 
+import Icon from "@/components/Icon";
 export const metadata = { title: "Become a seller" };
 
 export default async function Onboarding() {
@@ -19,9 +20,9 @@ export default async function Onboarding() {
           <p className="text-lg">Thanks, <strong>{seller.business_name}</strong>! The Incubation Hub team reviews every new seller before they go live. This usually takes 1 to 2 working days.</p>
         </div>
         <ol className="mt-6 space-y-3 text-ink">
-          <li className="flex gap-3"><span aria-hidden="true">✅</span> Profile submitted</li>
-          <li className="flex gap-3"><span aria-hidden="true">⏳</span> Admin review in progress</li>
-          <li className="flex gap-3"><span aria-hidden="true">🚀</span> Your listings go public once you&apos;re approved</li>
+          <li className="flex gap-3"><Icon name="check-circle" className="text-royal" /> Profile submitted</li>
+          <li className="flex gap-3"><Icon name="clock" className="text-royal" /> Admin review in progress</li>
+          <li className="flex gap-3"><Icon name="rocket" className="text-royal" /> Your listings go public once you&apos;re approved</li>
         </ol>
         <p className="mt-6 text-muted">You don&apos;t have to wait. Draft your listings now; they stay hidden until you&apos;re approved.</p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 
+import Icon from "./Icon";
 /** Accessible dialog: bottom sheet on phones, centred card on larger screens. Esc and backdrop close it. */
 export default function Modal({ open, onClose, title, children }: { open: boolean; onClose: () => void; title: string; children: ReactNode }) {
   const box = useRef<HTMLDivElement>(null);
@@ -40,7 +41,7 @@ export default function Modal({ open, onClose, title, children }: { open: boolea
         className="max-h-[92dvh] w-full max-w-md overflow-y-auto rounded-t-2xl bg-white p-5 shadow-xl outline-none sm:rounded-2xl">
         <div className="flex items-start justify-between gap-3">
           <h2 className="font-display text-xl font-bold text-navy">{title}</h2>
-          <button type="button" onClick={onClose} aria-label="Close" className="-mr-2 -mt-2 inline-flex h-11 w-11 items-center justify-center rounded-full text-2xl text-navy hover:bg-mist">×</button>
+          <button type="button" onClick={onClose} aria-label="Close" className="-mr-2 -mt-2 inline-flex h-11 w-11 items-center justify-center rounded-full text-navy hover:bg-mist"><Icon name="close" /></button>
         </div>
         <div className="mt-3">{children}</div>
       </div>

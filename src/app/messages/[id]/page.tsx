@@ -6,6 +6,7 @@ import { requireUser } from "@/lib/auth";
 import { priceLabel, publicImageUrl } from "@/lib/format";
 import { getThread } from "@/lib/inbox-data";
 
+import Icon from "@/components/Icon";
 export const metadata = { title: "Conversation" };
 export const dynamic = "force-dynamic";
 
@@ -23,7 +24,7 @@ export default async function ThreadPage({ params }: { params: Promise<{ id: str
     <>
       <div className="mx-auto max-w-2xl px-4 pt-3">
         <Link href={role === "seller" ? "/sell/enquiries" : "/messages"} className="inline-flex min-h-11 items-center text-sm font-semibold text-royal underline">
-          ← {role === "seller" ? "Enquiries" : "All messages"}
+          <Icon name="arrow-left" size="md" className="mr-1" />{role === "seller" ? "Enquiries" : "All messages"}
         </Link>
       </div>
       <Thread
