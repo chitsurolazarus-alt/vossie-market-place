@@ -4,6 +4,17 @@
 // and replace the demo sellers' listings.
 import { createClient } from "@supabase/supabase-js";
 import sharp from "sharp";
+import fs from "node:fs";
+
+// Real photos (scripts/fetch-photos.mjs). A listing without one falls back to the generated tile.
+const MANIFEST = new URL("./photos/manifest.json", import.meta.url);
+const PHOTOS = fs.existsSync(MANIFEST) ? JSON.parse(fs.readFileSync(MANIFEST, "utf8")) : {};
+async function listingImage(title, colour, biz) {
+  const m = PHOTOS[title];
+  const file = m && new URL("../" + m.file, import.meta.url);
+  if (file && fs.existsSync(file)) return fs.readFileSync(file);
+  return tile(title, colour, biz);
+}
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -170,7 +181,7 @@ for (const s of SELLERS) {
 
     s.listingIds.push(listing.id);
     const path = `${uid}/${listing.id}/1.webp`;
-    must(await db.storage.from("listing-images").upload(path, await tile(title, CATEGORY_COLOURS[s.cat], s.biz), { contentType: "image/webp", upsert: true }), "image");
+    must(await db.storage.from("listing-images").upload(path, await listingImage(title, CATEGORY_COLOURS[s.cat], s.biz), { contentType: "image/webp", upsert: true }), "image");
     must(await db.from("listing_images").insert({ listing_id: listing.id, path, alt: `${title} by ${s.biz}`, position: 0 }), "listing image");
 
     for (const t of tagStr.split(",")) {

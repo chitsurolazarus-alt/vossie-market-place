@@ -127,3 +127,21 @@ html[data-lowdata="true"] *::after {
 .theme-sun { display: none; }
 :root[data-theme="dark"] .theme-sun { display: block; }
 :root[data-theme="dark"] .theme-moon { display: none; }
+
+/* ---------------------------------------------------------------------------------------------
+   Splash (installed app launch only: see Splash.tsx) and loading skeletons.
+   --------------------------------------------------------------------------------------------- */
+.splash { display: none; }
+html[data-splash="1"] .splash, html[data-splash="out"] .splash {
+  position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem;
+  background: #16305e; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
+}
+html[data-splash="out"] .splash { opacity: 0; transition: opacity 0.25s ease-out; pointer-events: none; }
+.splash-mark { animation: splash-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.splash-tag { animation: splash-rise 0.5s 0.15s ease-out both; }
+@keyframes splash-pop { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+@keyframes splash-rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* Skeleton screens fade in only if loading takes longer than ~150ms, so fast navigations never flash. */
+.loading-delay { animation: loading-in 0.2s 0.15s ease-out both; }
+@keyframes loading-in { from { opacity: 0; } to { opacity: 1; } }

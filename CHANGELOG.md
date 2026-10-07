@@ -135,3 +135,10 @@
 - Mobile: header/desktop nav moved from 768px to 1024px (it overflowed at 768 on every page), safe-area insets (`viewport-fit=cover`), `dvh` sheet, fixed 44px tap target on `/sell`.
 - `scripts/responsive-audit.mjs` (`npm run test:audit`): 35 routes x 6 widths x light/dark. 80 issue instances before, 0 after. Report in `docs/UI_AUDIT.md`.
 - Checks: lint, typecheck, build; `test:ui` 75, `test:theme` 79, `test:phase5` 134, `test:flow` 46, `test:smoke` 31.
+
+## Rebrand stage 3 (part 1) - Splash and loading screens
+- Branded **splash** (logo mark rise-in) for installed-app launches only, once per session, gone in about 0.7s (0.25s with reduced motion); browser visits never see it, so first-visit speed is untouched.
+- **Route skeletons** (fade in only after 150ms, so fast loads never flash): home, browse, messages list, sell, admin, mentor, account (plus the existing sell/listings one).
+  Listing and message-thread pages deliberately have none, to keep real HTTP 404s (a streamed page cannot change its status).
+- Photo pipeline ready: `scripts/fetch-photos.mjs` (Pexels API), `scripts/photos/queries.mjs` (33 listing + 10 site searches), seed uses the photos when present. Waiting for `PEXELS_API_KEY`.
+- Checks: lint, typecheck, build; `test:splash` 7, `test:ui` 75, `test:theme` 79, `test:phase5` 134, `test:flow` 46, `test:smoke` 31.

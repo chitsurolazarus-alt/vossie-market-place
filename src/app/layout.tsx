@@ -3,6 +3,8 @@ import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
+import Splash from "@/components/Splash";
+import { SPLASH_INIT_SCRIPT } from "@/lib/splash";
 import ToastProvider from "@/components/Toast";
 import RegisterSW from "@/components/RegisterSW";
 import AccountNotice from "@/components/AccountNotice";
@@ -32,9 +34,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     // data-theme is set by the inline script below before first paint (saved choice, else the device setting).
     <html lang="en" suppressHydrationWarning data-lowdata={lowData ? "true" : "false"} className={`${display.variable} ${body.variable} h-full antialiased`}>
-      <head><script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} /></head>
+      <head><script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT + SPLASH_INIT_SCRIPT }} /></head>
       <body className="min-h-full flex flex-col font-sans">
         <ToastProvider>
+        <Splash />
         <a href="#main" className="skip-link">Skip to content</a>
         <Header />
         <AccountNotice />

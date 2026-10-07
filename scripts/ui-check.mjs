@@ -93,6 +93,7 @@ await page.select("#f-category", "food");
 await page.$eval("[role=dialog] form button[type=submit]", (b) => b.click());
 await page.waitForFunction(() => location.search.includes("category=food"));
 check("submitting filters puts them in the URL", page.url().includes("category=food"));
+await page.waitForFunction(() => document.body.innerText.includes("Chicken kota"), { timeout: 10000 }).catch(() => {}); // results stream in after the loading skeleton
 check("filtered results show only food", (await page.content()).includes("Chicken kota") && !(await page.content()).includes("Skin fade"));
 await page.goBack({ waitUntil: "networkidle0" });
 check("back button restores the unfiltered page", !page.url().includes("category=food"));
