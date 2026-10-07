@@ -105,3 +105,8 @@ Phases 0-5 complete. Rebrand Stage 1 (HustleHub identity) done; Stages 2-10 foll
 - Route skeletons: `src/components/skeletons.tsx`; `loading.tsx` lives in route groups `(home)` and `(index)` next to the index page only.
   **Gotcha:** a `loading.tsx` makes Next stream the page, so `notFound()` below it returns HTTP 200 instead of 404. Never put one on a parent of `l/[id]`, `messages/[id]` or other access-controlled detail routes.
 - Real photos: `npm run photos:fetch` (needs `UNSPLASH_ACCESS_KEY` or `PEXELS_API_KEY` in `.env.local`) fills `scripts/photos/files` + `public/photos` and `scripts/photos/manifest.json`; `db:seed` uploads them. Credits in `docs/IMAGE_CREDITS.md`.
+
+## Settings and navigation (Stage 4)
+- Data saver, theme, notification prefs, campus, tour replay and legal links live in `/settings` (sections have ids for deep links, e.g. `/settings#data-saver`). The header has no data-saver toggle.
+- `NAV` in `Header.tsx` is the one list for both navs; `desktopOnly` items stay out of the five-item mobile bottom nav (Home, Browse, Sell, Messages, Account). Keep it at 5 on mobile.
+- `NavLink.tsx` provides the active state (`aria-current="page"`). `npm run test:settings` covers all of this.

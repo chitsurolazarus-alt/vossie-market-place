@@ -1,4 +1,5 @@
 import { signOut } from "@/app/actions/auth";
+import Icon from "@/components/Icon";
 import { Button, ButtonLink, PageShell } from "@/components/ui";
 import { getMySeller, requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -28,10 +29,12 @@ export default async function Account() {
       </dl>
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <ButtonLink href="/sell" variant="sand">{seller ? "Seller dashboard" : "Start selling"}</ButtonLink>
+        <ButtonLink href="/saved" variant="secondary"><Icon name="heart" size="md" />Saved</ButtonLink>
+        <ButtonLink href="/looking-for" variant="secondary"><Icon name="megaphone" size="md" />Looking For board</ButtonLink>
+        <ButtonLink href="/settings" variant="secondary"><Icon name="settings" size="md" />Settings</ButtonLink>
         {profile?.role === "admin" && <ButtonLink href="/admin" variant="primary">Admin panel</ButtonLink>}
         {(profile?.role === "mentor" || profile?.role === "admin") && <ButtonLink href="/mentor" variant="primary">Mentor view</ButtonLink>}
         <ButtonLink href="/growth" variant="secondary">Hub Growth corner</ButtonLink>
-        <ButtonLink href="/settings/privacy" variant="secondary">Privacy settings</ButtonLink>
         <form action={signOut}><Button type="submit" variant="secondary" className="w-full">Sign out</Button></form>
       </div>
     </PageShell>

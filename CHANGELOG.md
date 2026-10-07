@@ -149,3 +149,12 @@
   deleted and nothing from it shipped. The script keeps Openverse behind `--openverse` only.
 - Pipeline stays ready: `scripts/fetch-photos.mjs` (Unsplash or Pexels key), `scripts/photos/queries.mjs`, `scripts/photos/sheet.mjs` (contact sheet for the by-eye check), seed fallback to tiles.
   To finish: add `UNSPLASH_ACCESS_KEY` or `PEXELS_API_KEY` to `.env.local`, run `npm run photos:fetch`, review the sheet, `npm run db:seed`.
+
+## Rebrand stage 4 - Settings page and navigation
+- `/settings` now has seven sections with a jump bar: **Appearance** (light/dark/device), **Data saver** (the same low-data mode, moved out of the header), **Notifications** (email on new enquiries, daily summary; push shown as coming soon),
+  **Location** (my campus, saved to the profile; becomes province + campus in Stage 6), **Help** (Replay app tour, FAQ), **Privacy & data** (download or delete) and **About & legal** (privacy, terms, seller guidelines, how trust and Featured work, Hub Growth, contact, Incubation Hub credit).
+  Signed-out visitors still get Appearance, Data saver and About; account sections ask them to sign in.
+- New `/faq` page (10 questions). New server actions in `actions/settings.ts` (own-row writes through RLS, no service role).
+- **Bottom nav (mobile):** exactly five items, icon + label, current section highlighted: Home, Browse, Sell, Messages, Account. Saved, Looking For and Settings moved into **Account**.
+  **Desktop** top bar (from 1024px) keeps all links, with the current one highlighted. The data-saver toggle is gone from the header.
+- New `scripts/settings-check.mjs` (`npm run test:settings`, 33 checks). `test:ui` updated for the moved toggle.
