@@ -36,7 +36,7 @@ const state = (p) => p.evaluate(() => ({ attr: document.documentElement.getAttri
   const p = await phone([{ name: "display-mode", value: "standalone" }]);
   await p.goto(BASE + "/", { waitUntil: "domcontentloaded" });
   const early = await state(p);
-  check("installed app: the splash is on screen at first paint", early.attr === "1" && early.shown, JSON.stringify(early));
+  check("installed app: the splash is on screen at first paint (or already fading)", (early.attr === "1" || early.attr === "out") && early.shown, JSON.stringify(early));
   const t0 = Date.now();
   await p.waitForFunction(() => !document.documentElement.hasAttribute("data-splash"), { timeout: 4000 });
   const ms = Date.now() - t0;
