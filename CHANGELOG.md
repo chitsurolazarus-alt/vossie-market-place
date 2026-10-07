@@ -142,3 +142,10 @@
   Listing and message-thread pages deliberately have none, to keep real HTTP 404s (a streamed page cannot change its status).
 - Photo pipeline ready: `scripts/fetch-photos.mjs` (Pexels API), `scripts/photos/queries.mjs` (33 listing + 10 site searches), seed uses the photos when present. Waiting for `PEXELS_API_KEY`.
 - Checks: lint, typecheck, build; `test:splash` 7, `test:ui` 75, `test:theme` 79, `test:phase5` 134, `test:flow` 46, `test:smoke` 31.
+
+## Rebrand stage 3 (closed) - real photos deferred
+- Pexels keys were paused and Unsplash was not available, so **no real photos are in the app yet**: listings and the landing page keep the generated tiles.
+- Free no-key option tried: Openverse (CC0 / public domain / CC BY only). Results were unusable (off-topic, historical or ethnographic images, visible Apple and Coca-Cola logos), so the whole batch was
+  deleted and nothing from it shipped. The script keeps Openverse behind `--openverse` only.
+- Pipeline stays ready: `scripts/fetch-photos.mjs` (Unsplash or Pexels key), `scripts/photos/queries.mjs`, `scripts/photos/sheet.mjs` (contact sheet for the by-eye check), seed fallback to tiles.
+  To finish: add `UNSPLASH_ACCESS_KEY` or `PEXELS_API_KEY` to `.env.local`, run `npm run photos:fetch`, review the sheet, `npm run db:seed`.
