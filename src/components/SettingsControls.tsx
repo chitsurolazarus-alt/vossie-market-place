@@ -2,9 +2,10 @@
 
 import { useState, useTransition } from "react";
 import { replayTours, saveMyCampus, saveNotificationPrefs } from "@/app/actions/settings";
+import CampusSelect, { type CampusOption } from "./CampusSelect";
 import Icon from "./Icon";
 import { useToast } from "./Toast";
-import { Button, inputCls } from "./ui";
+import { Button } from "./ui";
 
 function Switch({ label, hint, checked, onChange, disabled }: { label: string; hint: string; checked: boolean; onChange: (v: boolean) => void; disabled?: boolean }) {
   return (
@@ -43,7 +44,7 @@ export function NotificationPrefs({ initial }: { initial: { email_new_enquiry: b
   );
 }
 
-export function CampusPicker({ campuses, initial }: { campuses: { id: string; name: string }[]; initial: string | null }) {
+export function CampusPicker({ campuses, initial }: { campuses: CampusOption[]; initial: string | null }) {
   const toast = useToast();
   const [value, setValue] = useState(initial ?? "");
   const [pending, start] = useTransition();
@@ -53,11 +54,8 @@ export function CampusPicker({ campuses, initial }: { campuses: { id: string; na
   });
   return (
     <div className="space-y-3">
-      <label htmlFor="my-campus" className="block font-semibold text-navy">My campus</label>
-      <select id="my-campus" value={value} onChange={(e) => setValue(e.target.value)} className={inputCls}>
-        <option value="">Not set</option>
-        {campuses.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-      </select>
+      <p className="font-semibold text-navy">My campus</p>
+      <CampusSelect id="my-campus" campuses={campuses} value={value} onChange={setValue} emptyLabel="Not set" />
       <p className="text-sm text-muted">We use this to show hustles at your campus first.</p>
       <Button type="button" onClick={save} disabled={pending || value === (initial ?? "")} className="w-full sm:w-auto">{pending ? "Saving..." : "Save campus"}</Button>
     </div>

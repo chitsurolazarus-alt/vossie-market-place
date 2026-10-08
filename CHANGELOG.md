@@ -165,3 +165,9 @@
 - Progress is stored per tour in `profiles.tours_seen` (migration `20261008000001_tours_seen.sql`). A tour waits until the welcome slides are done, and each shows once.
 - Settings -> Replay app tour now clears `tours_seen` as well. The old seller tour component was removed.
 - `npm run test:tours` (21 checks, real browser at 360px).
+
+## Rebrand stage 6 - Nationwide campuses
+- All 12 Eduvos campuses are in the database with a province (migration `20261008000002_nationwide_campuses.sql`). Midrand and Durban stay active (they hold the demo data); the other ten are inactive and each has the standard four public pickup points.
+- New province-then-campus picker (`CampusSelect`) in Settings -> Location and in seller registration. Campuses that have not launched show as "coming soon" and cannot be chosen; the seller action also rejects them on the server.
+- Filters, Home chips and Growth only list launched campuses. An admin switches a campus on in Admin -> Manage and it appears everywhere with no code change.
+- `npm run test:campuses` (11 checks). `test:settings` updated for the two-step picker.

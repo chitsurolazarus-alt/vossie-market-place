@@ -14,7 +14,7 @@ const check = (n, ok, x = "") => { if (ok) pass++; else fail++; console.log(`${o
 
 const { data: list } = await db.auth.admin.listUsers({ perPage: 1000 });
 const uid = list.users.find((u) => u.email === EMAIL).id;
-const { data: campuses } = await db.from("campuses").select("id,name").eq("active", true).order("name");
+const { data: campuses } = await db.from("campuses").select("id,name,province").eq("active", true).order("name");
 const reset = () => Promise.all([
   db.from("notification_prefs").delete().eq("user_id", uid),
   db.from("profiles").update({ campus_id: null, onboarding_seen: true, seller_tour_seen: true, tours_seen: ["home", "browse", "messages", "seller"], low_data_mode: false }).eq("id", uid),
@@ -92,6 +92,7 @@ check("the saved choice shows again after reload", (await page.$$eval("#notifica
 
 // campus
 const campus = campuses[0];
+await page.select("#my-campus-province", campus.province);
 await page.select("#my-campus", campus.id);
 await page.$$eval("#location button", (bs) => bs.find((b) => b.innerText.includes("Save campus")).click());
 await wait(1500);

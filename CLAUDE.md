@@ -54,7 +54,7 @@ realistic South African seed data, no lorem ipsum.
   currently not approved, and lint/build work without it.
 
 ## Status
-Phases 0-5 complete. Rebrand Stages 1-5 done; Stages 6-10 follow the rebrand brief. Email provider (SMTP) is still outstanding.
+Phases 0-5 complete. Rebrand Stages 1-6 done; Stages 7-10 follow the rebrand brief. Email provider (SMTP) is still outstanding.
 
 ## Phase 1-2 decisions
 - Sign-up allow-list in DB tables (`vossie.net`, `eduvos.com`, named test emails); roles by promotion only.
@@ -105,6 +105,9 @@ Phases 0-5 complete. Rebrand Stages 1-5 done; Stages 6-10 follow the rebrand bri
 - Route skeletons: `src/components/skeletons.tsx`; `loading.tsx` lives in route groups `(home)` and `(index)` next to the index page only.
   **Gotcha:** a `loading.tsx` makes Next stream the page, so `notFound()` below it returns HTTP 200 instead of 404. Never put one on a parent of `l/[id]`, `messages/[id]` or other access-controlled detail routes.
 - Real photos: `npm run photos:fetch` (needs `UNSPLASH_ACCESS_KEY` or `PEXELS_API_KEY` in `.env.local`) fills `scripts/photos/files` + `public/photos` and `scripts/photos/manifest.json`; `db:seed` uploads them. Credits in `docs/IMAGE_CREDITS.md`.
+
+## Nationwide campuses (Stage 6)
+- `campuses.province` is required; `active=false` means not launched. `getReference()` returns `campuses` (active only, for filters and chips) and `allCampuses` (pickers). Use `CampusSelect` for any campus choice. Activating a campus = Admin -> Manage. `npm run test:campuses`.
 
 ## Coach-mark tours (Stage 5)
 - `CoachTour` (`src/components/CoachTour.tsx`) + steps in `src/lib/tours.ts`; targets are `data-tour="..."` attributes. Seen ids live in `profiles.tours_seen`; a tour waits for the welcome slides (`onboarding_seen`). New screens: add anchors + a steps array + `<CoachTour id=...>`; add the id to the seeds. `npm run test:tours`.

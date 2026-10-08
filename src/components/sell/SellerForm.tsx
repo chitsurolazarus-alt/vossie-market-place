@@ -9,13 +9,15 @@ import PhotoCropper from "./PhotoCropper";
 import { STEP_FIELDS, validateStep, type FieldErrors, type SellerInput } from "@/lib/validation";
 
 export type SellerState = Omit<SellerInput, "agree"> & { agree: boolean };
+import CampusSelect, { type CampusOption } from "@/components/CampusSelect";
+
 export type Option = { id: string; name: string };
 export type PickupOption = { id: string; campus_id: string; name: string; description: string | null };
 
 type Props = {
   userId: string;
   categories: Option[];
-  campuses: Option[];
+  campuses: CampusOption[];
   pickupPoints: PickupOption[];
   initial: Partial<SellerState>;
   maskedWhatsapp: string | null;
@@ -110,12 +112,9 @@ function StepCampus({ s, set, errors, campuses, pickupPoints, campusLocked }: Ct
   return (
     <div className="space-y-5">
       <Field label="Campus" htmlFor="campusId" error={errors.campusId} hint={campusLocked ? "Campus can't be changed after approval or once you have listings." : undefined}>
-        <select id="campusId" className={inputCls} value={s.campusId} disabled={campusLocked}
-          onChange={(e) => set({ campusId: e.target.value, pickupPointIds: [] })} aria-invalid={!!errors.campusId}
-          aria-describedby={describe("campusId", errors.campusId, !!campusLocked)}>
-          <option value="">Choose your campus</option>
-          {campuses.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-        </select>
+        <CampusSelect id="campusId" campuses={campuses} value={s.campusId} disabled={campusLocked}
+          onChange={(id) => set({ campusId: id, pickupPointIds: [] })} invalid={!!errors.campusId}
+          describedBy={describe("campusId", errors.campusId, !!campusLocked)} />
       </Field>
       {s.campusId && (
         <fieldset aria-describedby="pp-hint">

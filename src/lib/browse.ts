@@ -21,9 +21,11 @@ export const getReference = cache(async () => {
   const supabase = await createClient();
   const [cats, camps] = await Promise.all([
     supabase.from("categories").select("id,name,slug").eq("active", true).order("sort_order"),
-    supabase.from("campuses").select("id,name,slug").eq("active", true).order("name"),
+    supabase.from("campuses").select("id,name,slug,province,active").order("name"),
   ]);
-  return { categories: cats.data ?? [], campuses: camps.data ?? [] };
+  const all = camps.data ?? [];
+  // `campuses` = launched ones (filters, chips); `allCampuses` = everything, for pickers that show "coming soon".
+  return { categories: cats.data ?? [], campuses: all.filter((c) => c.active), allCampuses: all };
 });
 
 export type BrowseParams = {

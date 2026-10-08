@@ -82,7 +82,7 @@ export default async function Settings() {
         </Section>
 
         <Section id="location" icon="pin" title="Location">
-          {user ? <CampusPicker campuses={ref.campuses} initial={campusId} /> : signInHint}
+          {user ? <CampusPicker campuses={ref.allCampuses} initial={campusId} /> : signInHint}
         </Section>
 
         <Section id="help" icon="help" title="Help">

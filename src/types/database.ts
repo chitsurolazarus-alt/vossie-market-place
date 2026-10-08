@@ -98,6 +98,7 @@ export type Database = {
         Row: {
           active: boolean
           city: string | null
+          province: string
           created_at: string
           id: string
           name: string
@@ -106,6 +107,7 @@ export type Database = {
         Insert: {
           active?: boolean
           city?: string | null
+          province: string
           created_at?: string
           id?: string
           name: string
@@ -114,6 +116,7 @@ export type Database = {
         Update: {
           active?: boolean
           city?: string | null
+          province?: string
           created_at?: string
           id?: string
           name?: string

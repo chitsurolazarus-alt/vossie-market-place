@@ -170,3 +170,11 @@ _(to be filled in by the team)_
 
 ### Team review notes
 _(to be filled in by the team)_
+
+## Rebrand stage 6: nationwide campuses
+**What the AI did:** looked up the Eduvos campus list on the web, wrote the migration, the `CampusSelect` picker, the server-side check and the `test:campuses` check.
+**Verified:** `test:campuses`, `test:settings`, `test:ui`, `test:smoke`, `test:tours`; lint, typecheck, build. The responsive audit, phase 5 and flow suites were NOT re-run (the machine ran low on memory).
+**Not verified (please check):** the campus list. Sources disagree: Eduvos's own page says "Vaal" where other sources say Vanderbijlpark, and it omits Durban (Umhlanga) and East London. I used 12 campuses; confirm names and cities with the Incubation Hub team.
+
+### Team review notes
+_(to be filled in by the team)_

@@ -46,6 +46,10 @@ export async function saveSeller(input: unknown, mode: "submit" | "edit"): Promi
     return { ok: false, error: "Add your WhatsApp number", fieldErrors: { whatsapp: "Add your WhatsApp number so buyers can reach you" } };
   }
 
+  const { data: camp } = await supabase.from("campuses").select("active").eq("id", v.campusId).maybeSingle();
+  if (!camp?.active && existing?.campus_id !== v.campusId) {
+    return { ok: false, error: "That campus hasn't launched yet", fieldErrors: { campusId: "That campus isn't live yet. Pick a campus that is open." } };
+  }
   const fields = {
     campus_id: v.campusId,
     category_id: v.categoryId,

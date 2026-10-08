@@ -7,7 +7,7 @@ export async function loadReferenceData() {
   const supabase = await createClient();
   const [cats, camps, pps] = await Promise.all([
     supabase.from("categories").select("id,name").eq("active", true).order("sort_order"),
-    supabase.from("campuses").select("id,name").eq("active", true).order("name"),
+    supabase.from("campuses").select("id,name,province,active").order("name"),
     supabase.from("pickup_points").select("id,campus_id,name,description").eq("approved", true).order("name"),
   ]);
   return { categories: cats.data ?? [], campuses: camps.data ?? [], pickupPoints: pps.data ?? [] };
