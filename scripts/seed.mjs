@@ -180,7 +180,8 @@ for (const s of SELLERS) {
     }).select("id").single(), `listing ${title}`);
 
     s.listingIds.push(listing.id);
-    const path = `${uid}/${listing.id}/1.webp`;
+    // Real photos get a `-photo` suffix so the landing hero can prefer them over generated tiles.
+    const path = `${uid}/${listing.id}/${PHOTOS[title] ? "1-photo" : "1"}.webp`;
     must(await db.storage.from("listing-images").upload(path, await listingImage(title, CATEGORY_COLOURS[s.cat], s.biz), { contentType: "image/webp", upsert: true }), "image");
     must(await db.from("listing_images").insert({ listing_id: listing.id, path, alt: `${title} by ${s.biz}`, position: 0 }), "listing image");
 

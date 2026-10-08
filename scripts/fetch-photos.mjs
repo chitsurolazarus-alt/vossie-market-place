@@ -7,19 +7,19 @@
 import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
-import { LISTING_QUERIES, SITE_QUERIES } from "./photos/queries.mjs";
+import { COMMONS_QUERIES, LISTING_QUERIES, SITE_QUERIES } from "./photos/queries.mjs";
 
 const require = createRequire(import.meta.url);
 const sharp = require("sharp");
 
 // Providers: Unsplash or Pexels (free key) or, with --openverse, Openverse (no key; CC0 / public domain / CC BY only; poor relevance, see below).
 const UNSPLASH = process.env.UNSPLASH_ACCESS_KEY, PEXELS = process.env.PEXELS_API_KEY;
-const PROVIDER = UNSPLASH ? "unsplash" : PEXELS ? "pexels" : process.argv.includes("--openverse") ? "openverse" : null;
+const PROVIDER = process.argv.includes("--commons") ? "commons" : UNSPLASH ? "unsplash" : PEXELS ? "pexels" : process.argv.includes("--openverse") ? "openverse" : null;
 if (!PROVIDER) {
   console.error("Add UNSPLASH_ACCESS_KEY or PEXELS_API_KEY to .env.local. (Openverse works without a key via --openverse, but its search is loosely matched: a trial gave off-topic, historical and branded photos, so it is opt-in and every photo needs a by-eye check.)");
   process.exit(1);
 }
-const LICENCE = { unsplash: "Unsplash License (free to use, credit appreciated)", pexels: "Pexels License (free to use, no attribution required)", openverse: "" }[PROVIDER];
+const LICENCE = { commons: "", unsplash: "Unsplash License (free to use, credit appreciated)", pexels: "Pexels License (free to use, no attribution required)", openverse: "" }[PROVIDER];
 class RateLimited extends Error {}
 const only = process.argv.includes("--only") ? process.argv[process.argv.indexOf("--only") + 1] : null;
 const refresh = process.argv.includes("--refresh");
@@ -35,7 +35,36 @@ const used = new Set(Object.values(manifest).map((m) => (m.provider ? `${m.provi
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
 
 // Both providers are normalised to { id, pageUrl, photographer, photographerUrl, alt, imageUrl, ping }.
+// Wikimedia Commons: no key. Keeps CC0, public domain, CC BY and CC BY-SA photos only (commercial use allowed, credit required).
+const strip = (h) => String(h ?? "").replace(/<[^>]*>/g, " ").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").replace(/\s+/g, " ").trim();
+const BAD_TITLE = /logo|icon|diagram|map of|flag of|coat of arms|poster|stamp|painting|drawing|illustration|svg|screenshot|portrait of|bust of|statue/i;
+async function searchCommons(query) {
+  const u = "https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrnamespace=6&gsrlimit=30&gsrsearch=" +
+    encodeURIComponent(query + " filetype:bitmap") + "&prop=imageinfo&iiprop=url|size|mime|extmetadata&iiurlwidth=2000";
+  const r = await fetch(u, { headers: { "User-Agent": "HustleHub-seed-script/1.0 (student marketplace demo)" } });
+  if (r.status === 429) throw new RateLimited("Wikimedia rate limit reached.");
+  if (!r.ok) throw new Error("Commons " + r.status);
+  const pages = Object.values((await r.json()).query?.pages ?? {}).sort((a, b) => a.index - b.index);
+  const out = [];
+  for (const pg of pages) {
+    const ii = pg.imageinfo?.[0]; if (!ii) continue;
+    const md = ii.extmetadata ?? {};
+    const lic = strip(md.LicenseShortName?.value);
+    const title = pg.title.replace(/^File:/, "");
+    if (!/^(CC0|CC BY(-SA)? [0-9.]+|Public domain|PD)/i.test(lic)) continue;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(ii.mime) || ii.width < 1000 || ii.width / ii.height < 1.15 || ii.width / ii.height > 2.1) continue;
+    if (BAD_TITLE.test(title)) continue;
+    out.push({
+      id: String(pg.pageid), pageUrl: ii.descriptionurl, photographer: strip(md.Artist?.value) || "Unknown", photographerUrl: ii.descriptionurl,
+      alt: strip(md.ImageDescription?.value).slice(0, 160) || title.replace(/\.[a-z]+$/i, "").replace(/_/g, " "),
+      imageUrl: ii.thumburl || ii.url, licence: lic + (md.LicenseUrl?.value ? " (" + md.LicenseUrl.value + ")" : ""), source: "Wikimedia Commons",
+    });
+  }
+  return out;
+}
+
 async function search(query) {
+  if (PROVIDER === "commons") return searchCommons(query);
   if (PROVIDER === "openverse") {
     const u = `https://api.openverse.org/v1/images/?q=${encodeURIComponent(query)}&license=cc0,pdm,by&license_type=commercial&mature=false&page_size=20`;
     const r = await fetch(u, { headers: { "User-Agent": "HustleHub-seed-script" } });
@@ -76,12 +105,12 @@ async function toWebp(buf, width, maxBytes) {
 const jobs = [
   ...Object.entries(LISTING_QUERIES).map(([key, q]) => ({ key, q, dir: FILES, width: 1600, max: 380_000, file: `${slug(key)}.webp` })),
   ...Object.entries(SITE_QUERIES).map(([key, q]) => ({ key, q, dir: SITE, width: key === "site:hero" ? 1920 : 1280, max: key === "site:hero" ? 220_000 : 160_000, file: `${key.slice(5)}.webp` })),
-].filter((j) => (!only || j.key.toLowerCase().includes(only.toLowerCase())) && (refresh || !manifest[j.key]));
+].filter((j) => !(process.argv.includes("--no-site") && j.key.startsWith("site:")) && (!only || j.key.toLowerCase().includes(only.toLowerCase())) && (refresh || !manifest[j.key]));
 
 console.log(`${jobs.length} photo(s) to fetch via ${PROVIDER}`);
 try {
   for (const j of jobs) {
-    const results = await search(j.q);
+    const results = await search(PROVIDER === "commons" ? COMMONS_QUERIES[j.key] ?? j.q : j.q);
     let pick = null, buf = null;
     for (const cand of results.filter((p) => !used.has(`${PROVIDER}:${p.id}`) && !used.has(p.id)).slice(0, 4)) {
       if (cand.ping) await fetch(cand.ping, { headers: { Authorization: `Client-ID ${UNSPLASH}` } }); // Unsplash API guideline: report the download
@@ -98,7 +127,7 @@ try {
     };
     fs.writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2));
     console.log(`  ok  ${j.key.padEnd(42)} ${(out.length / 1024).toFixed(0)}KB  ${pick.photographer}`);
-    await new Promise((r) => setTimeout(r, PROVIDER === "openverse" ? 3500 : 400));
+    await new Promise((r) => setTimeout(r, PROVIDER === "openverse" ? 3500 : PROVIDER === "commons" ? 1200 : 400));
   }
 } catch (e) {
   if (!(e instanceof RateLimited)) throw e;
@@ -107,11 +136,11 @@ try {
 
 // docs/IMAGE_CREDITS.md
 const rows = Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b));
-const name = (m) => (m.provider === "pexels" ? "Pexels" : m.provider === "unsplash" ? "Unsplash" : `Openverse / ${m.source ?? "web"}`);
+const name = (m) => (m.provider === "commons" ? "Wikimedia Commons" : m.provider === "pexels" ? "Pexels" : m.provider === "unsplash" ? "Unsplash" : `Openverse / ${m.source ?? "web"}`);
 const md = [
   "# Image credits",
   "",
-  "Photos come from [Openverse](https://openverse.org) (openly licensed images from Flickr, Wikimedia and others; only CC0, public domain and CC BY, which allow commercial use), and where noted Unsplash or Pexels. The creator, source page and exact licence of every photo are listed below; CC BY photos must keep this credit.",
+  "Photos come from [Wikimedia Commons](https://commons.wikimedia.org) (openly licensed: CC0, public domain, CC BY and CC BY-SA, all of which allow commercial use with credit). Each photo links to its source page, author and licence below.",
   "Downloaded with `scripts/fetch-photos.mjs`, converted to WebP, EXIF removed. Listing photos live in Supabase Storage (`listing-images`); site photos in `public/photos`.",
   "Each photo was checked by eye for identifiable brand logos or trademarks before use. Seller avatars are generated initials tiles, not photos of people.",
   "",

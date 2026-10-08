@@ -11,7 +11,9 @@ type Campus = { id: string; name: string; slug: string; province: string; active
 /** Signed-out hero: big type, solid blocks and three live listings so the page proves the marketplace is real. */
 export function LandingHero({ tiles, campuses, campus }: { tiles: Tile[]; campuses: Campus[]; campus?: string }) {
   const live = campuses.filter((c) => c.active);
-  const shown = tiles.filter((t) => t.cover_path).slice(0, 3);
+  // Real photos first; generated tiles only fill the gaps.
+  const withImage = tiles.filter((t) => t.cover_path);
+  const shown = [...withImage.filter((t) => t.cover_path!.includes("-photo")), ...withImage.filter((t) => !t.cover_path!.includes("-photo"))].slice(0, 3);
   return (
     <section className="relative overflow-hidden bg-navy text-white">
       <span aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-royal" />

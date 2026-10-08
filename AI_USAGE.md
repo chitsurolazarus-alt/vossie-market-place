@@ -202,3 +202,11 @@ _(to be filled in by the team)_
 
 ### Team review notes
 _(to be filled in by the team)_
+
+## Rebrand stage 10: verify and ship
+**What the AI did:** ran every test suite one at a time, diagnosed the phase 5 and RLS failures (leftover test data and a transient sign-up error, not code bugs), added a Wikimedia Commons provider to the photo importer, tuned search terms, looked at contact sheets of every candidate and rejected the unsuitable ones, re-seeded, and pushed.
+**Verified:** see the Stage 10 entry in CHANGELOG.md.
+**Not verified (please check):** the photos themselves (a human should review each one for fit and for any person who might object), the CC BY and CC BY-SA credit wording, and a full Paystack test-card payment. The responsive audit ran at 3 of the 6 widths (360, 768, 1440).
+
+### Team review notes
+_(to be filled in by the team)_

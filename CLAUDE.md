@@ -54,7 +54,7 @@ realistic South African seed data, no lorem ipsum.
   currently not approved, and lint/build work without it.
 
 ## Status
-Phases 0-5 complete. Rebrand Stages 1-9 done; Stage 10 follow the rebrand brief. Email provider (SMTP) is still outstanding.
+Phases 0-5 complete. Rebrand Stages 1-10 done (verified and shipped). Email provider (SMTP) is still outstanding.
 
 ## Phase 1-2 decisions
 - Sign-up allow-list in DB tables (`vossie.net`, `eduvos.com`, named test emails); roles by promotion only.

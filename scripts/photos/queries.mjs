@@ -56,3 +56,21 @@ export const SITE_QUERIES = {
   "site:trust": "friends shaking hands",
   "site:sell": "young woman packing orders at home",
 };
+
+// Wikimedia Commons matches words in file names and descriptions, so plain nouns work best there.
+// Each term was tuned by looking at what came back (wrong subject, brand logos or minors are rejected by eye).
+export const COMMONS_QUERIES = {
+  "Beard trim and shape": "barber beard trim", "Braids for laptop repair": "hair braiding salon", "Cornrows (straight back)": "braided hair African woman back view",
+  "Haircut for data or airtime": "barber haircut", "Knotless braids (medium)": "box braids hairstyle", "Res room haircut (2 friends)": "haircut at home",
+  "Skin fade and line-up": "fade haircut barber", "Take-down and wash": "hair wash salon",
+  "CV and LinkedIn makeover": "resume document pen", "Event poster or flyer": "poster printing flyer", "Instagram post pack (5 designs)": "smartphone photography",
+  "Logo design (2 concepts)": "graphic designer working",
+  "Balloon arch (small)": "balloon arch", "Party props box": "party hats balloons", "Res birthday setup": "birthday party decorations", "Society event coordinator": "student society event",
+  "Custom laces set (3 pairs)": "shoelaces", "Pre-loved Air Force 1 (size 8)": "white sneakers", "Sneaker deep clean": "shoe cleaning brush", "Sole whitening and restoration": "sneakers shoes",
+  "Birthday cupcake box (12)": "box of cupcakes", "Chicken kota with atchar": "South African street food", "Chilli bites tray (20)": "fried snacks",
+  "Vetkoek and mince (2 pack)": "vetkoek", "Weekend baking box": "baking flour eggs",
+  "Laptop clean-up and speed boost": "laptop repair", "Phone screen protector and setup": "smartphone screen protector", "Refurbished 32GB flash drive": "usb stick",
+  "Simple website for your hustle": "web developer coding laptop",
+  "Financial Accounting tutoring (1 hour)": "accounting calculator", "Maths 1 exam crash course": "mathematics homework", "Summarised study notes bundle": "notebook notes pen desk",
+  "Tutoring for a design job": "tutor teaching student",
+};
