@@ -103,7 +103,8 @@ try {
   await click(buyer.page, "Approve test payment"); await wait(3000);
   r = (await rows())[0];
   check("approving records paid via mockpay", r.status === "paid" && r.provider === "mockpay" && !!r.paid_at && r.provider_ref?.startsWith("MOCK-"), JSON.stringify(r));
-  check("pay page now shows Paid", (await buyer.page.evaluate(() => document.body.innerText)).includes("Paid."));
+  const sawPaid = await buyer.page.waitForFunction(() => document.body.innerText.includes("Paid."), { timeout: 10000 }).then(() => true, () => false);
+  check("pay page now shows Paid", sawPaid);
   const { data: n2 } = await db.from("notifications").select("type").eq("user_id", sellerUser.id).eq("conversation_id", conv.id).eq("type", "payment_received");
   check("seller got a payment_received notification", n2.length === 1);
   const { data: ev } = await db.from("payment_events").select("type").eq("request_id", r.id);
