@@ -9,6 +9,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getLowData, getSavedIds } from "@/lib/viewer";
 
 import CoachTour from "@/components/CoachTour";
+import { CampusGrid, FinalCta, HowItWorks, LandingHero, StatsBand, TrustStrip } from "@/components/landing/Landing";
+import { getLandingStats } from "@/lib/landing";
 import { HOME_TOUR } from "@/lib/tours";
 import Verified from "@/components/Verified";
 import Icon from "@/components/Icon";
@@ -41,12 +43,15 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
   const campusId = ref.campuses.find((c) => c.slug === campus)?.id;
   const [featured, fresh, lowData, user] = await Promise.all([loadFeatured(campusId), latestTiles(12, campusId), getLowData(), getUser()]);
   const saved = await getSavedIds(fresh.map((t) => t.id));
+  // Signed-out visitors get the landing page; signed-in users go straight to the marketplace.
+  const stats = user ? null : await getLandingStats(ref.allCampuses);
 
   const hasNew = fresh.some((t) => isWithinDays(t.created_at, 7));
 
   return (
     <>
       <CoachTour id="home" label="Home tour" steps={HOME_TOUR} />
+      {user || !stats ? (
       <section className="bg-navy text-white">
         <div className="mx-auto max-w-6xl px-4 py-10 sm:py-16">
           <p className="inline-block rounded-full bg-sand px-3 py-1 text-sm font-semibold text-navy">Eduvos Incubation Hub</p>
@@ -71,6 +76,13 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           </div>
         </div>
       </section>
+      ) : (
+        <>
+          <LandingHero tiles={fresh} campuses={ref.allCampuses} campus={campus} />
+          <StatsBand stats={stats} />
+          <HowItWorks />
+        </>
+      )}
 
       {featured.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 pt-10" aria-labelledby="featured-h">
@@ -140,6 +152,13 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           <div className="mt-4 sm:mt-0"><ButtonLink href="/looking-for" variant="primary">Looking For (coming soon)</ButtonLink></div>
         </div>
       </section>
+      {!user && (
+        <>
+          <CampusGrid campuses={ref.allCampuses} />
+          <TrustStrip />
+          <FinalCta />
+        </>
+      )}
     </>
   );
 }

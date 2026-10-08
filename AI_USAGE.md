@@ -194,3 +194,11 @@ _(to be filled in by the team)_
 
 ### Team review notes
 _(to be filled in by the team)_
+
+## Rebrand stage 9: landing page
+**What the AI did:** chose the structure (landing for signed-out visitors only), wrote the landing components and live stats query, and the `test:landing` check; looked at the 360px and 1440px screenshots and fixed the "R0" numeral.
+**Verified:** `test:landing` (sections, 12 campuses, 44px targets, no horizontal scroll at 360/768/1024/1440 in light and dark, signed-in home unchanged), `test:ui`, `test:smoke`, `test:settings`; lint, typecheck, build.
+**Not verified (please check):** the copy and the claims in the stats band; the hero cards use placeholder artwork until real photos are added (open item from Stage 3); `test:discovery` could not run here (it needs a direct database connection); the responsive audit and phase 5 suites were not re-run.
+
+### Team review notes
+_(to be filled in by the team)_

@@ -185,3 +185,9 @@
 - Records only: the ledger stores status, provider and reference. No payout or escrow yet (next step: Paystack subaccounts). Payment does not count as a confirmed sale; trust still needs the buyer's confirmation.
 - Database: `payment_requests` (read-only for the buyer and seller through RLS; all writes happen in server code), append-only `payment_events` (idempotent, also logs a late payment on a cancelled request), notifications `payment_request` and `payment_received`, `payments` flag on, FAQ entry added.
 - Paystack test keys are set on Vercel (secret one as sensitive). `npm run test:payments` (28 checks).
+
+## Rebrand stage 9 - Landing page
+- Signed-out visitors at `/` now get a landing page; signed-in users keep the marketplace home. One URL to share on Demo Day.
+- New sections: bold hero (large Playfair headline, search, two actions, campus chips and three live listings as tilted cards on desktop), a royal stats band with live numbers (things for sale, student sellers, campuses live, R0 to start), How it works for buying and selling, the existing live Featured Hustles / New this week / categories / Looking For sections, "One hub, every campus" (all 12 campuses by province, live ones link to Browse, the rest shown as coming soon), a safety, trust and data-saver strip, and a closing call to action.
+- Built from existing tokens, Unicons and components; the same headings, search form and links work with data saver, dark mode and reduced motion. Stat figures use lining numerals so "R0" does not read as "Ro".
+- `npm run test:landing` (21 checks, also saves screenshots to `shots/`).

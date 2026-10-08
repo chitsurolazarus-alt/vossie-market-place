@@ -24,6 +24,7 @@
     "test:campuses": "node --env-file=.env.local scripts/campuses-check.mjs",
     "test:handover": "node --env-file=.env.local scripts/handover-check.mjs",
     "test:payments": "node --env-file=.env.local scripts/payments-check.mjs",
+    "test:landing": "node --env-file=.env.local scripts/landing-check.mjs",
     "test:splash": "node --env-file=.env.local scripts/splash-check.mjs",
     "photos:fetch": "node --env-file=.env.local scripts/fetch-photos.mjs",
     "test:audit": "node --env-file=.env.local scripts/responsive-audit.mjs"
