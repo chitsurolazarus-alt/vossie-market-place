@@ -9,7 +9,7 @@ export default async function BottomNav() {
   const unread = await getUnreadCounts();
   const items = NAV.filter((n) => !n.desktopOnly).slice(0, 5);
   return (
-    <nav aria-label="Primary" className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-navy/10 pb-[env(safe-area-inset-bottom)]">
+    <nav data-tour="nav" aria-label="Primary" className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-navy/10 pb-[env(safe-area-inset-bottom)]">
       <ul className="grid grid-cols-5">
         {items.map((n) => (
           <li key={n.href}>

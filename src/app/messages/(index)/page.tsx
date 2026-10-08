@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import CoachTour from "@/components/CoachTour";
+import { MESSAGES_TOUR } from "@/lib/tours";
 import LiveRefresh from "@/components/messages/LiveRefresh";
 import { ButtonLink, EmptyState, PageShell } from "@/components/ui";
 import { requireUser } from "@/lib/auth";
@@ -16,11 +18,12 @@ export default async function Inbox() {
   return (
     <PageShell title="Messages" intro="Your enquiries with buyers and sellers." width="max-w-2xl">
       <LiveRefresh tables={["messages", "conversations"]} channel="inbox" />
+      <CoachTour id="messages" label="Messages tour" steps={MESSAGES_TOUR} />
       {rows.length === 0 ? (
         <EmptyState title="No messages yet" body="When you message a seller, or a buyer messages you, the conversation shows up here."
           action={<ButtonLink href="/browse" variant="sand">Browse hustles</ButtonLink>} />
       ) : (
-        <ul className="divide-y divide-navy/10 overflow-hidden rounded-2xl border border-navy/15 bg-white">
+        <ul data-tour="inbox" className="divide-y divide-navy/10 overflow-hidden rounded-2xl border border-navy/15 bg-white">
           {rows.map((r) => (
             <li key={r.id}>
               <Link href={`/messages/${r.id}`} className="flex min-h-[4.5rem] items-center gap-3 p-3 hover:bg-mist">

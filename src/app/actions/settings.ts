@@ -42,7 +42,7 @@ export async function saveMyCampus(campusId: string | null): Promise<Result> {
 export async function replayTours(): Promise<Result> {
   const { supabase, user } = await me();
   if (!user) return { ok: false, error: "Sign in to replay the tour." };
-  const { error } = await supabase.from("profiles").update({ onboarding_seen: false, seller_tour_seen: false }).eq("id", user.id);
+  const { error } = await supabase.from("profiles").update({ onboarding_seen: false, seller_tour_seen: false, tours_seen: [] }).eq("id", user.id);
   if (error) return { ok: false, error: "Couldn't reset the tour. Try again." };
   return { ok: true };
 }

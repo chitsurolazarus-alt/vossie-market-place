@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import CoachTour from "@/components/CoachTour";
+import { BROWSE_TOUR } from "@/lib/tours";
 import BrowseFilters from "@/components/BrowseFilters";
 import ListingTile from "@/components/ListingTile";
 import { ButtonLink, EmptyState, inputCls } from "@/components/ui";
@@ -33,9 +35,10 @@ export default async function Browse({ searchParams }: { searchParams: Promise<R
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 sm:py-8">
+      <CoachTour id="browse" label="Browse tour" steps={BROWSE_TOUR} />
       <h1 className="font-display text-3xl font-bold text-navy">{p.q ? <>Results for &ldquo;{p.q}&rdquo;</> : "Browse hustles"}</h1>
 
-      <form action="/browse" method="get" role="search" className="mt-4 flex gap-2">
+      <form data-tour="browse-search" action="/browse" method="get" role="search" className="mt-4 flex gap-2">
         {p.category && <input type="hidden" name="category" value={p.category} />}
         {p.campus && <input type="hidden" name="campus" value={p.campus} />}
         {p.kind && <input type="hidden" name="kind" value={p.kind} />}
@@ -49,13 +52,13 @@ export default async function Browse({ searchParams }: { searchParams: Promise<R
       </form>
 
       <div className="mt-6 grid gap-6 md:grid-cols-[260px_1fr]">
-        <aside aria-label="Filters" className="md:sticky md:top-20 md:self-start">
+        <aside data-tour="browse-filters" aria-label="Filters" className="md:sticky md:top-20 md:self-start">
           <BrowseFilters
             v={{ category: p.category, campus: p.campus, kind: p.kind, mode: p.mode, min: p.min, max: p.max, avail: p.avail, q: p.q, sort: p.sort }}
             categories={ref.categories} campuses={ref.campuses} activeCount={chips.length} clearHref={clearHref} />
         </aside>
 
-        <section aria-label="Results" className="min-w-0">
+        <section data-tour="browse-results" aria-label="Results" className="min-w-0">
           <nav aria-label="Categories" className="-mx-4 mb-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
             <ul className="flex w-max gap-2">
               {[{ slug: "", name: "All" }, ...ref.categories].map((c) => {

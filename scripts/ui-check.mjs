@@ -18,7 +18,7 @@ import { createClient } from "@supabase/supabase-js";
   if (u) {
     await db.from("saved_listings").delete().eq("user_id", u.id);
     await db.from("follows").delete().eq("user_id", u.id);
-    await db.from("profiles").update({ onboarding_seen: false, low_data_mode: false }).eq("id", u.id);
+    await db.from("profiles").update({ onboarding_seen: false, tours_seen: ["home", "browse", "messages", "seller"], low_data_mode: false }).eq("id", u.id);
   }
 }
 

@@ -1,4 +1,5 @@
-import { SellerTour } from "@/components/Tours";
+import CoachTour from "@/components/CoachTour";
+import { SELLER_TOUR } from "@/lib/tours";
 import { ButtonLink, PageShell } from "@/components/ui";
 import { ReplyTime, TrustBadge } from "@/components/trust";
 import { getSellerTrust, getTierLabels } from "@/lib/trust";
@@ -43,10 +44,9 @@ export default async function SellDashboard() {
     getTierLabels(),
     getHubPosts({ campusId: seller.campus_id, limit: 1 }),
   ]);
-  const [{ count: total }, { count: live }, { data: prof }] = await Promise.all([
+  const [{ count: total }, { count: live }] = await Promise.all([
     supabase.from("listings").select("id", { count: "exact", head: true }).eq("seller_id", seller.id).is("deleted_at", null),
     supabase.from("listings").select("id", { count: "exact", head: true }).eq("seller_id", seller.id).is("deleted_at", null).eq("availability", "available"),
-    supabase.from("profiles").select("seller_tour_seen").eq("id", user.id).single(),
   ]);
   const st = STATUS[seller.status];
 
@@ -96,7 +96,7 @@ export default async function SellDashboard() {
           </div>
         </div>
       </div>
-      {!prof?.seller_tour_seen && <SellerTour userId={user.id} />}
+      <CoachTour id="seller" label="Seller dashboard tour" steps={SELLER_TOUR} />
     </PageShell>
   );
 }

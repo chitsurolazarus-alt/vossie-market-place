@@ -161,3 +161,12 @@ _(to be filled in by the team)_
 
 ### Team review notes
 _(to be filled in by the team)_
+
+## Rebrand stage 5: coach-mark app tours
+**What the AI did:** designed and wrote the `CoachTour` spotlight component, the tour copy (`src/lib/tours.ts`), the `tours_seen` migration, the anchors on four screens and the `test:tours` browser check.
+**Verified:** `test:tours` (opens once, saves, Escape, Replay, popover inside 360px, 44px buttons, nav spotlight at the bottom), plus `test:ui`, `test:settings`, `test:theme` and `test:smoke`; lint, typecheck and build.
+**Not verified (please check):** the tour copy, how the card looks on a real phone and on the 1024px+ desktop nav, and a screen reader read-through.
+**Caveat:** existing demo accounts were marked as having seen every tour so tests are not blocked; use Settings -> Replay app tour to see them.
+
+### Team review notes
+_(to be filled in by the team)_

@@ -25,7 +25,7 @@ export default async function Header() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-2">
         <Logo />
         <div className="flex shrink-0 items-center gap-0.5 sm:gap-1">
-          <nav aria-label="Main" className="hidden gap-1 lg:flex">
+          <nav data-tour="nav" aria-label="Main" className="hidden gap-1 lg:flex">
             {NAV.map((n) => (
               <TopNavLink key={n.href} href={n.href}>
                 {n.label}

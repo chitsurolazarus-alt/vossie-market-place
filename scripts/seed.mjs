@@ -141,14 +141,14 @@ const pickups = must(await db.from("pickup_points").select("id,campus_id,name"),
 
 for (const s of STAFF) {
   const id = await ensureUser(s.email, s.name);
-  must(await db.from("profiles").update({ role: s.role, display_name: s.name, onboarding_seen: true }).eq("id", id), "staff role");
+  must(await db.from("profiles").update({ role: s.role, display_name: s.name, onboarding_seen: true, tours_seen: ["home", "browse", "messages", "seller"] }).eq("id", id), "staff role");
   s.id = id;
 }
 const mentorId = STAFF.find((s) => s.role === "mentor").id;
 
 for (const s of SELLERS) {
   const uid = await ensureUser(s.email, s.name);
-  must(await db.from("profiles").update({ display_name: s.name, campus_id: campuses[s.campus], onboarding_seen: true, seller_tour_seen: true }).eq("id", uid), "profile");
+  must(await db.from("profiles").update({ display_name: s.name, campus_id: campuses[s.campus], onboarding_seen: true, seller_tour_seen: true, tours_seen: ["home", "browse", "messages", "seller"] }).eq("id", uid), "profile");
 
   const photoPath = `${uid}/profile.webp`;
   must(await db.storage.from("avatars").upload(photoPath, await tile(s.biz, CATEGORY_COLOURS[s.cat], "HustleHub", 512), { contentType: "image/webp", upsert: true }), "avatar");
@@ -205,7 +205,7 @@ const BUYERS = [
 const buyerIds = [];
 for (const [email, name] of BUYERS) {
   const id = await ensureUser(email, name);
-  must(await db.from("profiles").update({ display_name: name, onboarding_seen: true }).eq("id", id), "buyer profile");
+  must(await db.from("profiles").update({ display_name: name, onboarding_seen: true, tours_seen: ["home", "browse", "messages", "seller"] }).eq("id", id), "buyer profile");
   buyerIds.push(id);
 }
 const ayanda = STAFF.find((x) => x.email === "20250109@vossie.net").id;
@@ -313,7 +313,7 @@ await enquire(by("Pixel & Pen Studio"), buyerIds[3], 1, { days: 0.005, status: "
 // ---------------------------------------------------------------------------
 {
   const aishaId = await ensureUser("20250110@vossie.net", "Aisha Patel");
-  must(await db.from("profiles").update({ display_name: "Aisha Patel", campus_id: campuses.midrand, onboarding_seen: true, seller_tour_seen: true }).eq("id", aishaId), "aisha profile");
+  must(await db.from("profiles").update({ display_name: "Aisha Patel", campus_id: campuses.midrand, onboarding_seen: true, seller_tour_seen: true, tours_seen: ["home", "browse", "messages", "seller"] }).eq("id", aishaId), "aisha profile");
   const aisha = must(await db.from("seller_profiles").upsert({
     user_id: aishaId, campus_id: campuses.midrand, category_id: cats.food, business_name: "Aisha's Bakes", slug: "aishas-bakes",
     tagline: "Custom cupcakes and cookie boxes for birthdays and exams.", bio: "Home baker studying Marketing. Cupcakes, cookie boxes and cakes made to order, collected on campus.",

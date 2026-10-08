@@ -158,3 +158,10 @@
 - **Bottom nav (mobile):** exactly five items, icon + label, current section highlighted: Home, Browse, Sell, Messages, Account. Saved, Looking For and Settings moved into **Account**.
   **Desktop** top bar (from 1024px) keeps all links, with the current one highlighted. The data-saver toggle is gone from the header.
 - New `scripts/settings-check.mjs` (`npm run test:settings`, 33 checks). `test:ui` updated for the moved toggle.
+
+## Rebrand stage 5 - Coach-mark app tours
+- One reusable spotlight tour (`CoachTour`): dims the page, outlines the target, and places a card above or below it. Tabs stay inside the card, Esc or Skip closes it, buttons are 44px+, and smooth scrolling respects reduced motion.
+- Short tours on Home (search, campus, categories, nav), Browse (search, filters, results), Messages (inbox) and the seller dashboard (status, listings, profile). Steps whose target is not on screen are skipped, so an empty inbox shows no tour.
+- Progress is stored per tour in `profiles.tours_seen` (migration `20261008000001_tours_seen.sql`). A tour waits until the welcome slides are done, and each shows once.
+- Settings -> Replay app tour now clears `tours_seen` as well. The old seller tour component was removed.
+- `npm run test:tours` (21 checks, real browser at 360px).

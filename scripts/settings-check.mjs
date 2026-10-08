@@ -17,7 +17,7 @@ const uid = list.users.find((u) => u.email === EMAIL).id;
 const { data: campuses } = await db.from("campuses").select("id,name").eq("active", true).order("name");
 const reset = () => Promise.all([
   db.from("notification_prefs").delete().eq("user_id", uid),
-  db.from("profiles").update({ campus_id: null, onboarding_seen: true, seller_tour_seen: true, low_data_mode: false }).eq("id", uid),
+  db.from("profiles").update({ campus_id: null, onboarding_seen: true, seller_tour_seen: true, tours_seen: ["home", "browse", "messages", "seller"], low_data_mode: false }).eq("id", uid),
 ]);
 await reset();
 

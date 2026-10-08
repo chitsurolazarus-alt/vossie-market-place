@@ -20,6 +20,7 @@
     "test:discovery": "node --env-file=.env.local scripts/discovery-test.mjs",
     "test:ui": "node --env-file=.env.local scripts/ui-check.mjs",
     "test:settings": "node --env-file=.env.local scripts/settings-check.mjs",
+    "test:tours": "node --env-file=.env.local scripts/tours-check.mjs",
     "test:splash": "node --env-file=.env.local scripts/splash-check.mjs",
     "photos:fetch": "node --env-file=.env.local scripts/fetch-photos.mjs",
     "test:audit": "node --env-file=.env.local scripts/responsive-audit.mjs"

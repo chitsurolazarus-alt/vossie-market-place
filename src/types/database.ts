@@ -1213,6 +1213,7 @@ export type Database = {
           last_seen_at: string | null
           low_data_mode: boolean
           onboarding_seen: boolean
+          tours_seen: string[]
           phone: string | null
           popia_consent_at: string | null
           role: Database["public"]["Enums"]["user_role"]
@@ -1233,6 +1234,7 @@ export type Database = {
           last_seen_at?: string | null
           low_data_mode?: boolean
           onboarding_seen?: boolean
+          tours_seen?: string[]
           phone?: string | null
           popia_consent_at?: string | null
           role?: Database["public"]["Enums"]["user_role"]
@@ -1253,6 +1255,7 @@ export type Database = {
           last_seen_at?: string | null
           low_data_mode?: boolean
           onboarding_seen?: boolean
+          tours_seen?: string[]
           phone?: string | null
           popia_consent_at?: string | null
           role?: Database["public"]["Enums"]["user_role"]

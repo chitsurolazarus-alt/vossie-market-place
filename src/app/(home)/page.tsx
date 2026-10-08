@@ -8,6 +8,8 @@ import { isWithinDays } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
 import { getLowData, getSavedIds } from "@/lib/viewer";
 
+import CoachTour from "@/components/CoachTour";
+import { HOME_TOUR } from "@/lib/tours";
 import Verified from "@/components/Verified";
 import Icon from "@/components/Icon";
 export const metadata = { title: { absolute: "HustleHub | Student hustles. Nationwide." } };
@@ -44,19 +46,20 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
 
   return (
     <>
+      <CoachTour id="home" label="Home tour" steps={HOME_TOUR} />
       <section className="bg-navy text-white">
         <div className="mx-auto max-w-6xl px-4 py-10 sm:py-16">
           <p className="inline-block rounded-full bg-sand px-3 py-1 text-sm font-semibold text-navy">Eduvos Incubation Hub</p>
           <h1 className="mt-4 max-w-2xl font-display text-4xl font-bold sm:text-5xl">Student hustles. Nationwide.</h1>
           <p className="mt-3 max-w-xl text-lg text-white/90">Find food, hair, tutoring, design and more from students on your campus.</p>
-          <form action="/browse" method="get" role="search" className="mt-6 flex max-w-xl gap-2">
+          <form data-tour="home-search" action="/browse" method="get" role="search" className="mt-6 flex max-w-xl gap-2">
             <label htmlFor="home-q" className="sr-only">Search HustleHub</label>
             <input id="home-q" name="q" type="search" enterKeyHint="search" placeholder="Try braids, logo, kota…" className={`${inputCls} border-white`} />
             <button type="submit" className="min-h-11 shrink-0 rounded-lg bg-sand px-5 font-semibold text-navy hover:brightness-95">Search</button>
           </form>
           <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
             <ButtonLink href="/sell" variant="sand">Start selling</ButtonLink>
-            <nav aria-label="Campus" className="flex flex-wrap items-center gap-2 text-sm">
+            <nav data-tour="home-campus" aria-label="Campus" className="flex flex-wrap items-center gap-2 text-sm">
               <span className="text-white/80">Campus:</span>
               {[{ slug: "", name: "All" }, ...ref.campuses].map((c) => (
                 <Link key={c.slug || "all"} href={c.slug ? `/?campus=${c.slug}` : "/"} aria-current={(campus ?? "") === c.slug ? "true" : undefined}
@@ -117,7 +120,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
 
       <section className="mx-auto max-w-6xl px-4 pt-10" aria-labelledby="cats-h">
         <h2 id="cats-h" className="font-display text-2xl font-bold text-navy">Shop by category</h2>
-        <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        <ul data-tour="home-categories" className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {ref.categories.map((c) => (
             <li key={c.slug}>
               <Link href={`/browse?category=${c.slug}${campus ? `&campus=${campus}` : ""}`} className="flex min-h-16 items-center gap-3 rounded-xl bg-mist px-4 font-semibold text-navy hover:bg-navy/10">
