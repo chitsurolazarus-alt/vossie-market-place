@@ -11,6 +11,7 @@ import ShareButton from "@/components/ShareButton";
 import { getUser } from "@/lib/auth";
 import { sellerTiles, similarTiles } from "@/lib/browse";
 import { priceLabel, publicImageUrl } from "@/lib/format";
+import { HANDOVER_LABEL, formatZar, type Handover } from "@/lib/validation";
 import EnquireButton from "@/components/messages/EnquireButton";
 import { ReplyTime, TrustBadge } from "@/components/trust";
 import { getExistingConversationId, getMyListingsForSwap } from "@/lib/inbox-data";
@@ -95,8 +96,12 @@ export default async function ListingPage({ params, searchParams }: { params: Pr
             <dt className="text-muted">Type</dt><dd className="font-medium capitalize text-navy">{l.kind}</dd>
             {l.categories && <><dt className="text-muted">Category</dt><dd className="font-medium text-navy">{l.categories.name}</dd></>}
             {l.campuses && <><dt className="text-muted">Campus</dt><dd className="font-medium text-navy">{l.campuses.name}</dd></>}
-            {l.pickup_points && <><dt className="text-muted">Pickup point</dt><dd className="font-medium text-navy">{l.pickup_points.name}</dd></>}
-            {l.delivered_on_campus && <><dt className="text-muted">Delivery</dt><dd className="font-medium text-navy">On campus or online</dd></>}
+            {l.pickup_points && l.handover.includes("pickup") && <><dt className="text-muted">Pickup point</dt><dd className="font-medium text-navy">{l.pickup_points.name}</dd></>}
+            <dt className="text-muted">Handover</dt>
+            <dd className="font-medium text-navy">
+              {(l.handover as Handover[]).map((h) => HANDOVER_LABEL[h]).join(" · ")}
+              {l.handover.some((h) => h !== "pickup") && <span className="block text-muted">{l.delivery_fee_zar ? `Delivery fee: ${formatZar(l.delivery_fee_zar)}` : "Free delivery"}</span>}
+            </dd>
           </dl>
 
           {l.description && <p className="mt-4 whitespace-pre-line text-ink">{l.description}</p>}

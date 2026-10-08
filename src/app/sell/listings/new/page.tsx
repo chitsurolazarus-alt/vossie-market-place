@@ -23,7 +23,7 @@ export default async function NewListing() {
         initial={{
           id: crypto.randomUUID(), kind: "product", title: "", description: "", categoryId: seller.category_id ?? "", tags: [],
           pricingMode: "cash", priceZar: null, priceIsFrom: false, swapFor: "", availability: "available",
-          pickupPointId: pickups.length === 1 ? pickups[0].id : null, deliveredOnCampus: false, images: [],
+          pickupPointId: pickups.length === 1 ? pickups[0].id : null, handover: ["pickup"], deliveryFeeZar: null, images: [],
         }} />
     </PageShell>
   );

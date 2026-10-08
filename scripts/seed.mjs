@@ -176,7 +176,7 @@ for (const s of SELLERS) {
       seller_id: seller.id, campus_id: campuses[s.campus], category_id: cats[s.cat], kind, title,
       description: desc, pricing_mode: mode, price_zar: mode === "swap" ? null : price,
       price_is_from: kind === "service" && mode !== "swap", swap_for: swap,
-      pickup_point_id: kind === "product" ? mine[0].id : null, delivered_on_campus: kind === "service",
+      pickup_point_id: kind === "product" ? mine[0].id : null, delivered_on_campus: kind === "service", handover: kind === "service" ? ["campus_dropoff"] : ["pickup"],
     }).select("id").single(), `listing ${title}`);
 
     s.listingIds.push(listing.id);

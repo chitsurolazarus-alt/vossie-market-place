@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import ListingForm from "@/components/sell/ListingForm";
+import ListingForm, { type ListingInitial } from "@/components/sell/ListingForm";
 import { PageShell } from "@/components/ui";
 import { getMySeller, requireUser } from "@/lib/auth";
 import { publicImageUrl } from "@/lib/format";
@@ -33,7 +33,7 @@ export default async function EditListing({ params }: { params: Promise<{ id: st
           id: l.id, kind: l.kind, title: l.title, description: l.description ?? "", categoryId: l.category_id ?? "",
           tags: l.listing_tags.map((t) => t.tags?.name).filter((n): n is string => !!n),
           pricingMode: l.pricing_mode, priceZar: l.price_zar, priceIsFrom: l.price_is_from, swapFor: l.swap_for ?? "",
-          availability: l.availability, pickupPointId: l.pickup_point_id, deliveredOnCampus: l.delivered_on_campus,
+          availability: l.availability, pickupPointId: l.pickup_point_id, handover: l.handover as ListingInitial["handover"], deliveryFeeZar: l.delivery_fee_zar,
           images: [...l.listing_images].sort((a, b) => a.position - b.position).map((i) => ({ path: i.path, url: publicImageUrl(i.path), alt: i.alt })),
         }} />
     </PageShell>

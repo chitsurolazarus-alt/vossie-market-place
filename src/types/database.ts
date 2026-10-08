@@ -781,6 +781,8 @@ export type Database = {
           created_at: string
           deleted_at: string | null
           delivered_on_campus: boolean
+          delivery_fee_zar: number | null
+          handover: string[]
           description: string | null
           hidden_by_moderation: boolean
           id: string
@@ -804,6 +806,8 @@ export type Database = {
           created_at?: string
           deleted_at?: string | null
           delivered_on_campus?: boolean
+          delivery_fee_zar?: number | null
+          handover?: string[]
           description?: string | null
           hidden_by_moderation?: boolean
           id?: string
@@ -827,6 +831,8 @@ export type Database = {
           created_at?: string
           deleted_at?: string | null
           delivered_on_campus?: boolean
+          delivery_fee_zar?: number | null
+          handover?: string[]
           description?: string | null
           hidden_by_moderation?: boolean
           id?: string

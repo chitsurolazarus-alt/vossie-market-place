@@ -171,3 +171,10 @@
 - New province-then-campus picker (`CampusSelect`) in Settings -> Location and in seller registration. Campuses that have not launched show as "coming soon" and cannot be chosen; the seller action also rejects them on the server.
 - Filters, Home chips and Growth only list launched campuses. An admin switches a campus on in Admin -> Manage and it appears everywhere with no code change.
 - `npm run test:campuses` (11 checks). `test:settings` updated for the two-step picker.
+
+## Rebrand stage 7 - Handover and delivery options
+- Each listing now offers one to three handover options: campus pickup point, campus drop-off, or a courier the seller arranges (migration `20261008000003_handover_options.sql`; the database rejects unknown or empty lists). Old "delivered on campus" listings were converted.
+- Optional delivery fee in rand (0 to R5000) for drop-off and courier. The listing page shows the options, the pickup point only when pickup is offered, and "Delivery fee: R35" or "Free delivery".
+- A pickup point is only required when pickup is offered. The form reminds sellers to hand over in public and never share a home address.
+- `npm run test:handover` (10 checks). No courier integration: sellers arrange it themselves.
+- Paystack test keys were added to the git-ignored `.env.local` for Stage 8 (`.env.example` has empty placeholders).

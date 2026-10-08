@@ -36,8 +36,10 @@ export async function saveListing(input: unknown): Promise<Result<{ id: string }
     price_is_from: v.kind === "service" && v.pricingMode !== "swap" ? v.priceIsFrom : false,
     swap_for: v.pricingMode === "cash" ? null : v.swapFor,
     availability: v.availability,
-    pickup_point_id: v.kind === "product" ? v.pickupPointId : v.pickupPointId,
-    delivered_on_campus: v.kind === "service" ? v.deliveredOnCampus : false,
+    pickup_point_id: v.handover.includes("pickup") ? v.pickupPointId : null,
+    handover: v.handover,
+    delivery_fee_zar: v.handover.includes("pickup") && v.handover.length === 1 ? null : v.deliveryFeeZar,
+    delivered_on_campus: v.handover.includes("campus_dropoff"),
   };
 
   const { data: existing } = await supabase.from("listings").select("id").eq("id", v.id).eq("seller_id", seller.id).maybeSingle();

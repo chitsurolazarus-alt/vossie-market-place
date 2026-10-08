@@ -20,6 +20,9 @@ export const CONTACT_PREFS = ["in_app", "whatsapp", "both"] as const;
 export const PRICING_MODES = ["cash", "swap", "both"] as const;
 export const AVAILABILITY = ["available", "sold_out", "paused"] as const;
 export const KINDS = ["product", "service"] as const;
+export const HANDOVER = ["pickup", "campus_dropoff", "courier"] as const;
+export type Handover = (typeof HANDOVER)[number];
+export const HANDOVER_LABEL: Record<Handover, string> = { pickup: "Campus pickup point", campus_dropoff: "Campus drop-off", courier: "Courier (seller arranges)" };
 
 /** Seller form fields, grouped so each wizard step can validate its own subset. */
 export const sellerBase = z.object({
@@ -89,7 +92,8 @@ export const listingSchema = z
     swapFor: optionalText(200, "Swap details"),
     availability: z.enum(AVAILABILITY),
     pickupPointId: z.uuid().nullable(),
-    deliveredOnCampus: z.boolean(),
+    handover: z.array(z.enum(HANDOVER)).min(1, "Choose at least one way to hand over").max(3),
+    deliveryFeeZar: z.number().int("Use whole rand").min(0, "Fee can't be negative").max(5000, "That fee looks too high").nullable(),
     images: z
       .array(z.object({ path: z.string().min(3).max(300), alt: z.string().trim().min(1, "Add alt text").max(200) }))
       .min(1, "Add at least 1 photo")
@@ -102,7 +106,7 @@ export const listingSchema = z
     if (v.pricingMode !== "cash" && !v.swapFor) {
       ctx.addIssue({ code: "custom", path: ["swapFor"], message: "Tell buyers what you'd swap for" });
     }
-    if (v.kind === "product" && !v.pickupPointId) {
+    if (v.kind === "product" && v.handover.includes("pickup") && !v.pickupPointId) {
       ctx.addIssue({ code: "custom", path: ["pickupPointId"], message: "Choose a pickup point for handover" });
     }
   });

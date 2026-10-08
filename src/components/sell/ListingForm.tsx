@@ -6,7 +6,7 @@ import { saveListing } from "@/app/actions/listing";
 import { Alert, Button, ButtonLink, Field, describe, inputCls } from "@/components/ui";
 import { createClient } from "@/lib/supabase/client";
 import { compressListingImage } from "@/lib/image";
-import { listingSchema, issuesToErrors, type FieldErrors } from "@/lib/validation";
+import { HANDOVER, HANDOVER_LABEL, listingSchema, issuesToErrors, type FieldErrors, type Handover } from "@/lib/validation";
 import type { Option } from "./SellerForm";
 
 import Icon from "@/components/Icon";
@@ -14,7 +14,7 @@ type Img = { path: string; url: string; alt: string };
 export type ListingInitial = {
   id: string; kind: "product" | "service"; title: string; description: string; categoryId: string; tags: string[];
   pricingMode: "cash" | "swap" | "both"; priceZar: number | null; priceIsFrom: boolean; swapFor: string;
-  availability: "available" | "sold_out" | "paused"; pickupPointId: string | null; deliveredOnCampus: boolean; images: Img[];
+  availability: "available" | "sold_out" | "paused"; pickupPointId: string | null; handover: Handover[]; deliveryFeeZar: number | null; images: Img[];
 };
 
 const cardBtn = (on: boolean) => `flex min-h-12 flex-1 cursor-pointer items-center justify-center rounded-lg border-2 px-3 text-center font-semibold ${on ? "border-royal bg-blue-50 text-navy" : "border-navy/20 text-ink"}`;
@@ -179,7 +179,7 @@ export default function ListingForm({ userId, categories, pickupPoints, initial,
         <div className="mt-2 flex gap-2">
           {(["product", "service"] as const).map((k) => (
             <label key={k} className={cardBtn(f.kind === k)}>
-              <input type="radio" name="kind" className="sr-only" checked={f.kind === k} onChange={() => set({ kind: k, deliveredOnCampus: k === "service" })} />
+              <input type="radio" name="kind" className="sr-only" checked={f.kind === k} onChange={() => set({ kind: k, handover: k === "service" ? ["campus_dropoff"] : ["pickup"] })} />
               {k === "product" ? "Product" : "Service"}
             </label>
           ))}
@@ -240,18 +240,37 @@ export default function ListingForm({ userId, categories, pickupPoints, initial,
       <ImageManager userId={userId} listingId={f.id} images={f.images} title={f.title} error={errors.images}
         onChange={(images) => set({ images })} />
 
-      <Field label={f.kind === "product" ? "Handover pickup point" : "Pickup point (optional)"} htmlFor="pickupPointId" error={errors.pickupPointId}
-        hint="Chosen from your approved campus pickup points.">
-        <select id="pickupPointId" className={inputCls} value={f.pickupPointId ?? ""} onChange={(e) => set({ pickupPointId: e.target.value || null })} aria-invalid={!!errors.pickupPointId}>
-          <option value="">{f.kind === "product" ? "Choose a pickup point" : "None"}</option>
-          {pickupPoints.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
-        </select>
-      </Field>
-      {f.kind === "service" && (
-        <label className="flex min-h-11 items-center gap-3">
-          <input type="checkbox" className="h-5 w-5" checked={f.deliveredOnCampus} onChange={(e) => set({ deliveredOnCampus: e.target.checked })} />
-          Delivered on campus or online
-        </label>
+      <fieldset aria-describedby="handover-hint">
+        <legend className="font-semibold text-navy">How will the buyer get it?</legend>
+        <p id="handover-hint" className="mt-1 text-sm text-muted">Pick every option you offer. Always hand over in public, and never share a home address.</p>
+        <div className="mt-2 grid gap-2">
+          {HANDOVER.map((h) => (
+            <label key={h} className="flex min-h-11 items-center gap-3 rounded-lg border-2 border-navy/20 px-3">
+              <input type="checkbox" className="h-5 w-5" checked={f.handover.includes(h)}
+                onChange={(e) => set({ handover: e.target.checked ? [...f.handover, h] : f.handover.filter((x) => x !== h) })} />
+              {HANDOVER_LABEL[h]}
+            </label>
+          ))}
+        </div>
+        {errors.handover && <p role="alert" className="mt-1 text-sm font-semibold text-red-700">{errors.handover}</p>}
+      </fieldset>
+      {f.handover.includes("pickup") && (
+        <Field label={f.kind === "product" ? "Handover pickup point" : "Pickup point (optional)"} htmlFor="pickupPointId" error={errors.pickupPointId}
+          hint="Chosen from your approved campus pickup points.">
+          <select id="pickupPointId" className={inputCls} value={f.pickupPointId ?? ""} onChange={(e) => set({ pickupPointId: e.target.value || null })} aria-invalid={!!errors.pickupPointId}>
+            <option value="">{f.kind === "product" ? "Choose a pickup point" : "None"}</option>
+            {pickupPoints.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+        </Field>
+      )}
+      {(f.handover.includes("campus_dropoff") || f.handover.includes("courier")) && (
+        <Field label="Delivery fee (optional)" htmlFor="deliveryFeeZar" error={errors.deliveryFeeZar} hint="Leave empty for free. The buyer pays this on top of the price.">
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-semibold text-navy" aria-hidden="true">R</span>
+            <input id="deliveryFeeZar" type="number" inputMode="numeric" min={0} max={5000} step={1} className={inputCls} value={f.deliveryFeeZar ?? ""}
+              onChange={(e) => set({ deliveryFeeZar: e.target.value === "" ? null : Number(e.target.value) })} aria-invalid={!!errors.deliveryFeeZar} />
+          </div>
+        </Field>
       )}
 
       <Field label="Availability" htmlFor="availability">

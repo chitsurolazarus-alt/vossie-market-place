@@ -178,3 +178,11 @@ _(to be filled in by the team)_
 
 ### Team review notes
 _(to be filled in by the team)_
+
+## Rebrand stage 7: handover options
+**What the AI did:** designed the `handover` and `delivery_fee_zar` columns, the form section, validation, listing-page display and the `test:handover` check.
+**Verified:** `test:handover`, `test:ui`, `test:smoke`, `test:flow`; lint, typecheck, build.
+**Not verified (please check):** the wording of the options, how the fieldset looks on a real phone, and that a Browse filter for handover is NOT built (needs a change to the search function; deferred). The handover choice is also not yet recorded on the enquiry.
+
+### Team review notes
+_(to be filled in by the team)_
