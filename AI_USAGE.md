@@ -186,3 +186,11 @@ _(to be filled in by the team)_
 
 ### Team review notes
 _(to be filled in by the team)_
+
+## Rebrand stage 8: payments
+**What the AI did:** designed the payment-request flow and the two-provider split, wrote the migration, server actions, pay page, Paystack callback and webhook, the in-chat panel and `test:payments`; set the Paystack keys on Vercel.
+**Verified:** `test:payments` (28: RLS, MockPay end to end, notifications, idempotency, bad webhook signature, no payment recorded without Paystack confirming, Paystack redirect to checkout, flag off), plus `test:ui`, `smoke`, `flow`, `settings`, `tours`, `messaging`, `theme`; lint, typecheck, build. A Paystack test transaction was initialised in ZAR (not paid).
+**Not verified (please check):** a full card payment on Paystack's test checkout and the webhook arriving from Paystack (it needs the webhook URL set in the Paystack dashboard: `<site>/api/paystack/webhook`); the wording on the pay screen and FAQ; the legal side of holding money for sellers (payouts are not built); the responsive audit and phase 5 suites were not re-run.
+
+### Team review notes
+_(to be filled in by the team)_

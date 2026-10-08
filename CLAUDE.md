@@ -54,7 +54,7 @@ realistic South African seed data, no lorem ipsum.
   currently not approved, and lint/build work without it.
 
 ## Status
-Phases 0-5 complete. Rebrand Stages 1-7 done; Stages 8-10 follow the rebrand brief. Email provider (SMTP) is still outstanding.
+Phases 0-5 complete. Rebrand Stages 1-8 done; Stages 9-10 follow the rebrand brief. Email provider (SMTP) is still outstanding.
 
 ## Phase 1-2 decisions
 - Sign-up allow-list in DB tables (`vossie.net`, `eduvos.com`, named test emails); roles by promotion only.
@@ -105,6 +105,9 @@ Phases 0-5 complete. Rebrand Stages 1-7 done; Stages 8-10 follow the rebrand bri
 - Route skeletons: `src/components/skeletons.tsx`; `loading.tsx` lives in route groups `(home)` and `(index)` next to the index page only.
   **Gotcha:** a `loading.tsx` makes Next stream the page, so `notFound()` below it returns HTTP 200 instead of 404. Never put one on a parent of `l/[id]`, `messages/[id]` or other access-controlled detail routes.
 - Real photos: `npm run photos:fetch` (needs `UNSPLASH_ACCESS_KEY` or `PEXELS_API_KEY` in `.env.local`) fills `scripts/photos/files` + `public/photos` and `scripts/photos/manifest.json`; `db:seed` uploads them. Credits in `docs/IMAGE_CREDITS.md`.
+
+## Payments (Stage 8)
+- `payment_requests` + `payment_events`: users only SELECT (RLS); every write is server code with the service role after explicit checks (`lib/payments.ts`, `actions/payments.ts`). Provider = `site_settings.payment_provider` (mockpay default; paystack only if `PAYSTACK_SECRET_KEY` is set). Paid is recorded only after `markPaid` (MockPay approve, or Paystack verify via callback/webhook). Flag `payments`. Payout/escrow not built. `npm run test:payments`.
 
 ## Handover options (Stage 7)
 - `listings.handover` (text[] of pickup | campus_dropoff | courier) + `delivery_fee_zar`; constants and labels in `lib/validation.ts`. `delivered_on_campus` is kept in sync (true when campus_dropoff) but is legacy. `npm run test:handover`.

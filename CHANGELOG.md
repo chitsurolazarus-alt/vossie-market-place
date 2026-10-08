@@ -178,3 +178,10 @@
 - A pickup point is only required when pickup is offered. The form reminds sellers to hand over in public and never share a home address.
 - `npm run test:handover` (10 checks). No courier integration: sellers arrange it themselves.
 - Paystack test keys were added to the git-ignored `.env.local` for Stage 8 (`.env.example` has empty placeholders).
+
+## Rebrand stage 8 - Payments (MockPay and Paystack-ready)
+- **Pay request in the chat.** A seller sends a payment request (item price, optional delivery fee, short note, prefilled from the listing); the buyer pays on `/pay/[reference]`. One open request per conversation, valid for 3 days; the seller can cancel. Both sides see Waiting / Paid / Cancelled / Expired in the conversation, live.
+- **MockPay** is the default: a clearly labelled test payment, no real money. **Paystack** (ZAR, hosted checkout) is used only when the `payment_provider` setting says `paystack` and the secret key is set. The callback and the signed webhook never trust the request: they ask Paystack to verify status, currency and amount before recording.
+- Records only: the ledger stores status, provider and reference. No payout or escrow yet (next step: Paystack subaccounts). Payment does not count as a confirmed sale; trust still needs the buyer's confirmation.
+- Database: `payment_requests` (read-only for the buyer and seller through RLS; all writes happen in server code), append-only `payment_events` (idempotent, also logs a late payment on a cancelled request), notifications `payment_request` and `payment_received`, `payments` flag on, FAQ entry added.
+- Paystack test keys are set on Vercel (secret one as sensitive). `npm run test:payments` (28 checks).

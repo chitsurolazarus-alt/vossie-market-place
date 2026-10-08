@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 /** Re-renders the server page when any of these tables change for the signed-in user (RLS filters the events). */
-export default function LiveRefresh({ tables, channel }: { tables: ("messages" | "conversations" | "enquiries")[]; channel: string }) {
+export default function LiveRefresh({ tables, channel }: { tables: ("messages" | "conversations" | "enquiries" | "payment_requests")[]; channel: string }) {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const key = tables.join(",");

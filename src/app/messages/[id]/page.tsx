@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { z } from "zod";
+import LiveRefresh from "@/components/messages/LiveRefresh";
+import PaymentPanel from "@/components/messages/PaymentPanel";
 import Thread from "@/components/messages/Thread";
 import { requireUser } from "@/lib/auth";
 import { priceLabel, publicImageUrl } from "@/lib/format";
@@ -27,6 +29,8 @@ export default async function ThreadPage({ params }: { params: Promise<{ id: str
           <Icon name="arrow-left" size="md" className="mr-1" />{role === "seller" ? "Enquiries" : "All messages"}
         </Link>
       </div>
+      <LiveRefresh tables={["payment_requests"]} channel={`pay-${conv.id}`} />
+      <PaymentPanel conversationId={conv.id} role={role} listingId={t.listing?.id ?? null} />
       <Thread
         conversationId={conv.id} meId={user.id} otherUserId={role === "buyer" ? t.seller?.user_id ?? null : conv.buyer_id} role={role} otherName={otherName} sellerSlug={t.seller?.slug ?? null}
         listing={t.listing ? { id: t.listing.id, title: t.listing.title, price: priceLabel(t.listing), availability: t.listing.availability } : null}

@@ -98,28 +98,28 @@ export type Database = {
         Row: {
           active: boolean
           city: string | null
-          province: string
           created_at: string
           id: string
           name: string
+          province: string
           slug: string
         }
         Insert: {
           active?: boolean
           city?: string | null
-          province: string
           created_at?: string
           id?: string
           name: string
+          province: string
           slug: string
         }
         Update: {
           active?: boolean
           city?: string | null
-          province?: string
           created_at?: string
           id?: string
           name?: string
+          province?: string
           slug?: string
         }
         Relationships: []
@@ -782,8 +782,8 @@ export type Database = {
           deleted_at: string | null
           delivered_on_campus: boolean
           delivery_fee_zar: number | null
-          handover: string[]
           description: string | null
+          handover: string[]
           hidden_by_moderation: boolean
           id: string
           kind: Database["public"]["Enums"]["listing_kind"]
@@ -807,8 +807,8 @@ export type Database = {
           deleted_at?: string | null
           delivered_on_campus?: boolean
           delivery_fee_zar?: number | null
-          handover?: string[]
           description?: string | null
+          handover?: string[]
           hidden_by_moderation?: boolean
           id?: string
           kind?: Database["public"]["Enums"]["listing_kind"]
@@ -832,8 +832,8 @@ export type Database = {
           deleted_at?: string | null
           delivered_on_campus?: boolean
           delivery_fee_zar?: number | null
-          handover?: string[]
           description?: string | null
+          handover?: string[]
           hidden_by_moderation?: boolean
           id?: string
           kind?: Database["public"]["Enums"]["listing_kind"]
@@ -1128,6 +1128,134 @@ export type Database = {
           },
         ]
       }
+      payment_events: {
+        Row: {
+          created_at: string
+          id: string
+          payload: Json | null
+          request_id: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          payload?: Json | null
+          request_id: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          payload?: Json | null
+          request_id?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_events_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "payment_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_requests: {
+        Row: {
+          buyer_id: string
+          conversation_id: string
+          created_at: string
+          delivery_zar: number
+          expires_at: string
+          id: string
+          item_zar: number
+          listing_id: string | null
+          note: string | null
+          paid_at: string | null
+          provider: string | null
+          provider_ref: string | null
+          reference: string
+          seller_id: string
+          status: string
+          total_zar: number | null
+          updated_at: string
+        }
+        Insert: {
+          buyer_id: string
+          conversation_id: string
+          created_at?: string
+          delivery_zar?: number
+          expires_at?: string
+          id?: string
+          item_zar: number
+          listing_id?: string | null
+          note?: string | null
+          paid_at?: string | null
+          provider?: string | null
+          provider_ref?: string | null
+          reference: string
+          seller_id: string
+          status?: string
+          total_zar?: number | null
+          updated_at?: string
+        }
+        Update: {
+          buyer_id?: string
+          conversation_id?: string
+          created_at?: string
+          delivery_zar?: number
+          expires_at?: string
+          id?: string
+          item_zar?: number
+          listing_id?: string | null
+          note?: string | null
+          paid_at?: string | null
+          provider?: string | null
+          provider_ref?: string | null
+          reference?: string
+          seller_id?: string
+          status?: string
+          total_zar?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_requests_buyer_id_fkey"
+            columns: ["buyer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_requests_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_requests_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "browse_listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_requests_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_requests_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "seller_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           amount_zar: number
@@ -1222,13 +1350,13 @@ export type Database = {
           last_seen_at: string | null
           low_data_mode: boolean
           onboarding_seen: boolean
-          tours_seen: string[]
           phone: string | null
           popia_consent_at: string | null
           role: Database["public"]["Enums"]["user_role"]
           seller_tour_seen: boolean
           suspended_until: string | null
           suspension_reason: string | null
+          tours_seen: string[]
         }
         Insert: {
           avatar_url?: string | null
@@ -1243,13 +1371,13 @@ export type Database = {
           last_seen_at?: string | null
           low_data_mode?: boolean
           onboarding_seen?: boolean
-          tours_seen?: string[]
           phone?: string | null
           popia_consent_at?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           seller_tour_seen?: boolean
           suspended_until?: string | null
           suspension_reason?: string | null
+          tours_seen?: string[]
         }
         Update: {
           avatar_url?: string | null
@@ -1264,13 +1392,13 @@ export type Database = {
           last_seen_at?: string | null
           low_data_mode?: boolean
           onboarding_seen?: boolean
-          tours_seen?: string[]
           phone?: string | null
           popia_consent_at?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           seller_tour_seen?: boolean
           suspended_until?: string | null
           suspension_reason?: string | null
+          tours_seen?: string[]
         }
         Relationships: [
           {
